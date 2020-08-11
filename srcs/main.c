@@ -83,7 +83,7 @@ static int	parse_args(int ac, char **av, t_data *data, t_fct *fcts)
 	return (0);
 }
 
-int 		main(int ac, char **av)
+int			main(int ac, char **av)
 {
 	t_data	*data;
 
