@@ -18,36 +18,47 @@ static void	print_help(void)
 	ft_putendl("\nMessage Digest commands");
 }
 
-static int	get_s_opt(int ac, char **av, t_data data)
+static int	set_hash(t_data *data, t_fct *fcts, char *hash)
 {
-	if (ac > data->s_opt + 1 && (len = ft_strlen(av[data->s_opt + 1])))
+	int i;
+
+	i = 0;
+	while (fcts[i].name)
 	{
+		if (ft_strcmp(fcts[i].name, hash) == 0)
 		{
-			if ((data->string = (char *)malloc(len + 1)) == NULL)
+			if ((data->hash = (t_fct *)malloc(sizeof(t_fct))) == NULL)
 				return (-1);
-			ft_strcpy(data->string, av[data->s_opt + 1]);
-			data->string[len] = 0;
-			ft_putendl(data->string);
+			ft_memmove(data->hash, fcts[i].name, sizeof(t_fct));
 		}
-		else
-			print_help();
+		++i;
 	}
 	return (0);
 }
 
-static int	read_stdin(t_data *data)
+static int	get_s_opt(int ac, char **av, t_data *data)
 {
-	(void)data;
+	int len;
+
+	len = 0;
+	if (ac > data->s_opt + 1 && (len = ft_strlen(av[data->s_opt + 1])))
+	{
+		if ((data->string = (char *)malloc(len + 1)) == NULL)
+			return (-1);
+		ft_strcpy(data->string, av[data->s_opt + 1]);
+		data->string[len] = 0;
+		ft_putendl(data->string);
+	}
+	else
+		print_help();
 	return (0);
 }
 
-static int	parse_args(int ac, char **av, t_data *data)
+static int	parse_args(int ac, char **av, t_data *data, t_fct *fcts)
 {
 	int 	i;
-	int		len;
 
 	i = 0;
-	len = 0;
 	if (ac > 1)
 		while (++i < ac)
 		{
@@ -57,10 +68,12 @@ static int	parse_args(int ac, char **av, t_data *data)
 				data->q_opt = 1;
 			else if (ft_strcmp(av[i], "-r") == 0)
 				data->r_opt = 1;
-			else if (ft_strcmp(av[i], "-s") == 0)
-				data->s_opt = i;
+			else if (ft_strcmp(av[i], "-s") == 0 && ac > i + 1)
+				data->s_opt = i++;
 			else if(ft_strcmp(av[i], "-h") == 0)
 				print_help();
+			else if (set_hash(data, fcts, av[i]))
+				return (-1);
 		}
 	else if (read_stdin(data))
 		return (-1);
@@ -74,9 +87,13 @@ int 		main(int ac, char **av)
 {
 	t_data	*data;
 
+	t_fct	fcts[] = {
+		{"test", "TEST"},
+		{NULL, NULL}
+	};
 	if ((data = (t_data *)malloc(sizeof(t_data))) == NULL)
 		return (-1);
-	if (parse_args(ac, av, data))
+	if (parse_args(ac, av, data, fcts))
 		return (-1);
 	free(data->string);
 	free(data->hash);

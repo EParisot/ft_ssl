@@ -17,14 +17,22 @@
 # include "../libft/libft.h"
 # include <stdlib.h>
 
+typedef struct		s_fct
+{
+	char			*name;
+	char			*print_name;
+}					t_fct;
+
 typedef struct		s_data
 {
 	int				p_opt;
 	int				q_opt;
 	int				r_opt;
 	int				s_opt;
-	char			*hash;
+	t_fct			*hash;
 	char			*string;
 }					t_data;
+
+int					read_stdin(t_data *data);
 
 #endif
