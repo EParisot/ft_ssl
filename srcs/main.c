@@ -12,10 +12,20 @@
 
 #include "../includes/ft_ssl_md5.h"
 
+static t_fct	g_fcts[] = {
+	{"test", "TEST"},
+	{NULL, NULL}
+};
+
 static void	print_help(void)
 {
+	//int i;
+
+	//i = 0;
 	ft_putendl("usage: ./ft_ssl [hash] [opt] [string]");
 	ft_putendl("\nMessage Digest commands");
+	//while (g_fcts[i].name)
+	//	ft_putendl(g_fcts[i++].name);
 }
 
 static int	set_hash(t_data *data, char *hash)
@@ -75,7 +85,7 @@ static int	parse_args(int ac, char **av, t_data *data)
 			else if (set_hash(data, av[i]))
 				return (-1);
 		}
-	else if (read_stdin(data))
+	else if (read_stdin(data, g_fcts))
 		return (-1);
 	if (data->s_opt)
 		if (get_s_opt(ac, av, data))

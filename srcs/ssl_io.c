@@ -12,8 +12,9 @@
 
 #include "../includes/ft_ssl_md5.h"
 
-int	read_stdin(t_data *data)
+int	read_stdin(t_data *data, t_fct *g_fcts)
 {
 	(void)data;
+	(void)g_fcts;
 	return (0);
 }

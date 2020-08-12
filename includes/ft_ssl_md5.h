@@ -33,11 +33,6 @@ typedef struct		s_data
 	char			*string;
 }					t_data;
 
-t_fct	g_fcts[] = {
-	{"test", "TEST"},
-	{NULL, NULL}
-};
-
-int					read_stdin(t_data *data);
+int					read_stdin(t_data *data, t_fct *g_fcts);
 
 #endif
