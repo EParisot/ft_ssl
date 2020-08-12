@@ -13,7 +13,9 @@
 NAME	=	ft_ssl
 
 SRCS	=	srcs/main.c \
-			srcs/ssl_io.c
+			srcs/ssl_io.c \
+			srcs/tools.c \
+			srcs/ft_ssl.c \
 
 INC		=	includes/ft_ssl_md5.h
 

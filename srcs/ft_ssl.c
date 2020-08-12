@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ssl_md5.h                                       :+:      :+:    :+:   */
+/*   ft_ssl.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eparisot <eparisot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,40 +10,10 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_SSL_MD5_H
+#include "../includes/ft_ssl_md5.h"
 
-# define FT_SSL_MD5_H
-
-# include "../libft/libft.h"
-# include <stdlib.h>
-# include <sys/types.h>
-# include <sys/stat.h>
-# include <fcntl.h>
-# include <unistd.h>
-
-# define BUF_SIZE 64
-
-typedef struct		s_fct
+int		hash_string(t_data *data)
 {
-	char			*name;
-	char			*print_name;
-}					t_fct;
-
-typedef struct		s_data
-{
-	int				p_opt;
-	int				q_opt;
-	int				r_opt;
-	int				s_opt;
-	t_fct			*hash;
-	char			*string;
-	t_list			*files;
-}					t_data;
-
-int					read_stdin(t_data *data);
-int 				handle_files(t_data *data, char *filename);
-int					read_files(t_data *data);
-int					hash_string(t_data *data);
-void				del(void *addr, size_t size);
-
-#endif
+	ft_putendl(data->string);
+	return (0);
+}
