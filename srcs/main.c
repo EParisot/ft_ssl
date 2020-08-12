@@ -19,13 +19,13 @@ static t_fct	g_fcts[] = {
 
 static void	print_help(void)
 {
-	//int i;
+	int i;
 
-	//i = 0;
+	i = 0;
 	ft_putendl("usage: ./ft_ssl [hash] [opt] [string]");
 	ft_putendl("\nMessage Digest commands");
-	//while (g_fcts[i].name)
-	//	ft_putendl(g_fcts[i++].name);
+	while (g_fcts[i].name)
+		ft_putendl(g_fcts[i++].name);
 }
 
 static int	set_hash(t_data *data, char *hash)
