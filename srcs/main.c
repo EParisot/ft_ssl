@@ -56,7 +56,7 @@ static int	get_s_opt(int ac, char **av, t_data *data)
 
 static int	parse_args(int ac, char **av, t_data *data)
 {
-	int 	i;
+	int		i;
 
 	i = 0;
 	if (ac > 1)
@@ -86,7 +86,7 @@ static int	parse_args(int ac, char **av, t_data *data)
 int			main(int ac, char **av)
 {
 	t_data	*data;
-	
+
 	if ((data = (t_data *)malloc(sizeof(t_data))) == NULL)
 		return (-1);
 	if (parse_args(ac, av, data))
