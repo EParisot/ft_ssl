@@ -18,18 +18,18 @@ static void	print_help(void)
 	ft_putendl("\nMessage Digest commands");
 }
 
-static int	set_hash(t_data *data, t_fct *fcts, char *hash)
+static int	set_hash(t_data *data, char *hash)
 {
 	int i;
 
 	i = 0;
-	while (fcts[i].name)
+	while (g_fcts[i].name)
 	{
-		if (ft_strcmp(fcts[i].name, hash) == 0)
+		if (ft_strcmp(g_fcts[i].name, hash) == 0)
 		{
 			if ((data->hash = (t_fct *)malloc(sizeof(t_fct))) == NULL)
 				return (-1);
-			ft_memmove(data->hash, fcts[i].name, sizeof(t_fct));
+			ft_memmove(data->hash, g_fcts[i].name, sizeof(t_fct));
 		}
 		++i;
 	}
@@ -54,7 +54,7 @@ static int	get_s_opt(int ac, char **av, t_data *data)
 	return (0);
 }
 
-static int	parse_args(int ac, char **av, t_data *data, t_fct *fcts)
+static int	parse_args(int ac, char **av, t_data *data)
 {
 	int 	i;
 
@@ -70,9 +70,9 @@ static int	parse_args(int ac, char **av, t_data *data, t_fct *fcts)
 				data->r_opt = 1;
 			else if (ft_strcmp(av[i], "-s") == 0 && ac > i + 1)
 				data->s_opt = i++;
-			else if(ft_strcmp(av[i], "-h") == 0)
+			else if (ft_strcmp(av[i], "-h") == 0)
 				print_help();
-			else if (set_hash(data, fcts, av[i]))
+			else if (set_hash(data, av[i]))
 				return (-1);
 		}
 	else if (read_stdin(data))
@@ -86,14 +86,11 @@ static int	parse_args(int ac, char **av, t_data *data, t_fct *fcts)
 int			main(int ac, char **av)
 {
 	t_data	*data;
+	
 
-	t_fct	fcts[] = {
-		{"test", "TEST"},
-		{NULL, NULL}
-	};
 	if ((data = (t_data *)malloc(sizeof(t_data))) == NULL)
 		return (-1);
-	if (parse_args(ac, av, data, fcts))
+	if (parse_args(ac, av, data))
 		return (-1);
 	free(data->string);
 	free(data->hash);
