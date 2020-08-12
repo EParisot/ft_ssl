@@ -87,7 +87,6 @@ int			main(int ac, char **av)
 {
 	t_data	*data;
 	
-
 	if ((data = (t_data *)malloc(sizeof(t_data))) == NULL)
 		return (-1);
 	if (parse_args(ac, av, data))

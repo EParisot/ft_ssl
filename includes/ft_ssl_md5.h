@@ -34,8 +34,8 @@ typedef struct		s_data
 }					t_data;
 
 t_fct	g_fcts[] = {
-		{"test", "TEST"},
-		{NULL, NULL}
+	{"test", "TEST"},
+	{NULL, NULL}
 };
 
 int					read_stdin(t_data *data);
