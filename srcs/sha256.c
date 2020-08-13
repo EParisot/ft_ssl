@@ -12,3 +12,8 @@
 
 #include "../includes/ft_ssl_md5.h"
 
+int			sha256(void *data)
+{
+	data = (t_data *)data;
+	return (0);
+}

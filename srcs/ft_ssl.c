@@ -16,10 +16,9 @@ int		hash_string(t_data *data)
 {
 	if (data->r_opt)
 	{
-		if (data->p_opt)
-			ft_putstr(data->string);
 		if (data->p_opt || data->q_opt == 0)
 		{
+			ft_putstr(data->string);
 			ft_putchar(' ');
 			ft_putendl(data->hash->print_name);
 		}
@@ -31,9 +30,9 @@ int		hash_string(t_data *data)
 		{
 			ft_putstr(data->hash->print_name);
 			ft_putchar(' ');
-		}
-		if (data->p_opt)
 			ft_putendl(data->string);
+		}
 	}
+	data->hash->func_ptr((void*)data);
 	return (0);
 }

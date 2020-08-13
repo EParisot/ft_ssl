@@ -13,9 +13,9 @@
 #include "../includes/ft_ssl_md5.h"
 
 static t_fct	g_fcts[] = {
-	{"md5", "MD5"},
-	{"sha256", "SHA256"},
-	{NULL, NULL}
+	{"md5", "MD5", &md5},
+	{"sha256", "SHA256", &sha256},
+	{NULL, NULL, NULL}
 };
 
 static void	print_help(void)
