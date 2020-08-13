@@ -14,6 +14,6 @@
 
 int			sha256(void *data)
 {
-	data = (t_data *)data;
+	ft_putendl(((t_data *)data)->string);
 	return (0);
 }
