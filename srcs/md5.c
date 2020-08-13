@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tools.c                                            :+:      :+:    :+:   */
+/*   md5.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eparisot <eparisot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,18 +12,3 @@
 
 #include "../includes/ft_ssl_md5.h"
 
-void				del(void *addr, size_t size)
-{
-	(void)size;
-	free(addr);
-}
-
-void				clean_data(t_data *data)
-{
-	if (data->files)
-		ft_lstdel(&data->files, del);
-	if (data->string)
-		free(data->string);
-	free(data->hash);
-	free(data);
-}

@@ -14,6 +14,26 @@
 
 int		hash_string(t_data *data)
 {
-	ft_putendl(data->string);
+	if (data->r_opt)
+	{
+		if (data->p_opt)
+			ft_putstr(data->string);
+		if (data->p_opt || data->q_opt == 0)
+		{
+			ft_putchar(' ');
+			ft_putendl(data->hash->print_name);
+		}
+		
+	}
+	else
+	{
+		if (data->p_opt || data->q_opt == 0)
+		{
+			ft_putstr(data->hash->print_name);
+			ft_putchar(' ');
+		}
+		if (data->p_opt)
+			ft_putendl(data->string);
+	}
 	return (0);
 }

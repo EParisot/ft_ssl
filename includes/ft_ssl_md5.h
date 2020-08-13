@@ -44,6 +44,7 @@ int					read_stdin(t_data *data);
 int 				handle_files(t_data *data, char *filename);
 int					read_files(t_data *data);
 int					hash_string(t_data *data);
+void				clean_data(t_data *data);
 void				del(void *addr, size_t size);
 
 #endif

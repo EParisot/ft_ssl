@@ -13,7 +13,8 @@
 #include "../includes/ft_ssl_md5.h"
 
 static t_fct	g_fcts[] = {
-	{"test", "TEST"},
+	{"md5", "MD5"},
+	{"sha256", "SHA256"},
 	{NULL, NULL}
 };
 
@@ -39,7 +40,7 @@ static int	set_hash_or_file(t_data *data, char *hash_or_file)
 		{
 			if ((data->hash = (t_fct *)malloc(sizeof(t_fct))) == NULL)
 				return (-1);
-			ft_memmove(data->hash, g_fcts[i].name, sizeof(t_fct));
+			ft_memmove(data->hash, &g_fcts[i], sizeof(t_fct));
 			return (0);
 		}
 		++i;
@@ -116,11 +117,6 @@ int			main(int ac, char **av)
 	}
 	if (hash_string(data))
 		ret = -1;
-	if (data->files)
-		ft_lstdel(&data->files, del);
-	if (data->string)
-		free(data->string);
-	free(data->hash);
-	free(data);
+	clean_data(data);
 	return (ret);
 }
