@@ -45,9 +45,14 @@ int			read_stdin(t_data *data)
 {
 	char 	buf[BUF_SIZE];
 
+	ft_memset(buf, 0, BUF_SIZE);
 	while(read(STDIN_FILENO, &buf, BUF_SIZE))
+	{
 		if (read_loop(data, buf))
 			return (-1);
+		ft_memset(buf, 0, BUF_SIZE);
+	}
+	ft_putchar('\n');
 	return (0);
 }
 
