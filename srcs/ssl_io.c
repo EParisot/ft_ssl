@@ -94,18 +94,28 @@ static int	read_file(t_string *file)
 	return (0);
 }
 
-/*static int	set_new_string(t_list *new_lst, t_string *new_string, char *source)
+static int	already_exists(t_data *data, char *filename)
 {
-	if ((new_string->source = (char *)malloc(ft_strlen(source) + 1)) == NULL)
-		return (-1);
-	ft_strcpy(new_string->source, source);
-	new_string->source_type = 2;
-	if ((new_lst = ft_lstnew(&new_string, sizeof(t_string))) == NULL)
-		return (-1);
-	if (read_file(new_string))
-		return (-1);
+	t_list	*tmp_lst;
+
+	tmp_lst = data->strings;
+	if (data->strings)
+	{
+		while (data->strings)
+		{
+			if (ft_strcmp(filename, ((t_string *)(data->strings->content))->source) == 0)
+			{
+				data->strings = tmp_lst;
+				return (1);
+			}
+			data->strings = data->strings->next;
+		}
+		data->strings = tmp_lst;
+		while (data->strings->next)
+			data->strings = data->strings->next;
+	}
 	return (0);
-}*/
+}
 
 int 		handle_files(t_data *data, char *filename)
 {
@@ -114,43 +124,23 @@ int 		handle_files(t_data *data, char *filename)
 	t_string 	new_string;
 
 	new_lst = NULL;
-	tmp_lst = NULL;
+	tmp_lst = data->strings;
+	if (already_exists(data, filename))
+		return (-2);
+	if ((new_string.source = (char *)malloc(ft_strlen(filename) + 1)) == NULL)
+		return (-1);
+	ft_strcpy(new_string.source, filename);
+	new_string.source_type = 2;
+	if ((new_lst = ft_lstnew(&new_string, sizeof(t_string))) == NULL)
+		return (-1);
+	if (read_file((t_string *)(new_lst->content)))
+		return (-1);
 	if (data->strings)
 	{
-		tmp_lst = data->strings;
-		while (data->strings->next)
-		{
-			if (ft_strcmp(filename, ((t_string *)(data->strings->content))->source) == 0)
-				return (-2);
-			data->strings = data->strings->next;
-		}
-		if (ft_strcmp(filename, ((t_string *)(data->strings->content))->source) == 0)
-		{
-			data->strings = tmp_lst;
-			return (-2);
-		}
-		if ((new_string.source = (char *)malloc(ft_strlen(filename) + 1)) == NULL)
-			return (-1);
-		ft_strcpy(new_string.source, filename);
-		new_string.source_type = 2;
-		if ((new_lst = ft_lstnew(&new_string, sizeof(t_string))) == NULL)
-			return (-1);
-		if (read_file((t_string *)(new_lst->content)))
-			return (-1);
 		data->strings->next = new_lst;
 		data->strings = tmp_lst;
 	}
 	else
-	{
-		if ((new_string.source = (char *)malloc(ft_strlen(filename) + 1)) == NULL)
-			return (-1);
-		ft_strcpy(new_string.source, filename);
-		new_string.source_type = 2;
-		if ((new_lst = ft_lstnew(&new_string, sizeof(t_string))) == NULL)
-			return (-1);
-		if (read_file((t_string *)(new_lst->content)))
-			return (-1);
 		data->strings = new_lst;
-	}
 	return (0);
 }

@@ -18,11 +18,8 @@ static t_fct	g_fcts[] = {
 	{NULL, NULL, NULL}
 };
 
-static int	get_hash_or_file(t_data *data, char *hash_or_file)
+static int	get_hash_or_file(t_data *data, char *hash_or_file, int i)
 {
-	int i;
-
-	i = 0;
 	if (data->hash == NULL)
 	{
 		while (g_fcts[i].name)
@@ -49,17 +46,33 @@ static int	get_hash_or_file(t_data *data, char *hash_or_file)
 
 static int	get_strings(t_data *data, char *str)
 {
-	(void)data;
-	(void)str;
-	// TODO
+	t_list		*tmp_lst;
+	t_list		*new_lst;
+	t_string 	new_string;
+
+	new_lst = NULL;
+	tmp_lst = data->strings;
+	while (data->strings->next)
+		data->strings = data->strings->next;
+	new_string.source = NULL;
+	new_string.source_type = 0;
+	if ((new_string.string = (char *)malloc(ft_strlen(str) + 1)) == NULL)
+		return (-1);
+	ft_strcpy(new_string.string, str);
+	if ((new_lst = ft_lstnew(&new_string, sizeof(t_string))) == NULL)
+		return (-1);
+	if (data->strings)
+	{
+		data->strings->next = new_lst;
+		data->strings = tmp_lst;
+	}
+	else
+		data->strings = new_lst;
 	return (0);
 }
 
-static int	parse_args(int ac, char **av, t_data *data)
+static int	parse_args(int ac, char **av, t_data *data, int i)
 {
-	int		i;
-
-	i = 0;
 	if (ac > 1)
 		while (++i < ac)
 		{
@@ -67,7 +80,6 @@ static int	parse_args(int ac, char **av, t_data *data)
 			{
 				if (read_stdin(data))
 					return (-1);
-				data->p_opt = 1;
 			}
 			else if (ft_strcmp(av[i], "-q") == 0)
 				data->q_opt = 1;
@@ -80,7 +92,7 @@ static int	parse_args(int ac, char **av, t_data *data)
 			}
 			else if (ft_strcmp(av[i], "-h") == 0)
 				print_help(1, g_fcts);
-			else if (get_hash_or_file(data, av[i]))
+			else if (get_hash_or_file(data, av[i], 0))
 				return (-1);
 		}
 	return (0);
@@ -88,7 +100,7 @@ static int	parse_args(int ac, char **av, t_data *data)
 
 static int	init_env(t_data *data, int ac, char **av)
 {
-	if (parse_args(ac, av, data))
+	if (parse_args(ac, av, data, 0))
 		return (-1);
 	if (data->hash && data->strings == NULL)
 	{
