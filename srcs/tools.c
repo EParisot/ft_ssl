@@ -20,10 +20,11 @@ void				del(void *addr, size_t size)
 
 void				clean_data(t_data *data)
 {
-	if (data->files)
+	if (data && data->files)
 		ft_lstdel(&data->files, del);
-	if (data->string)
+	if (data && data->string)
 		free(data->string);
-	free(data->hash);
+	if (data && data->hash)
+		free(data->hash);
 	free(data);
 }

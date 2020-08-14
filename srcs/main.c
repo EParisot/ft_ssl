@@ -18,15 +18,19 @@ static t_fct	g_fcts[] = {
 	{NULL, NULL, NULL}
 };
 
-static void	print_help(void)
+static void	print_help(int usage)
 {
 	int i;
 
 	i = 0;
-	ft_putendl("usage: ./ft_ssl [hash] [opt] [string]");
-	ft_putendl("\nMessage Digest commands");
-	while (g_fcts[i].name)
-		ft_putendl(g_fcts[i++].name);
+	if (usage)
+		ft_putendl("usage: ./ft_ssl [hash] [opt] [string]");
+	else
+	{
+		ft_putendl("\nMessage Digest commands");
+		while (g_fcts[i].name)
+			ft_putendl(g_fcts[i++].name);
+	}
 }
 
 static int	set_hash_or_file(t_data *data, char *hash_or_file)
@@ -34,16 +38,24 @@ static int	set_hash_or_file(t_data *data, char *hash_or_file)
 	int i;
 
 	i = 0;
-	while (g_fcts[i].name)
+	if (data->hash == NULL)
 	{
-		if (ft_strcmp(g_fcts[i].name, hash_or_file) == 0)
+		while (g_fcts[i].name)
 		{
-			if ((data->hash = (t_fct *)malloc(sizeof(t_fct))) == NULL)
-				return (-1);
-			ft_memmove(data->hash, &g_fcts[i], sizeof(t_fct));
-			return (0);
+			if (ft_strcmp(g_fcts[i].name, hash_or_file) == 0)
+			{
+				if ((data->hash = (t_fct *)malloc(sizeof(t_fct))) == NULL)
+					return (-1);
+				ft_memmove(data->hash, &g_fcts[i], sizeof(t_fct));
+				return (0);
+			}
+			++i;
 		}
-		++i;
+		ft_putstr("ft_ssl: Error: '");
+		ft_putstr(hash_or_file);
+		ft_putendl("' is an invalid command.");
+		print_help(0);
+		return (-1);
 	}
 	if (handle_files(data, hash_or_file))
 		return (-1);
@@ -63,7 +75,7 @@ static int	get_s_opt(int ac, char **av, t_data *data)
 		data->string[len] = 0;
 	}
 	else
-		print_help();
+		print_help(1);
 	return (0);
 }
 
@@ -84,7 +96,7 @@ static int	parse_args(int ac, char **av, t_data *data)
 			else if (ft_strcmp(av[i], "-s") == 0 && ac > i + 1)
 				data->s_opt = i++;
 			else if (ft_strcmp(av[i], "-h") == 0)
-				print_help();
+				print_help(1);
 			else if (set_hash_or_file(data, av[i]))
 				return (-1);
 		}
@@ -94,28 +106,40 @@ static int	parse_args(int ac, char **av, t_data *data)
 	return (0);
 }
 
+static int	init_env(t_data *data, int ac, char **av)
+{
+	if (parse_args(ac, av, data))
+		return (-1);
+	if (data->hash && data->files)
+	{
+		if (read_files(data))
+			ft_putendl("Error reading file");
+	}
+	else if ((data->hash && \
+		(data->s_opt == 0 && data->string == NULL && data->files == NULL)) ||\
+		 														data->p_opt)
+	{
+		if (read_stdin(data))
+			return (-1);
+	}
+	else if (data->hash == NULL)
+	{
+		print_help(1);
+		return (-1);
+	}
+	return (0);
+}
+
 int			main(int ac, char **av)
 {
 	t_data	*data;
 	int		ret;
 
-	ret = 0;
 	if ((data = (t_data *)malloc(sizeof(t_data))) == NULL)
 		return (-1);
 	ft_memset(data, 0, sizeof(t_data));
-	if (parse_args(ac, av, data))
-		return (-1);
-	if (data->s_opt == 0 && data->string == NULL && data->files)
-	{
-		if (read_files(data))
-			ft_putendl("Error reading file");
-	}
-	else if (data->s_opt == 0 && data->string == NULL)
-	{
-		if (read_stdin(data))
-			ret = -1;
-	}
-	if (hash_string(data))
+	ret = init_env(data, ac, av);
+	if (ret == 0 && hash_string(data))
 		ret = -1;
 	clean_data(data);
 	return (ret);
