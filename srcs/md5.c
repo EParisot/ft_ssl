@@ -14,6 +14,6 @@
 
 int			md5(char *str)
 {
-	ft_putendl(str);
+	ft_putstr(str);
 	return (0);
 }

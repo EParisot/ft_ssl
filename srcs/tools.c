@@ -30,17 +30,17 @@ void			print_help(int usage, t_fct *g_fcts)
 void			del(void *addr, size_t size)
 {
 	(void)size;
+	if (((t_string *)addr)->string)
+		free(((t_string *)addr)->string);
+	if (((t_string *)addr)->source)
+		free(((t_string *)addr)->source);
 	free(addr);
 }
 
 void			clean_data(t_data *data)
 {
-	if (data && data->files)
-		ft_lstdel(&data->files, del);
-	if (data && data->string)
-		free(data->string);
-	if (data && data->stdin)
-		free(data->stdin);
+	if (data && data->strings)
+		ft_lstdel(&data->strings, del);
 	if (data && data->hash)
 		free(data->hash);
 	free(data);

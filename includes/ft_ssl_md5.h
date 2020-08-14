@@ -30,6 +30,13 @@ typedef struct		s_fct
 	int				(*func_ptr)(char *str);
 }					t_fct;
 
+typedef struct		s_string
+{
+	char			*string;
+	char			*source;
+	int				source_type;
+}					t_string;
+
 typedef struct		s_data
 {
 	int				p_opt;
@@ -37,14 +44,11 @@ typedef struct		s_data
 	int				r_opt;
 	int				s_opt;
 	t_fct			*hash;
-	char			*string;
-	char			*stdin;
-	t_list			*files;
+	t_list			*strings;
 }					t_data;
 
 int					read_stdin(t_data *data);
 int 				handle_files(t_data *data, char *filename);
-int					read_files(t_data *data);
 int					hash_string(t_data *data);
 int					md5(char *str);
 int					sha256(char *str);

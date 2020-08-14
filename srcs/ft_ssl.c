@@ -14,14 +14,28 @@
 
 int		hash_string(t_data *data)
 {
-	if (data->stdin)
-		data->hash->func_ptr(data->stdin);
-	if (data->string)
-		data->hash->func_ptr(data->string);
-	if (data->files)
+	t_list	*tmp_lst;
+
+	tmp_lst = data->strings;
+	while (data->strings)
 	{
-		if (read_files(data))
-			ft_putendl("Error reading file");
+		if (data->r_opt == 0 && data->q_opt == 0)
+		{
+			ft_putstr(data->hash->print_name);
+			ft_putchar(' ');
+			ft_putstr(((t_string *)(data->strings->content))->source);
+			ft_putchar(' ');
+		}
+		if (data->hash && data->hash->func_ptr(((t_string *)(data->strings->content))->string))
+			return (-1);
+		if (data->r_opt == 1 && data->q_opt == 0)
+		{
+			ft_putchar(' ');
+			ft_putendl(((t_string *)(data->strings->content))->source);
+		}
+		ft_putchar('\n');
+		data->strings = data->strings->next;
 	}
+	data->strings = tmp_lst;
 	return (0);
 }

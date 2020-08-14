@@ -18,7 +18,7 @@ static t_fct	g_fcts[] = {
 	{NULL, NULL, NULL}
 };
 
-static int	set_hash_or_file(t_data *data, char *hash_or_file)
+static int	get_hash_or_file(t_data *data, char *hash_or_file)
 {
 	int i;
 
@@ -42,25 +42,16 @@ static int	set_hash_or_file(t_data *data, char *hash_or_file)
 		print_help(0, g_fcts);
 		return (-1);
 	}
-	if (handle_files(data, hash_or_file))
+	if (handle_files(data, hash_or_file) == -1)
 		return (-1);
 	return (0);
 }
 
-static int	get_s_opt(int ac, char **av, t_data *data)
+static int	get_strings(t_data *data, char *str)
 {
-	int len;
-
-	len = 0;
-	if (ac > data->s_opt + 1 && (len = ft_strlen(av[data->s_opt + 1])))
-	{
-		if ((data->string = (char *)malloc(len + 1)) == NULL)
-			return (-1);
-		ft_strcpy(data->string, av[data->s_opt + 1]);
-		data->string[len] = 0;
-	}
-	else
-		print_help(1, g_fcts);
+	(void)data;
+	(void)str;
+	// TODO
 	return (0);
 }
 
@@ -73,21 +64,25 @@ static int	parse_args(int ac, char **av, t_data *data)
 		while (++i < ac)
 		{
 			if (ft_strcmp(av[i], "-p") == 0)
+			{
+				if (read_stdin(data))
+					return (-1);
 				data->p_opt = 1;
+			}
 			else if (ft_strcmp(av[i], "-q") == 0)
 				data->q_opt = 1;
 			else if (ft_strcmp(av[i], "-r") == 0)
 				data->r_opt = 1;
 			else if (ft_strcmp(av[i], "-s") == 0 && ac > i + 1)
-				data->s_opt = i++;
+			{
+				if (get_strings(data, av[++i]))
+					return (-1);
+			}
 			else if (ft_strcmp(av[i], "-h") == 0)
 				print_help(1, g_fcts);
-			else if (set_hash_or_file(data, av[i]))
+			else if (get_hash_or_file(data, av[i]))
 				return (-1);
 		}
-	if (data->s_opt)
-		if (get_s_opt(ac, av, data))
-			return (-1);
 	return (0);
 }
 
@@ -95,9 +90,7 @@ static int	init_env(t_data *data, int ac, char **av)
 {
 	if (parse_args(ac, av, data))
 		return (-1);
-	if ((data->hash && \
-		(data->s_opt == 0 && data->string == NULL && data->files == NULL)) ||\
-		 														data->p_opt)
+	if (data->hash && data->strings == NULL)
 	{
 		if (read_stdin(data))
 			return (-1);

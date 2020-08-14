@@ -12,7 +12,7 @@
 
 #include "../includes/ft_ssl_md5.h"
 
-int			read_loop(t_data *data, char *buf)
+int			read_loop(char **str, char *buf)
 {
 	static int	i;
 	char	*str_tmp;
@@ -20,43 +20,56 @@ int			read_loop(t_data *data, char *buf)
 
 	len = 0;
 	str_tmp = NULL;
-	if (data->stdin)
+	if (*str)
 	{
-		len = ft_strlen(data->stdin);
+		len = ft_strlen(*str);
 		if ((str_tmp = (char *)malloc(len + 1)) == NULL)
 			return (-1);
-		ft_memmove(str_tmp, data->stdin, len);
-		free(data->stdin);
+		ft_memmove(str_tmp, *str, len);
+		free(*str);
 	}
-	if ((data->stdin = (char *)malloc(BUF_SIZE * ++i + 1)) == NULL)
+	if ((*str = (char *)malloc(BUF_SIZE * ++i + 1)) == NULL)
 		return (-1);
 	if (len)
 	{
-		ft_memmove(data->stdin, str_tmp, len);
-		ft_strcat(data->stdin, buf);
+		ft_memmove(*str, str_tmp, len);
+		ft_strcat(*str, buf);
 	}
 	else
-		ft_memmove(data->stdin, buf, BUF_SIZE);
+		ft_memmove(*str, buf, BUF_SIZE);
 	free(str_tmp);
 	return (0);
 }
 
 int			read_stdin(t_data *data)
 {
-	char 	buf[BUF_SIZE];
+	char 		buf[BUF_SIZE];
+	t_string 	new_string;
+	t_list		*new_lst;
 
 	ft_memset(buf, 0, BUF_SIZE);
+	if ((new_string.source = (char *)malloc(8)) == NULL)
+		return (-1);
+	ft_strcpy(new_string.source, "(stdin)");
+	new_string.string = NULL;
+	new_string.source_type = 1;
 	while(read(STDIN_FILENO, &buf, BUF_SIZE))
 	{
-		if (read_loop(data, buf))
+		if (read_loop(&new_string.string, buf))
 			return (-1);
 		ft_memset(buf, 0, BUF_SIZE);
 	}
+	if ((new_lst = ft_lstnew(&new_string, sizeof(t_string))) == NULL)
+		return (-1);
+	if (data->strings == NULL)
+		data->strings = new_lst;
+	else
+		data->strings->next = new_lst;
 	ft_putchar('\n');
 	return (0);
 }
 
-int			read_file(t_data *data, char *filename)
+static int	read_file(t_string *file)
 {
 	int 	fd;
 	char 	c;
@@ -65,70 +78,79 @@ int			read_file(t_data *data, char *filename)
 
 	len = 0;
 	i = 0;
-	if ((fd = open(filename, O_RDONLY)) == -1)
+	if ((fd = open(file->source, O_RDONLY)) == -1)
 		return (-1);
 	while (read(fd, &c, 1))
 		++len;
 	close(fd);
-	if ((data->string = (char *)malloc(len + 1)) == NULL)
+	if ((file->string = (char *)malloc(len + 1)) == NULL)
 		return (-1);
-	if ((fd = open(filename, O_RDONLY)) == -1)
+	if ((fd = open(file->source, O_RDONLY)) == -1)
 		return (-1);
 	while (read(fd, &c, 1))
-		data->string[i++] = c;
-	data->string[i] = 0;
+		file->string[i++] = c;
+	file->string[i] = 0;
 	close(fd);
 	return (0);
 }
 
-int			read_files(t_data *data)
+/*static int	set_new_string(t_list *new_lst, t_string *new_string, char *source)
 {
-	t_list	*tmp_lst;
-
-	tmp_lst = data->files;
-	while (data->files)
-	{
-		if (read_file(data, data->files->content))
-		{
-			data->files = tmp_lst;
-			return (-1);
-		}
-		if (data->hash && data->hash->func_ptr(data->string))
-			return (-1);
-		if (data->string)
-		{
-			free(data->string);
-			data->string = NULL;
-		}
-		data->files = data->files->next;
-	}
-	data->files = tmp_lst;
+	if ((new_string->source = (char *)malloc(ft_strlen(source) + 1)) == NULL)
+		return (-1);
+	ft_strcpy(new_string->source, source);
+	new_string->source_type = 2;
+	if ((new_lst = ft_lstnew(&new_string, sizeof(t_string))) == NULL)
+		return (-1);
+	if (read_file(new_string))
+		return (-1);
 	return (0);
-}
+}*/
 
 int 		handle_files(t_data *data, char *filename)
 {
-	t_list	*tmp_lst;
-	t_list	*new_lst;
+	t_list		*tmp_lst;
+	t_list		*new_lst;
+	t_string 	new_string;
 
 	new_lst = NULL;
 	tmp_lst = NULL;
-	if (data->files)
+	if (data->strings)
 	{
-		tmp_lst = data->files;
-		while (data->files->next)
+		tmp_lst = data->strings;
+		while (data->strings->next)
 		{
-			if (ft_strcmp(filename, data->files->content) == 0)
+			if (ft_strcmp(filename, ((t_string *)(data->strings->content))->source) == 0)
 				return (-2);
-			data->files = data->files->next;
+			data->strings = data->strings->next;
 		}
-		if ((new_lst = ft_lstnew(filename, ft_strlen(filename) + 1)) == NULL)
+		if (ft_strcmp(filename, ((t_string *)(data->strings->content))->source) == 0)
+		{
+			data->strings = tmp_lst;
+			return (-2);
+		}
+		if ((new_string.source = (char *)malloc(ft_strlen(filename) + 1)) == NULL)
 			return (-1);
-		data->files->next = new_lst;
-		data->files = tmp_lst;
+		ft_strcpy(new_string.source, filename);
+		new_string.source_type = 2;
+		if ((new_lst = ft_lstnew(&new_string, sizeof(t_string))) == NULL)
+			return (-1);
+		if (read_file((t_string *)(new_lst->content)))
+			return (-1);
+		data->strings->next = new_lst;
+		data->strings = tmp_lst;
 	}
 	else
-		if ((data->files = ft_lstnew(filename, ft_strlen(filename) + 1)) == NULL)
+	{
+		if ((new_string.source = (char *)malloc(ft_strlen(filename) + 1)) == NULL)
 			return (-1);
+		ft_strcpy(new_string.source, filename);
+		new_string.source_type = 2;
+		if ((new_lst = ft_lstnew(&new_string, sizeof(t_string))) == NULL)
+			return (-1);
+		if (read_file((t_string *)(new_lst->content)))
+			return (-1);
+		data->strings = new_lst;
+	}
 	return (0);
 }
