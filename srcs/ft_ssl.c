@@ -14,6 +14,14 @@
 
 int		hash_string(t_data *data)
 {
-	data->hash->func_ptr((void*)data);
+	if (data->stdin)
+		data->hash->func_ptr(data->stdin);
+	if (data->string)
+		data->hash->func_ptr(data->string);
+	if (data->files)
+	{
+		if (read_files(data))
+			ft_putendl("Error reading file");
+	}
 	return (0);
 }

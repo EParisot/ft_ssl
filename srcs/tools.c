@@ -12,18 +12,35 @@
 
 #include "../includes/ft_ssl_md5.h"
 
-void				del(void *addr, size_t size)
+void			print_help(int usage, t_fct *g_fcts)
+{
+	int i;
+
+	i = 0;
+	if (usage)
+		ft_putendl("usage: ./ft_ssl [hash] [opt] [string]");
+	else
+	{
+		ft_putendl("\nMessage Digest commands");
+		while (g_fcts[i].name)
+			ft_putendl(g_fcts[i++].name);
+	}
+}
+
+void			del(void *addr, size_t size)
 {
 	(void)size;
 	free(addr);
 }
 
-void				clean_data(t_data *data)
+void			clean_data(t_data *data)
 {
 	if (data && data->files)
 		ft_lstdel(&data->files, del);
 	if (data && data->string)
 		free(data->string);
+	if (data && data->stdin)
+		free(data->stdin);
 	if (data && data->hash)
 		free(data->hash);
 	free(data);

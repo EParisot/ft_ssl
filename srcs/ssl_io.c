@@ -20,23 +20,23 @@ int			read_loop(t_data *data, char *buf)
 
 	len = 0;
 	str_tmp = NULL;
-	if (data->string)
+	if (data->stdin)
 	{
-		len = ft_strlen(data->string);
+		len = ft_strlen(data->stdin);
 		if ((str_tmp = (char *)malloc(len + 1)) == NULL)
 			return (-1);
-		ft_memmove(str_tmp, data->string, len);
-		free(data->string);
+		ft_memmove(str_tmp, data->stdin, len);
+		free(data->stdin);
 	}
-	if ((data->string = (char *)malloc(BUF_SIZE * ++i + 1)) == NULL)
+	if ((data->stdin = (char *)malloc(BUF_SIZE * ++i + 1)) == NULL)
 		return (-1);
 	if (len)
 	{
-		ft_memmove(data->string, str_tmp, len);
-		ft_strcat(data->string, buf);
+		ft_memmove(data->stdin, str_tmp, len);
+		ft_strcat(data->stdin, buf);
 	}
 	else
-		ft_memmove(data->string, buf, BUF_SIZE);
+		ft_memmove(data->stdin, buf, BUF_SIZE);
 	free(str_tmp);
 	return (0);
 }
@@ -93,7 +93,7 @@ int			read_files(t_data *data)
 			data->files = tmp_lst;
 			return (-1);
 		}
-		if (hash_string(data))
+		if (data->hash && data->hash->func_ptr(data->string))
 			return (-1);
 		if (data->string)
 		{

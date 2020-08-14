@@ -12,8 +12,8 @@
 
 #include "../includes/ft_ssl_md5.h"
 
-int			md5(void *data)
+int			md5(char *str)
 {
-	ft_putendl(((t_data *)data)->string);
+	ft_putendl(str);
 	return (0);
 }

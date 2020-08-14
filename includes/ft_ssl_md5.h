@@ -27,7 +27,7 @@ typedef struct		s_fct
 {
 	char			*name;
 	char			*print_name;
-	int				(*func_ptr)(void *data);
+	int				(*func_ptr)(char *str);
 }					t_fct;
 
 typedef struct		s_data
@@ -38,6 +38,7 @@ typedef struct		s_data
 	int				s_opt;
 	t_fct			*hash;
 	char			*string;
+	char			*stdin;
 	t_list			*files;
 }					t_data;
 
@@ -45,8 +46,9 @@ int					read_stdin(t_data *data);
 int 				handle_files(t_data *data, char *filename);
 int					read_files(t_data *data);
 int					hash_string(t_data *data);
-int					md5(void *data);
-int					sha256(void *data);
+int					md5(char *str);
+int					sha256(char *str);
+void				print_help(int usage, t_fct *g_fcts);
 void				clean_data(t_data *data);
 void				del(void *addr, size_t size);
 
