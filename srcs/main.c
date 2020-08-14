@@ -44,7 +44,7 @@ static int	get_hash_or_file(t_data *data, char *hash_or_file, int i)
 	return (0);
 }
 
-static int	get_strings(t_data *data, char *str)
+static int	get_string(t_data *data, char *str)
 {
 	t_list		*tmp_lst;
 	t_list		*new_lst;
@@ -80,6 +80,7 @@ static int	parse_args(int ac, char **av, t_data *data, int i)
 			{
 				if (read_stdin(data))
 					return (-1);
+				data->p_opt = 1;
 			}
 			else if (ft_strcmp(av[i], "-q") == 0)
 				data->q_opt = 1;
@@ -87,7 +88,7 @@ static int	parse_args(int ac, char **av, t_data *data, int i)
 				data->r_opt = 1;
 			else if (ft_strcmp(av[i], "-s") == 0 && ac > i + 1)
 			{
-				if (get_strings(data, av[++i]))
+				if (get_string(data, av[++i]))
 					return (-1);
 			}
 			else if (ft_strcmp(av[i], "-h") == 0)

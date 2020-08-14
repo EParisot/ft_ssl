@@ -42,7 +42,6 @@ typedef struct		s_data
 	int				p_opt;
 	int				q_opt;
 	int				r_opt;
-	int				s_opt;
 	t_fct			*hash;
 	t_list			*strings;
 }					t_data;

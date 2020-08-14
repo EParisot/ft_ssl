@@ -65,7 +65,6 @@ int			read_stdin(t_data *data)
 		data->strings = new_lst;
 	else
 		data->strings->next = new_lst;
-	ft_putchar('\n');
 	return (0);
 }
 
