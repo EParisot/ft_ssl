@@ -12,11 +12,11 @@
 
 #include "../includes/ft_ssl_md5.h"
 
-int			read_loop(char **str, char *buf)
+static int		read_loop(char **str, char *buf)
 {
 	static int	i;
-	char	*str_tmp;
-	int		len;
+	char		*str_tmp;
+	int			len;
 
 	len = 0;
 	str_tmp = NULL;
@@ -41,7 +41,7 @@ int			read_loop(char **str, char *buf)
 	return (0);
 }
 
-int			read_stdin(t_data *data)
+static int		read_stdin(t_data *data)
 {
 	char 		buf[BUF_SIZE];
 	t_string 	new_string;
@@ -68,7 +68,7 @@ int			read_stdin(t_data *data)
 	return (0);
 }
 
-static int	read_file(t_string *file)
+static int		read_file(t_string *file)
 {
 	int 	fd;
 	char 	c;
@@ -93,7 +93,7 @@ static int	read_file(t_string *file)
 	return (0);
 }
 
-static int	already_exists(t_data *data, char *filename)
+static int		already_exists(t_data *data, char *filename)
 {
 	t_list	*tmp_lst;
 
@@ -117,7 +117,7 @@ static int	already_exists(t_data *data, char *filename)
 	return (0);
 }
 
-int 		handle_files(t_data *data, char *filename)
+int 			handle_files(t_data *data, char *filename)
 {
 	t_list		*tmp_lst;
 	t_list		*new_lst;
