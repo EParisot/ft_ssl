@@ -55,7 +55,7 @@ static int	get_string(t_data *data, char *str)
 	while (data->strings && data->strings->next)
 		data->strings = data->strings->next;
 	new_string.source = NULL;
-	new_string.source_type = 0;
+	new_string.source_type = STRING;
 	if ((new_string.string = (char *)malloc(ft_strlen(str) + 1)) == NULL)
 		return (-1);
 	ft_strcpy(new_string.string, str);

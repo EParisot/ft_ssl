@@ -23,6 +23,8 @@
 
 # define BUF_SIZE 64
 
+enum				source_type{STRING, STDIN, FILE};
+
 typedef struct		s_fct
 {
 	char			*name;

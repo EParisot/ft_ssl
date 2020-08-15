@@ -52,7 +52,7 @@ int			read_stdin(t_data *data)
 		return (-1);
 	ft_strcpy(new_string.source, "(stdin)");
 	new_string.string = NULL;
-	new_string.source_type = 1;
+	new_string.source_type = STDIN;
 	while(read(STDIN_FILENO, &buf, BUF_SIZE))
 	{
 		if (read_loop(&new_string.string, buf))
@@ -129,7 +129,7 @@ int 		handle_files(t_data *data, char *filename)
 	if ((new_string.source = (char *)malloc(ft_strlen(filename) + 1)) == NULL)
 		return (-1);
 	ft_strcpy(new_string.source, filename);
-	new_string.source_type = 2;
+	new_string.source_type = FILE;
 	if ((new_lst = ft_lstnew(&new_string, sizeof(t_string))) == NULL)
 		return (-1);
 	if (read_file((t_string *)(new_lst->content)))
