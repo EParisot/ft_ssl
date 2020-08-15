@@ -43,7 +43,7 @@ static int		read_loop(char **str, char *buf)
 
 static int		read_stdin(t_data *data)
 {
-	char 		buf[BUF_SIZE];
+	char 		buf[64];
 	t_string 	new_string;
 	t_list		*new_lst;
 
