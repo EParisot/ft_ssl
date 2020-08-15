@@ -42,8 +42,8 @@ static int		read_loop(char **str, char *buf, int i)
 
 int				read_stdin(t_data *data)
 {
-	char 		buf[BUF_SIZE];
-	t_string 	new_string;
+	char		buf[BUF_SIZE];
+	t_string	new_string;
 	t_list		*new_lst;
 	int			i;
 
@@ -54,7 +54,7 @@ int				read_stdin(t_data *data)
 	ft_strcpy(new_string.source, "(stdin)");
 	new_string.string = NULL;
 	new_string.source_type = STDIN;
-	while(read(STDIN_FILENO, &buf, BUF_SIZE))
+	while (read(STDIN_FILENO, &buf, BUF_SIZE))
 	{
 		if (read_loop(&new_string.string, buf, ++i))
 			return (-1);
@@ -71,8 +71,8 @@ int				read_stdin(t_data *data)
 
 static int		read_file(t_string *file)
 {
-	int 	fd;
-	char 	c;
+	int		fd;
+	char	c;
 	int		len;
 	int		i;
 
@@ -118,11 +118,11 @@ static int		already_exists(t_data *data, char *filename)
 	return (0);
 }
 
-int 			handle_files(t_data *data, char *filename)
+int				handle_files(t_data *data, char *filename)
 {
 	t_list		*tmp_lst;
 	t_list		*new_lst;
-	t_string 	new_string;
+	t_string	new_string;
 
 	new_lst = NULL;
 	tmp_lst = data->strings;
