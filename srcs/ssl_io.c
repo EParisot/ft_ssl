@@ -47,17 +47,17 @@ static int		read_stdin(t_data *data)
 	t_string 	new_string;
 	t_list		*new_lst;
 
-	ft_memset(buf, 0, BUF_SIZE);
+	ft_memset(buf, 0, 64);
 	if ((new_string.source = (char *)malloc(8)) == NULL)
 		return (-1);
 	ft_strcpy(new_string.source, "(stdin)");
 	new_string.string = NULL;
 	new_string.source_type = STDIN;
-	while(read(STDIN_FILENO, &buf, BUF_SIZE))
+	while(read(STDIN_FILENO, &buf, 64))
 	{
 		if (read_loop(&new_string.string, buf))
 			return (-1);
-		ft_memset(buf, 0, BUF_SIZE);
+		ft_memset(buf, 0, 64);
 	}
 	if ((new_lst = ft_lstnew(&new_string, sizeof(t_string))) == NULL)
 		return (-1);
