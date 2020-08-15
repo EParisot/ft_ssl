@@ -12,9 +12,8 @@
 
 #include "../includes/ft_ssl_md5.h"
 
-static int		read_loop(char **str, char *buf)
+static int		read_loop(char **str, char *buf, int i)
 {
-	static int	i;
 	char		*str_tmp;
 	int			len;
 
@@ -28,7 +27,7 @@ static int		read_loop(char **str, char *buf)
 		ft_memmove(str_tmp, *str, len);
 		free(*str);
 	}
-	if ((*str = (char *)malloc(BUF_SIZE * (++i) + 1)) == NULL)
+	if ((*str = (char *)malloc(BUF_SIZE * i + 1)) == NULL)
 		return (-1);
 	if (len)
 	{
@@ -46,7 +45,9 @@ int				read_stdin(t_data *data)
 	char 		buf[BUF_SIZE];
 	t_string 	new_string;
 	t_list		*new_lst;
+	int			i;
 
+	i = 0;
 	ft_memset(buf, 0, BUF_SIZE);
 	if ((new_string.source = (char *)malloc(8)) == NULL)
 		return (-1);
@@ -55,7 +56,7 @@ int				read_stdin(t_data *data)
 	new_string.source_type = STDIN;
 	while(read(STDIN_FILENO, &buf, BUF_SIZE))
 	{
-		if (read_loop(&new_string.string, buf))
+		if (read_loop(&new_string.string, buf, ++i))
 			return (-1);
 		ft_memset(buf, 0, BUF_SIZE);
 	}
