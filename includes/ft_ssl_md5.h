@@ -23,11 +23,16 @@
 
 # define BUF_SIZE 64
 
+# define A 0x67452301
+# define B 0xefcdab89
+# define C 0x98badcfe
+# define D 0x10325476
+
 typedef enum		e_source_type
 {
-	STRING,
-	STDIN,
-	FILE
+	_STRING,
+	_STDIN,
+	_FILE
 }					t_source_type;
 
 typedef struct		s_fct

@@ -14,16 +14,16 @@
 
 static void	prefix(t_data *data, int source_type)
 {
-	if (source_type == STDIN && data->p_opt == 1 && data->q_opt == 0)
+	if (source_type == _STDIN && data->p_opt == 1 && data->q_opt == 0)
 		ft_putendl(((t_string *)(data->strings->content))->string);
-	else if (source_type != STDIN && data->r_opt == 0 && data->q_opt == 0)
+	else if (source_type != _STDIN && data->r_opt == 0 && data->q_opt == 0)
 	{
 		ft_putstr(data->hash->print_name);
 		if (((t_string *)(data->strings->content))->source ||
 			((t_string *)(data->strings->content))->string)
 		{
 			ft_putstr(" (");
-			if (source_type == FILE)
+			if (source_type == _FILE)
 				ft_putstr(((t_string *)(data->strings->content))->source);
 			else
 			{
@@ -39,7 +39,7 @@ static void	prefix(t_data *data, int source_type)
 
 static void	suffix(t_data *data, int source_type)
 {
-	if (source_type != STDIN && data->r_opt == 1 && data->q_opt == 0)
+	if (source_type != _STDIN && data->r_opt == 1 && data->q_opt == 0)
 	{
 		ft_putchar(' ');
 		ft_putendl(((t_string *)(data->strings->content))->source);
