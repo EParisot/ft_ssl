@@ -28,7 +28,7 @@ static int		read_loop(char **str, char *buf)
 		ft_memmove(str_tmp, *str, len);
 		free(*str);
 	}
-	if ((*str = (char *)malloc(BUF_SIZE * i + 1)) == NULL)
+	if ((*str = (char *)malloc(BUF_SIZE * (++i) + 1)) == NULL)
 		return (-1);
 	if (len)
 	{
