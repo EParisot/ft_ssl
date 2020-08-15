@@ -12,7 +12,7 @@
 
 #include "../includes/ft_ssl_md5.h"
 
-static int		read_loop(char **str, char *buf, int i)
+static int		read_loop(char **str, char *buf)
 {
 	char		*str_tmp;
 	int			len;
@@ -25,30 +25,29 @@ static int		read_loop(char **str, char *buf, int i)
 		if ((str_tmp = (char *)malloc(len + 1)) == NULL)
 			return (-1);
 		ft_memmove(str_tmp, *str, len);
+		str_tmp[len] = 0;
 		free(*str);
 	}
-	if ((*str = (char *)malloc(BUF_SIZE * i + 1)) == NULL)
-		return (-1);
 	if (len)
-	{
-		ft_memmove(*str, str_tmp, len);
-		ft_strcat(*str, buf);
-	}
+		*str = ft_strjoin(str_tmp, buf);
 	else
+	{
+		if ((*str = (char *)malloc(BUF_SIZE + 1)) == NULL)
+			return (-1);
 		ft_memmove(*str, buf, BUF_SIZE);
+		(*str)[BUF_SIZE] = 0;
+	}
 	free(str_tmp);
 	return (0);
 }
 
 int				read_stdin(t_data *data)
 {
-	char		buf[BUF_SIZE];
+	char		buf[BUF_SIZE + 1];
 	t_string	new_string;
 	t_list		*new_lst;
-	int			i;
 
-	i = 0;
-	ft_memset(buf, 0, BUF_SIZE);
+	ft_memset(buf, 0, BUF_SIZE + 1);
 	if ((new_string.source = (char *)malloc(8)) == NULL)
 		return (-1);
 	ft_strcpy(new_string.source, "(stdin)");
@@ -56,9 +55,9 @@ int				read_stdin(t_data *data)
 	new_string.source_type = STDIN;
 	while (read(STDIN_FILENO, &buf, BUF_SIZE))
 	{
-		if (read_loop(&new_string.string, buf, ++i))
+		if (read_loop(&new_string.string, buf))
 			return (-1);
-		ft_memset(buf, 0, BUF_SIZE);
+		ft_memset(buf, 0, BUF_SIZE + 1);
 	}
 	if ((new_lst = ft_lstnew(&new_string, sizeof(t_string))) == NULL)
 		return (-1);
