@@ -21,7 +21,7 @@ void			print_help(int usage, t_fct *g_fcts)
 		ft_putendl("usage: ./ft_ssl [hash] [opt] [string]");
 	else
 	{
-		ft_putendl("\nMessage Digest commands");
+		ft_putendl("\nMessage Digest commands:");
 		while (g_fcts[i].name)
 			ft_putendl(g_fcts[i++].name);
 	}

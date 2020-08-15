@@ -52,7 +52,7 @@ static int	get_string(t_data *data, char *str)
 
 	new_lst = NULL;
 	tmp_lst = data->strings;
-	while (data->strings->next)
+	while (data->strings && data->strings->next)
 		data->strings = data->strings->next;
 	new_string.source = NULL;
 	new_string.source_type = 0;
