@@ -23,7 +23,12 @@
 
 # define BUF_SIZE 64
 
-typedef enum		source_type{STRING, STDIN, FILE};
+typedef enum		e_source_type
+{
+	STRING,
+	STDIN,
+	FILE
+}					t_source_type;
 
 typedef struct		s_fct
 {
