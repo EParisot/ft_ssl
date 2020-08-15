@@ -49,7 +49,7 @@ typedef struct		s_data
 }					t_data;
 
 int					read_stdin(t_data *data);
-int 				handle_files(t_data *data, char *filename);
+int					handle_files(t_data *data, char *filename);
 int					hash_string(t_data *data);
 int					md5(char *str);
 int					sha256(char *str);

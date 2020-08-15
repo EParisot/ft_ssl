@@ -48,7 +48,7 @@ static int	get_string(t_data *data, char *str)
 {
 	t_list		*tmp_lst;
 	t_list		*new_lst;
-	t_string 	new_string;
+	t_string	new_string;
 
 	new_lst = NULL;
 	tmp_lst = data->strings;

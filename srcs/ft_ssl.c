@@ -37,7 +37,7 @@ static void	prefix(t_data *data, int source_type)
 	}
 }
 
-static void suffix(t_data *data, int source_type)
+static void	suffix(t_data *data, int source_type)
 {
 	if (source_type != STDIN && data->r_opt == 1 && data->q_opt == 0)
 	{
@@ -54,7 +54,8 @@ int			hash_string(t_data *data)
 	while (data->strings)
 	{
 		prefix(data, ((t_string *)(data->strings->content))->source_type);
-		if (data->hash && data->hash->func_ptr(((t_string *)(data->strings->content))->string))
+		if (data->hash && \
+		data->hash->func_ptr(((t_string *)(data->strings->content))->string))
 			return (-1);
 		suffix(data, ((t_string *)(data->strings->content))->source_type);
 		ft_putchar('\n');
