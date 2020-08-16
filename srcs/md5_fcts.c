@@ -12,24 +12,24 @@
 
 #include "../includes/ft_ssl_md5.h"
 
-int		md5F(int X, int Y, int Z)
+int		md5F(int x, int y, int z)
 {
-	return ((X & Y) | ~X * Z);
+	return ((x & y) | ~x * z);
 }
 
-int		md5G(int X, int Y, int Z)
+int		md5G(int x, int y, int z)
 {
-	return ((X & Z) | Y * ~Z);
+	return ((x & z) | y * ~z);
 }
 
-int		md5H(int X, int Y, int Z)
+int		md5H(int x, int y, int z)
 {
-	return (X ^ Y ^ Z);
+	return (x ^ y ^ z);
 }
 
-int		md5I(int X, int Y, int Z)
+int		md5I(int x, int y, int z)
 {
-	return (Y ^ (X | ~Z));
+	return (y ^ (x | ~z));
 }
 
 uint32_t md5T(int i)
