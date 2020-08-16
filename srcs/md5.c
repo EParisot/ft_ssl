@@ -86,7 +86,7 @@ static int		md5_loop(char *padded_str, int padded_size, char *str_res)
 	int			j;
 	char		buf[16];
 	uint32_t	result[4];
-	
+
 	i = 0;
 	j = 0;
 	result[0] = 0x67452301;
