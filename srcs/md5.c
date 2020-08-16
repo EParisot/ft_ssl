@@ -65,14 +65,17 @@ static int		compute_res(uint32_t *result, char *str_res)
 {
 	int			i;
 	char		*tmp_res;
+	int			tmp_size;
 
+	tmp_size = 0;
 	tmp_res = NULL;
 	i = 0;
 	while (i < 4)
 	{
-		if ((tmp_res = ft_u_itoa_base(result[i], 16)) == NULL)
+		if ((tmp_res = ft_u_itoa_base(ft_swap_32(result[i]), 16)) == NULL)
 			return (-1);
-		ft_strcpy(str_res + (i * 32), tmp_res);
+		ft_strcpy(&str_res[tmp_size], tmp_res);
+		tmp_size += ft_strlen(tmp_res);
 		free(tmp_res);
 		i++;
 	}
@@ -89,10 +92,10 @@ static int		md5_loop(char *padded_str, int padded_size, char *str_res)
 
 	i = 0;
 	j = 0;
-	result[0] = 0x67452301;
-	result[1] = 0xefcdab89;
-	result[2] = 0x98badcfe;
-	result[3] = 0x10325476;
+	result[0] = MD5A;
+	result[1] = MD5B;
+	result[2] = MD5C;
+	result[3] = MD5D;
 	while (i < (padded_size / 16))
 	{
 		while (j < 16)
@@ -103,8 +106,13 @@ static int		md5_loop(char *padded_str, int padded_size, char *str_res)
 		compute_md5(buf, result);
 		i++;
 	}
+	result[0] += MD5A;
+	result[1] += MD5B;
+	result[2] += MD5C;
+	result[3] += MD5D;
 	if (compute_res(result, str_res))
 		return (-1);
+	
 	return (0);
 }
 

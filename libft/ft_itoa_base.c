@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_u_itoa_base.c                                   :+:      :+:    :+:   */
+/*   ft_itoa_base.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eparisot <eparisot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -13,40 +13,48 @@
 #include "libft.h"
 #include <stdlib.h>
 
-static char		*ft_w(uint32_t n, char *p, int i, int base)
+static char		*ft_w(int n, char *p, int i, int base)
 {
+	int			sign;
 	char		*tab;
-	int			j;
 
-	j = 0;
 	tab = "0123456789abcdef";
-	if (i + j < 8)
-		p[j++] = tab[0];
+	sign = 1;
+	if (n < 0)
+	{
+		n = -n;
+		i++;
+		sign = -1;
+	}
 	p[i] = '\0';
 	while (i--)
 	{
 		p[i] = tab[n % base];
 		n /= base;
 	}
+	if (sign == -1)
+		p[0] = '-';
 	return (p);
 }
 
-char			*ft_u_itoa_base(uint32_t n, int base)
+char			*ft_itoa_base(int n, int base)
 {
-	int			i;
-	uint32_t	tmp;
-	char		*p;
+	int		i;
+	int		tmp;
+	char	*p;
 
 	if (base < 2 || base > 16)
 		return (NULL);
 	i = 1;
+	if (n == -2147483648)
+		return (ft_strdup("-2147483648"));
 	tmp = n;
-	while (tmp >= (uint32_t)base)
+	while (tmp >= base)
 	{
 		tmp /= base;
 		i++;
 	}
-	if ((p = (char *)malloc(sizeof(char) * (8 + 1))) == NULL)
+	if ((p = (char *)malloc(sizeof(char) * (i + 1))) == NULL)
 		return (NULL);
 	return (ft_w(n, p, i, base));
 }

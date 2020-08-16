@@ -22,6 +22,7 @@ SRCS	=	ft_atoi.c \
 			ft_isdigit.c \
 			ft_isprint.c \
 			ft_itoa.c \
+			ft_itoa_base.c \
 			ft_u_itoa_base.c \
 			ft_lstadd.c \
 			ft_lstaddend.c \
@@ -81,7 +82,9 @@ SRCS	=	ft_atoi.c \
 			ft_tolower.c \
 			ft_toupper.c \
 			ft_tablen.c \
-			ft_strswap.c
+			ft_strswap.c \
+			ft_swap_32.c \
+			ft_swap_64.c \
 
 OBJS	=	$(SRCS:.c=.o)
 

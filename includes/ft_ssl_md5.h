@@ -24,6 +24,11 @@
 
 # define BUF_SIZE 64
 
+# define MD5A 0x67452301
+# define MD5B 0xefcdab89
+# define MD5C 0x98badcfe
+# define MD5D 0x10325476
+
 typedef enum		e_source_type
 {
 	_STRING,

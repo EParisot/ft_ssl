@@ -73,6 +73,7 @@ char				*ft_strtrim(const char *s);
 char				**ft_strsplit(const char *s, char c);
 char				*ft_strrev(char *s);
 char				*ft_itoa(int n);
+char				*ft_itoa_base(int n, int base);
 char				*ft_u_itoa_base(uint32_t n, int base);
 void				ft_foreach(int *tab, int len, void(*f)(int));
 void				ft_putchar(char c);
@@ -99,5 +100,8 @@ int					ft_lstmin(t_list *lst);
 
 void				ft_strswap(char *s1, char *s2);
 size_t				ft_tablen(char **tab);
+
+uint32_t			ft_swap_32(uint32_t n);
+uint64_t			ft_swap_64(uint64_t n);
 
 #endif
