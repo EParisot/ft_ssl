@@ -17,6 +17,7 @@ SRCS	=	srcs/main.c \
 			srcs/tools.c \
 			srcs/ft_ssl.c \
 			srcs/md5.c \
+			srcs/md5_fcts.c \
 			srcs/sha256.c \
 
 INC		=	includes/ft_ssl_md5.h
@@ -34,8 +35,10 @@ all		:	$(LIBS) $(NAME)
 $(NAME)	:	$(OBJS) $(INC)
 	gcc $(CFLAGS) $(OBJS) $(LIBS) -o $(NAME)
 
-$(LIBS)	:
+$(LIBS)	: .FORCE
 	@$(MAKE) -C libft
+
+.FORCE	:
 
 clean	:
 	$(RM) $(OBJS) && $(MAKE) clean -C libft

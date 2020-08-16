@@ -22,6 +22,7 @@ SRCS	=	ft_atoi.c \
 			ft_isdigit.c \
 			ft_isprint.c \
 			ft_itoa.c \
+			ft_u_itoa_base.c \
 			ft_lstadd.c \
 			ft_lstaddend.c \
 			ft_lstcount.c \

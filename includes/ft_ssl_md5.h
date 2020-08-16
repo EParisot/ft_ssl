@@ -20,13 +20,9 @@
 # include <sys/stat.h>
 # include <fcntl.h>
 # include <unistd.h>
+# include <stdint.h>
 
 # define BUF_SIZE 64
-
-# define A 0x67452301
-# define B 0xefcdab89
-# define C 0x98badcfe
-# define D 0x10325476
 
 typedef enum		e_source_type
 {
@@ -61,10 +57,17 @@ typedef struct		s_data
 int					read_stdin(t_data *data);
 int					handle_files(t_data *data, char *filename);
 int					hash_string(t_data *data);
-int					md5(char *str);
-int					sha256(char *str);
 void				print_help(int usage, t_fct *g_fcts);
 void				clean_data(t_data *data);
 void				del(void *addr, size_t size);
+
+int					md5(char *str);
+int					md5F(int X, int Y, int Z);
+int					md5G(int X, int Y, int Z);
+int					md5H(int X, int Y, int Z);
+int					md5I(int X, int Y, int Z);
+uint32_t			md5T(int i);
+
+int					sha256(char *str);
 
 #endif
