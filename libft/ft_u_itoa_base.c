@@ -20,12 +20,12 @@ static char		*ft_w(uint32_t n, char *p, int i, int base)
 
 	j = 0;
 	tab = "0123456789abcdef";
-	if (i + j < 8)
+	while (i + j < 8)
 		p[j++] = tab[0];
-	p[i] = '\0';
+	p[8] = '\0';
 	while (i--)
 	{
-		p[i] = tab[n % base];
+		p[j + i] = tab[n % base];
 		n /= base;
 	}
 	return (p);

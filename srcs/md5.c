@@ -55,12 +55,6 @@ static char		*add_len(char *padded_str, int *padded_size, long int str_size)
 	return (new_str);
 }
 
-static void		compute_md5(char *word_16, uint32_t *result)
-{
-	(void)word_16;
-	(void)result;
-}
-
 static int		compute_res(uint32_t *result, char *str_res)
 {
 	int			i;
@@ -74,7 +68,7 @@ static int		compute_res(uint32_t *result, char *str_res)
 	{
 		if ((tmp_res = ft_u_itoa_base(ft_swap_32(result[i]), 16)) == NULL)
 			return (-1);
-		ft_strcpy(&str_res[tmp_size], tmp_res);
+		ft_memmove(&str_res[tmp_size], tmp_res, 8 + 1);
 		tmp_size += ft_strlen(tmp_res);
 		free(tmp_res);
 		i++;
@@ -83,11 +77,49 @@ static int		compute_res(uint32_t *result, char *str_res)
 	return (0);
 }
 
+static void		rotation_md5(int i, uint32_t word, uint32_t *tmp_res)
+{
+	(void)word;
+	(void)tmp_res;
+	if (i < 16)
+	{
+
+	}
+	else if (i < 32)
+	{
+
+	}
+	else if (i < 48)
+	{
+		
+	}
+	else if (i < 64)
+	{
+		
+	}
+}
+
+static void		compute_md5(uint32_t *word_16, uint32_t *result)
+{
+	uint32_t	tmp_res[4];
+	int			i;
+
+	i = -1;
+	while (++i < 4)
+		tmp_res[i] = result[i];
+	i = -1;
+	while (++i < 16)
+		rotation_md5(i, word_16[i], tmp_res);
+	i = -1;
+	while (++i < 4)
+		result[i] += tmp_res[i];
+}
+
 static int		md5_loop(char *padded_str, int padded_size, char *str_res)
 {
 	int			i;
 	int			j;
-	char		buf[16];
+	uint32_t	buf[16];
 	uint32_t	result[4];
 
 	i = 0;
@@ -96,23 +128,18 @@ static int		md5_loop(char *padded_str, int padded_size, char *str_res)
 	result[1] = MD5B;
 	result[2] = MD5C;
 	result[3] = MD5D;
-	while (i < (padded_size / 16))
+	while (i < (padded_size / 64))
 	{
-		while (j < 16)
+		while (j < 64)
 		{
-			buf[j] = padded_str[i * 16 + j];
-			++j;
+			buf[j] = (uint32_t)padded_str[i * 64 + j];
+			j += 4;
 		}
 		compute_md5(buf, result);
 		i++;
 	}
-	result[0] += MD5A;
-	result[1] += MD5B;
-	result[2] += MD5C;
-	result[3] += MD5D;
 	if (compute_res(result, str_res))
 		return (-1);
-	
 	return (0);
 }
 
