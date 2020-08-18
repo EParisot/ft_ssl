@@ -83,19 +83,19 @@ static void		rotation_md5(int i, uint32_t word, uint32_t *tmp_res)
 	(void)tmp_res;
 	if (i < 16)
 	{
-
+		;
 	}
 	else if (i < 32)
 	{
-
+		;
 	}
 	else if (i < 48)
 	{
-		
+		;
 	}
 	else if (i < 64)
 	{
-		
+		;
 	}
 }
 
