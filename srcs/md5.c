@@ -77,26 +77,27 @@ static int		compute_res(uint32_t *result, char *str_res)
 	return (0);
 }
 
-static void		rotation_md5(int i, uint32_t word, uint32_t *tmp_res)
+static void		rotation_md5(int i, char *word, uint32_t *tmp_res)
 {
-	(void)tmp_res;
-	(void)word;
+	uint32_t	f;
+	uint32_t	tmp;
+
+	f = 0;
+	tmp = 0;
 	if (i < 16)
-	{
-
-	}
+		f = md5f(tmp_res[1], tmp_res[2], tmp_res[3]);
 	else if (i < 32)
-	{
-
-	}
+		f = md5g(tmp_res[1], tmp_res[2], tmp_res[3]);
 	else if (i < 48)
-	{
-
-	}
+		f = md5h(tmp_res[1], tmp_res[2], tmp_res[3]);
 	else if (i < 64)
-	{
-
-	}
+		f = md5i(tmp_res[1], tmp_res[2], tmp_res[3]);
+	tmp = ft_swap_32(tmp_res[1] + ((tmp_res[0] + f + word[md5kts(i, 'k')] \
+	+ md5kts(i, 't')) << md5kts(i, 's')));
+	tmp_res[0] = tmp_res[3];
+	tmp_res[3] = tmp_res[2];
+	tmp_res[2] = tmp_res[1];
+	tmp_res[1] = tmp;
 }
 
 static void		compute_md5(char *word_16, uint32_t *result)
@@ -108,8 +109,8 @@ static void		compute_md5(char *word_16, uint32_t *result)
 	while (++i < 4)
 		tmp_res[i] = result[i];
 	i = -1;
-	while (++i < 16)
-		rotation_md5(i, (uint32_t)word_16[i * 4], tmp_res);
+	while (++i < 64)
+		rotation_md5(i, word_16, tmp_res);
 	i = -1;
 	while (++i < 4)
 		result[i] += tmp_res[i];
