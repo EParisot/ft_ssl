@@ -125,10 +125,10 @@ static int		md5_loop(char *padded_str, int padded_size, char *str_res)
 
 	i = 0;
 	j = 0;
-	result[0] = MD5A;
-	result[1] = MD5B;
-	result[2] = MD5C;
-	result[3] = MD5D;
+	result[0] = 0x67452301;
+	result[1] = 0xefcdab89;
+	result[2] = 0x98badcfe;
+	result[3] = 0x10325476;
 	while (i < (padded_size / 64))
 	{
 		while (j < 64)
