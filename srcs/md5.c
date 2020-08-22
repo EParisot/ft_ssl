@@ -18,9 +18,7 @@ static char		*pad_len(char *str, int *padded_size)
 	int		pad_len;
 	char	*new_str;
 	int		i;
-	uint32_t	buf;
 
-	buf = 0;
 	i = -1;
 	pad_len = 0;
 	str_len = 0;
@@ -31,11 +29,7 @@ static char		*pad_len(char *str, int *padded_size)
 	if ((new_str = (char *)malloc(str_len + pad_len)) == NULL)
 		return (NULL);
 	if (str)
-		while ((size_t)++i < ft_strlen(str))
-		{
-			buf = *((uint32_t *)(str + i));
-			memmove(new_str + i, &buf, ft_strlen(str + i) / 8 + ft_strlen(str + i) % 8);
-		}
+		memmove(new_str, str, ft_strlen(str));
 	new_str[str_len] = 0x80;
 	i = 0;
 	while (++i < pad_len)
@@ -74,7 +68,7 @@ static int		compute_res(uint32_t *result, char *str_res)
 	{
 		if ((tmp_res = ft_u_itoa_base(ft_swap_32(result[i]), 16)) == NULL)
 			return (-1);
-		ft_memmove(&str_res[tmp_size], tmp_res, 8 + 1);
+		ft_memmove(&str_res[tmp_size], tmp_res, 8);
 		tmp_size += ft_strlen(tmp_res);
 		free(tmp_res);
 		i++;
@@ -103,10 +97,7 @@ static void		rotation_md5(int i, char *word, uint32_t *tmp_res)
 	tmp_res[3] = tmp_res[2];
 	tmp_res[2] = tmp_res[1];
 	fct_res = (tmp_res[0] + f + word[md5kts(i, 'k')] + md5kts(i, 't'));
-	if (fct_res << md5kts(i, 's'))
-		tmp_res[1] += fct_res << md5kts(i, 's');
-	else
-		tmp_res[1] += fct_res >> (32 - md5kts(i, 's'));
+	tmp_res[1] += ((fct_res << md5kts(i, 's')) | (fct_res >> (32 - md5kts(i, 's'))));
 	tmp_res[0] = tmp;
 }
 
@@ -150,39 +141,15 @@ int				md5(char *str)
 	int				padded_size;
 	char			*res_str;
 
-	printf("%ld\n", ft_strlen(str));
-	for (size_t j = 0; j < ft_strlen(str); ++j)
-	{
-		for (int i = 7; i >= 0; --i)
-			printf("%d", (str[j] >> i) & 1);
-		printf(" ");
-		if (j > 0 && (j+1) % 4 == 0)
-			printf("\n");
-	}
-	printf("\n");
-
 	str_size = 0;
 	if (str)
 		str_size = ft_strlen(str);
 	padded_size = 0;
 	if ((padded_str = pad_len(str, &padded_size)) == NULL)
 		return (-1);
-
-	printf("%d\n", padded_size);
-	for (int j = 0; j < padded_size; ++j)
-	{
-		for (int i = 7; i >= 0; --i)
-			printf("%d", (padded_str[j] >> i) & 1);
-		printf(" ");
-		if (j > 0 && (j+1) % 4 == 0)
-			printf("\n");
-	}
-	printf("\n");
-	
 	if ((padded_str = add_len(padded_str, &padded_size, str_size)) == NULL)
 		return (-1);
 
-	printf("%d\n", padded_size);
 	for (int j = 0; j < padded_size; ++j)
 	{
 		for (int i = 7; i >= 0; --i)
