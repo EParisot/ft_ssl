@@ -36,7 +36,7 @@ static char		*pad_len(char *str, int *padded_size)
 			buf = *((uint32_t *)(str + i));
 			memmove(new_str + i, &buf, ft_strlen(str + i) / 8 + ft_strlen(str + i) % 8);
 		}
-	new_str[str_len] = 1;
+	new_str[str_len] = 0x80;
 	i = 0;
 	while (++i < pad_len)
 		new_str[str_len + i] = 0;
@@ -153,7 +153,7 @@ int				md5(char *str)
 	printf("%ld\n", ft_strlen(str));
 	for (size_t j = 0; j < ft_strlen(str); ++j)
 	{
-		for (size_t i = 0; i < 8; ++i)
+		for (int i = 7; i >= 0; --i)
 			printf("%d", (str[j] >> i) & 1);
 		printf(" ");
 		if (j > 0 && (j+1) % 4 == 0)
@@ -171,7 +171,7 @@ int				md5(char *str)
 	printf("%d\n", padded_size);
 	for (int j = 0; j < padded_size; ++j)
 	{
-		for (int i = 0; i < 8; ++i)
+		for (int i = 7; i >= 0; --i)
 			printf("%d", (padded_str[j] >> i) & 1);
 		printf(" ");
 		if (j > 0 && (j+1) % 4 == 0)
@@ -185,7 +185,7 @@ int				md5(char *str)
 	printf("%d\n", padded_size);
 	for (int j = 0; j < padded_size; ++j)
 	{
-		for (int i = 0; i < 8; ++i)
+		for (int i = 7; i >= 0; --i)
 			printf("%d", (padded_str[j] >> i) & 1);
 		printf(" ");
 		if (j > 0 && (j+1) % 4 == 0)
