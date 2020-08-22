@@ -14,12 +14,12 @@
 
 int			md5f(int x, int y, int z)
 {
-	return ((x & y) | ~x * z);
+	return ((x & y) | (~x * z));
 }
 
 int			md5g(int x, int y, int z)
 {
-	return ((x & z) | y * ~z);
+	return ((x & z) | (y * ~z));
 }
 
 int			md5h(int x, int y, int z)
@@ -29,7 +29,7 @@ int			md5h(int x, int y, int z)
 
 int			md5i(int x, int y, int z)
 {
-	return (y ^ (x | ~z));
+	return (y ^ (x | (~z)));
 }
 
 uint32_t	md5kts(int i, char kts)

@@ -69,7 +69,7 @@ static int		compute_res(uint32_t *result, char *str_res)
 		if ((tmp_res = ft_u_itoa_base(ft_swap_32(result[i]), 16)) == NULL)
 			return (-1);
 		ft_memmove(&str_res[tmp_size], tmp_res, 8);
-		tmp_size += ft_strlen(tmp_res);
+		tmp_size += 8;
 		free(tmp_res);
 		i++;
 	}
@@ -77,7 +77,7 @@ static int		compute_res(uint32_t *result, char *str_res)
 	return (0);
 }
 
-static void		rotation_md5(int i, char *word, uint32_t *tmp_res)
+static void		rotation_md5(int i, char *word_16, uint32_t *tmp_res)
 {
 	uint32_t	f;
 	uint32_t	tmp;
@@ -96,13 +96,14 @@ static void		rotation_md5(int i, char *word, uint32_t *tmp_res)
 	tmp = tmp_res[3];
 	tmp_res[3] = tmp_res[2];
 	tmp_res[2] = tmp_res[1];
-	fct_res = (tmp_res[0] + f + word[md5kts(i, 'k')] + md5kts(i, 't'));
+	//printf("%u\n", (uint32_t)word_16[4 * md5kts(i, 'k')]);
+	fct_res = (tmp_res[0] + f + (uint32_t)word_16[4 * md5kts(i, 'k')] + md5kts(i, 't'));
 	tmp_res[1] += ((fct_res << md5kts(i, 's')) | \
 					(fct_res >> (32 - md5kts(i, 's'))));
 	tmp_res[0] = tmp;
 }
 
-static void		compute_md5(char *word_16, uint32_t *result)
+static void		compute_md5(char *padded_str, uint32_t *result)
 {
 	uint32_t	tmp_res[4];
 	int			i;
@@ -112,7 +113,7 @@ static void		compute_md5(char *word_16, uint32_t *result)
 		tmp_res[i] = result[i];
 	i = -1;
 	while (++i < 64)
-		rotation_md5(i, word_16, tmp_res);
+		rotation_md5(i, padded_str, tmp_res);
 	i = -1;
 	while (++i < 4)
 		result[i] += tmp_res[i];
@@ -129,7 +130,7 @@ static int		md5_loop(char *padded_str, int padded_size, char *str_res)
 	result[2] = 0x98badcfe;
 	result[3] = 0x10325476;
 	while (++i < (padded_size / 64))
-		compute_md5(&padded_str[i * 64], result);
+		compute_md5(padded_str + (i * 64), result);
 	if (compute_res(result, str_res))
 		return (-1);
 	return (0);
@@ -140,7 +141,7 @@ int				md5(char *str)
 	char			*padded_str;
 	uint64_t		str_size;
 	int				padded_size;
-	char			*res_str;
+	char			*str_res;
 
 	str_size = 0;
 	if (str)
@@ -151,7 +152,7 @@ int				md5(char *str)
 	if ((padded_str = add_len(padded_str, &padded_size, str_size)) == NULL)
 		return (-1);
 
-	for (int j = 0; j < padded_size; ++j)
+	/*for (int j = 0; j < padded_size; ++j)
 	{
 		for (int i = 7; i >= 0; --i)
 			printf("%d", (padded_str[j] >> i) & 1);
@@ -159,14 +160,14 @@ int				md5(char *str)
 		if (j > 0 && (j+1) % 4 == 0)
 			printf("\n");
 	}
-	printf("\n");
-
-	if ((res_str = (char *)malloc(8 * 4 + 1)) == NULL)
+	printf("\n");*/
+	
+	if ((str_res = (char *)malloc(8 * 4 + 1)) == NULL)
 		return (-1);
-	if (md5_loop(padded_str, padded_size, res_str))
+	if (md5_loop(padded_str, padded_size, str_res))
 		return (-1);
-	ft_putstr(res_str);
+	ft_putstr(str_res);
 	free(padded_str);
-	free(res_str);
+	free(str_res);
 	return (0);
 }
