@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "../includes/ft_ssl_md5.h"
-#include <stdio.h>
+//#include <stdio.h>
 static char		*pad_len(char *str, int *padded_size)
 {
 	int		str_len;
@@ -66,7 +66,7 @@ static int		compute_res(uint32_t *result, char *str_res)
 	i = 0;
 	while (i < 4)
 	{
-		if ((tmp_res = ft_u_itoa_base(result[i], 16)) == NULL)
+		if ((tmp_res = ft_u_itoa_base(ft_swap_32(result[i]), 16)) == NULL)
 			return (-1);
 		ft_memmove(str_res + tmp_size, tmp_res, 8);
 		tmp_size += 8;
@@ -97,12 +97,13 @@ static void		rotation_md5(int i, uint32_t *word_16, uint32_t *tmp_res)
 	tmp_res[3] = tmp_res[2];
 	tmp_res[2] = tmp_res[1];
 
-	printf("%2d = X[%2d]: %#10x; T: %#010x; S: %u\n", i, md5kts(i, 'k'), word_16[md5kts(i, 'k')], md5kts(i, 't'), md5kts(i, 's'));
+	//printf("%2d = X[%2d]: %#10x; T: %#010x; S: %u; f: %u\n", i, md5kts(i, 'k'), word_16[md5kts(i, 'k')], md5kts(i, 't'), md5kts(i, 's'), f);
 
 	fct_res = (tmp_res[0] + f + word_16[md5kts(i, 'k')] + md5kts(i, 't'));
-	tmp_res[1] += ((fct_res << md5kts(i, 's')) | \
-					(fct_res >> (32 - md5kts(i, 's'))));
+	tmp_res[1] += ((fct_res << md5kts(i, 's')) | (fct_res >> (32 - md5kts(i, 's'))));
 	tmp_res[0] = tmp;
+
+	//printf("\n%x %x %x %x\n\n", tmp_res[0], tmp_res[1], tmp_res[2], tmp_res[3]);
 }
 
 static void		compute_md5(uint32_t *padded_str, uint32_t *result)
@@ -114,7 +115,7 @@ static void		compute_md5(uint32_t *padded_str, uint32_t *result)
 	while (++i < 4)
 		tmp_res[i] = result[i];
 	
-	printf("\n%x %x %x %x\n\n", result[0], result[1], result[2], result[3]);
+	//printf("\n%x %x %x %x\n\n", result[0], result[1], result[2], result[3]);
 
 	i = -1;
 	while (++i < 64)
@@ -123,7 +124,7 @@ static void		compute_md5(uint32_t *padded_str, uint32_t *result)
 	while (++i < 4)
 		result[i] += tmp_res[i];
 	
-	printf("\n%x %x %x %x\n\n", result[0], result[1], result[2], result[3]);
+	//printf("\n%x %x %x %x\n\n", result[0], result[1], result[2], result[3]);
 }
 
 static int		md5_loop(unsigned char *padded_str, int padded_size, char *str_res)
@@ -159,7 +160,7 @@ int				md5(char *str)
 	if ((padded_str = add_len(padded_str, &padded_size, str_size)) == NULL)
 		return (-1);
 
-	for (int j = 0; j < padded_size; ++j)
+	/*for (int j = 0; j < padded_size; ++j)
 	{
 		printf("%c : ", padded_str[j]);
 		for (int i = 7; i >= 0; --i)
@@ -168,7 +169,7 @@ int				md5(char *str)
 		if (j > 0 && (j+1) % 4 == 0)
 			printf("\n");
 	}
-	printf("\n");
+	printf("\n");*/
 
 	if ((str_res = (char *)malloc(8 * 4 + 1)) == NULL)
 		return (-1);

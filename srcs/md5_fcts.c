@@ -14,12 +14,12 @@
 
 uint32_t			md5f(uint32_t x, uint32_t y, uint32_t z)
 {
-	return ((x & y) | ((~x) * z));
+	return ((x & y) | ((~x) & z));
 }
 
 uint32_t			md5g(uint32_t x, uint32_t y, uint32_t z)
 {
-	return ((x & z) | (y * (~z)));
+	return ((x & z) | (y & (~z)));
 }
 
 uint32_t			md5h(uint32_t x, uint32_t y, uint32_t z)
