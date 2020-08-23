@@ -48,7 +48,7 @@ static char		*add_len(char *padded_str, int *padded_size, uint64_t str_size)
 		return (NULL);
 	ft_memmove(new_str, padded_str, *padded_size);
 	free(padded_str);
-	str_size = ft_swap_64(str_size * 8);
+	str_size = str_size * 8;
 	ft_memmove(new_str + j, &str_size, 8);
 	*padded_size += 8;
 	new_str[*padded_size] = 0;
