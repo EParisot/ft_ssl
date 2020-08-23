@@ -102,12 +102,13 @@ static int		already_exists(t_data *data, char *filename)
 	{
 		while (data->strings)
 		{
-			if (ft_strcmp(filename, \
-				((t_string *)(data->strings->content))->source) == 0)
-			{
-				data->strings = tmp_lst;
-				return (1);
-			}
+			if (((t_string *)(data->strings->content))->source && filename)
+				if (ft_strcmp(filename, \
+					((t_string *)(data->strings->content))->source) == 0)
+				{
+					data->strings = tmp_lst;
+					return (1);
+				}
 			data->strings = data->strings->next;
 		}
 		data->strings = tmp_lst;
