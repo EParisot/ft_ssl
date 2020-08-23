@@ -13,10 +13,10 @@
 #include "libft.h"
 #include <stdlib.h>
 
-static char		*ft_w(uint32_t n, char *p, int i, int base)
+static unsigned char	*ft_w(uint32_t n, unsigned char *p, int i, int base)
 {
-	char		*tab;
-	int			j;
+	char	*tab;
+	int		j;
 
 	j = 0;
 	tab = "0123456789abcdef";
@@ -31,11 +31,11 @@ static char		*ft_w(uint32_t n, char *p, int i, int base)
 	return (p);
 }
 
-char			*ft_u_itoa_base(uint32_t n, int base)
+unsigned char			*ft_u_itoa_base(uint32_t n, int base)
 {
-	int			i;
-	uint32_t	tmp;
-	char		*p;
+	int				i;
+	uint32_t		tmp;
+	unsigned char	*p;
 
 	if (base < 2 || base > 16)
 		return (NULL);
@@ -46,7 +46,7 @@ char			*ft_u_itoa_base(uint32_t n, int base)
 		tmp /= base;
 		i++;
 	}
-	if ((p = (char *)malloc(sizeof(char) * (8 + 1))) == NULL)
+	if ((p = (unsigned char *)malloc(sizeof(char) * (8 + 1))) == NULL)
 		return (NULL);
 	return (ft_w(n, p, i, base));
 }

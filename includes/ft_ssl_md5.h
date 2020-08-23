@@ -62,10 +62,10 @@ void				clean_data(t_data *data);
 void				del(void *addr, size_t size);
 
 int					md5(char *str);
-int					md5f(int x, int y, int z);
-int					md5g(int x, int y, int z);
-int					md5h(int x, int y, int z);
-int					md5i(int x, int y, int z);
+uint32_t			md5f(uint32_t x, uint32_t y, uint32_t z);
+uint32_t			md5g(uint32_t x, uint32_t y, uint32_t z);
+uint32_t			md5h(uint32_t x, uint32_t y, uint32_t z);
+uint32_t			md5i(uint32_t x, uint32_t y, uint32_t z);
 uint32_t			md5kts(int i, char kts);
 
 int					sha256(char *str);
