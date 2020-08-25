@@ -61,6 +61,10 @@ void				print_help(int usage, t_fct *g_fcts);
 void				clean_data(t_data *data);
 void				del(void *addr, size_t size);
 
+char				*pad_len(char *str, int *padded_size);
+char				*add_len(char *padded_str, int *padded_size, \
+								uint64_t str_size);
+
 int					md5(char *str);
 uint32_t			md5f(uint32_t x, uint32_t y, uint32_t z);
 uint32_t			md5g(uint32_t x, uint32_t y, uint32_t z);

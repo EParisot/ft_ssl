@@ -15,6 +15,7 @@ NAME	=	ft_ssl
 SRCS	=	srcs/main.c \
 			srcs/ssl_io.c \
 			srcs/tools.c \
+			srcs/padding.c \
 			srcs/ft_ssl.c \
 			srcs/md5.c \
 			srcs/md5_fcts.c \
