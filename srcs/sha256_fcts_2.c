@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tools.c                                            :+:      :+:    :+:   */
+/*   sha256_fcts_2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eparisot <eparisot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,46 +12,22 @@
 
 #include "../includes/ft_ssl_md5.h"
 
-void			print_help(int usage, t_fct *g_fcts)
+uint32_t	sha256_bsig0(uint32_t x)
 {
-	int i;
-
-	i = 0;
-	if (usage)
-		ft_putendl("usage: ./ft_ssl [hash] [opt] [string]");
-	else
-	{
-		ft_putendl("\nMessage Digest commands:");
-		while (g_fcts[i].name)
-			ft_putendl(g_fcts[i++].name);
-	}
+	return (rot_r(x, 2) ^ rot_r(x, 13) ^ rot_r(x, 22));
 }
 
-void			del(void *addr, size_t size)
+uint32_t	sha256_bsig1(uint32_t x)
 {
-	(void)size;
-	if (((t_string *)addr)->string)
-		free(((t_string *)addr)->string);
-	if (((t_string *)addr)->source)
-		free(((t_string *)addr)->source);
-	free(addr);
+	return (rot_r(x, 6) ^ rot_r(x, 11) ^ rot_r(x, 25));
 }
 
-void			clean_data(t_data *data)
+uint32_t	sha256_ssig0(uint32_t x)
 {
-	if (data && data->strings)
-		ft_lstdel(&data->strings, del);
-	if (data && data->hash)
-		free(data->hash);
-	free(data);
+	return (rot_r(x, 7) ^ rot_r(x, 18) ^ (x >> 3));
 }
 
-uint32_t		rot_r(uint32_t x, uint32_t n)
+uint32_t	sha256_ssig1(uint32_t x)
 {
-	return ((x >> n) | (x << (32 - n)));
-}
-
-uint32_t		rot_l(uint32_t x, uint32_t n)
-{
-	return ((x << n) | (x >> (32 - n)));
+	return (rot_r(x, 17) ^ rot_r(x, 19) ^ (x >> 10));
 }

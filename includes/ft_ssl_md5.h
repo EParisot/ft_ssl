@@ -65,6 +65,9 @@ char				*pad_len(char *str, int *padded_size);
 char				*add_len(char *padded_str, int *padded_size, \
 								uint64_t str_size);
 
+uint32_t			rot_r(uint32_t x, uint32_t n);
+uint32_t			rot_l(uint32_t x, uint32_t n);
+
 int					md5(char *str);
 uint32_t			md5f(uint32_t x, uint32_t y, uint32_t z);
 uint32_t			md5g(uint32_t x, uint32_t y, uint32_t z);
@@ -73,5 +76,11 @@ uint32_t			md5i(uint32_t x, uint32_t y, uint32_t z);
 uint32_t			md5kts(int i, char kts);
 
 int					sha256(char *str);
+uint32_t			sha256ch(uint32_t x, uint32_t y, uint32_t z);
+uint32_t			sha256maj(uint32_t x, uint32_t y, uint32_t z);
+uint32_t			sha256_bsig0(uint32_t x);
+uint32_t			sha256_bsig1(uint32_t x);
+uint32_t			sha256_ssig0(uint32_t x);
+uint32_t			sha256_ssig1(uint32_t x);
 
 #endif

@@ -54,8 +54,7 @@ static void		rotation_md5(int i, uint32_t *word_16, uint32_t *tmp_res)
 	tmp_res[3] = tmp_res[2];
 	tmp_res[2] = tmp_res[1];
 	fct_res = (tmp_res[0] + f + word_16[md5kts(i, 'k')] + md5kts(i, 't'));
-	tmp_res[1] += ((fct_res << md5kts(i, 's')) | \
-					(fct_res >> (32 - md5kts(i, 's'))));
+	tmp_res[1] += rot_l(fct_res, md5kts(i, 's'));
 	tmp_res[0] = tmp;
 }
 
