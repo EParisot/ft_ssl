@@ -40,7 +40,8 @@ static void		rotation_sha224(int i, uint32_t *word_64, uint32_t *tmp_res)
 	uint32_t	t2;
 
 	t1 = tmp_res[7] + sha256_bsig1(tmp_res[4]) + \
-		sha256_ch(tmp_res[4], tmp_res[5], tmp_res[6]) + sha256_k(i) + word_64[i];
+		sha256_ch(tmp_res[4], tmp_res[5], tmp_res[6]) + sha256_k(i) \
+														+ word_64[i];
 	t2 = sha256_bsig0(tmp_res[0]) + \
 		sha256_maj(tmp_res[0], tmp_res[1], tmp_res[2]);
 	tmp_res[7] = tmp_res[6];
