@@ -75,3 +75,5 @@ echo "> "
 
 echo '> echo "just to be extra clear" | ./ft_ssl md5 -r -q -p -s "foo" file'
 echo "just to be extra clear" | ./ft_ssl md5 -r -q -p -s "foo" file
+
+rm -rf file
