@@ -1,6 +1,6 @@
 #! /bin/bash
 
-HASHES=(md5 sha256)
+HASHES=(md5 sha224 sha256)
 
 TEST_STRINGS=("" "abc" "bonjour42" "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
 
