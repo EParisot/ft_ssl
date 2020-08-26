@@ -82,5 +82,6 @@ uint32_t			sha256_bsig0(uint32_t x);
 uint32_t			sha256_bsig1(uint32_t x);
 uint32_t			sha256_ssig0(uint32_t x);
 uint32_t			sha256_ssig1(uint32_t x);
+uint32_t			shak(int i);
 
 #endif

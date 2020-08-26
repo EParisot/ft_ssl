@@ -58,7 +58,7 @@ static void		rotation_md5(int i, uint32_t *word_16, uint32_t *tmp_res)
 	tmp_res[0] = tmp;
 }
 
-static void		compute_md5(uint32_t *padded_str, uint32_t *result)
+static void		compute_md5(uint32_t *word_16, uint32_t *result)
 {
 	uint32_t	tmp_res[4];
 	int			i;
@@ -68,7 +68,7 @@ static void		compute_md5(uint32_t *padded_str, uint32_t *result)
 		tmp_res[i] = result[i];
 	i = -1;
 	while (++i < 64)
-		rotation_md5(i, padded_str, tmp_res);
+		rotation_md5(i, word_16, tmp_res);
 	i = -1;
 	while (++i < 4)
 		result[i] += tmp_res[i];

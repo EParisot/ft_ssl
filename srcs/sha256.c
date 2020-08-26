@@ -34,12 +34,56 @@ static int		compute_res(uint32_t *result, char *str_res)
 	return (0);
 }
 
+static void		rotation_sha256(int i, uint32_t *word_64, uint32_t *tmp_res)
+{
+	uint32_t	t1;
+	uint32_t	t2;
+
+	t1 = tmp_res[7] + sha256_bsig1(tmp_res[4]) + \
+		sha256ch(tmp_res[4], tmp_res[5], tmp_res[6]) + shak(i) + word_64[i];
+	t2 = sha256_bsig0(tmp_res[0]) + sha256maj(tmp_res[0], tmp_res[1], tmp_res[2]);
+	tmp_res[7] = tmp_res[6];
+	tmp_res[6] = tmp_res[5];
+	tmp_res[5] = tmp_res[4];
+	tmp_res[4] = tmp_res[3] + t1;
+	tmp_res[3] = tmp_res[2];
+	tmp_res[2] = tmp_res[1];
+	tmp_res[1] = tmp_res[0];
+	tmp_res[0] = t1 + t2;
+}
+
+static void		compute_sha256(uint32_t *word_16, uint32_t *result)
+{
+	uint32_t	tmp_res[8];
+	int			i;
+	uint32_t	word_64[64];
+
+	ft_bzero(word_64, 64 * sizeof(uint32_t));
+	i = -1;
+	while (++i < 8)
+		tmp_res[i] = result[i];
+	i = -1;
+	while (++i < 16)
+		word_64[i] = word_16[i];
+	--i;
+	while (++i < 64)
+		word_64[i] = sha256_ssig1(word_64[i - 2]) + word_64[i - 7] + \
+					sha256_ssig0(word_64[i - 15]) + word_64[i - 16];
+	i = -1;
+	while (++i < 64)
+		rotation_sha256(i, word_64, tmp_res);
+	i = -1;
+	while (++i < 8)
+		result[i] += tmp_res[i];
+}
+
 static int		sha256_loop(unsigned char *padded_str, int padded_size, \
 						char *str_res)
 {
 	(void)padded_size;
 	(void)padded_str;
 	uint32_t	result[8];
+	int			i;
 
 	result[0] = 0x6a09e667;
     result[1] = 0xbb67ae85;
@@ -49,7 +93,9 @@ static int		sha256_loop(unsigned char *padded_str, int padded_size, \
     result[5] = 0x9b05688c;
     result[6] = 0x1f83d9ab;
     result[7] = 0x5be0cd19;
-	// TODO
+	i = -1;
+	while (++i < (padded_size / 64))
+		compute_sha256((uint32_t *)(padded_str + (i * 64)), result);
 	if (compute_res(result, str_res))
 		return (-1);
 	return (0);
