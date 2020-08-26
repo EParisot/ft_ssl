@@ -23,7 +23,7 @@ static int		compute_res(uint32_t *result, char *str_res)
 	i = 0;
 	while (i < 8)
 	{
-		if ((tmp_res = ft_u_itoa_base(ft_swap_32(result[i]), 16)) == NULL)
+		if ((tmp_res = ft_u_itoa_base(result[i], 16)) == NULL)
 			return (-1);
 		ft_memmove(str_res + tmp_size, tmp_res, 8);
 		tmp_size += 8;
@@ -41,7 +41,8 @@ static void		rotation_sha256(int i, uint32_t *word_64, uint32_t *tmp_res)
 
 	t1 = tmp_res[7] + sha256_bsig1(tmp_res[4]) + \
 		sha256ch(tmp_res[4], tmp_res[5], tmp_res[6]) + shak(i) + word_64[i];
-	t2 = sha256_bsig0(tmp_res[0]) + sha256maj(tmp_res[0], tmp_res[1], tmp_res[2]);
+	t2 = sha256_bsig0(tmp_res[0]) + \
+		sha256maj(tmp_res[0], tmp_res[1], tmp_res[2]);
 	tmp_res[7] = tmp_res[6];
 	tmp_res[6] = tmp_res[5];
 	tmp_res[5] = tmp_res[4];
@@ -64,7 +65,7 @@ static void		compute_sha256(uint32_t *word_16, uint32_t *result)
 		tmp_res[i] = result[i];
 	i = -1;
 	while (++i < 16)
-		word_64[i] = word_16[i];
+		word_64[i] = ft_swap_32(word_16[i]);
 	--i;
 	while (++i < 64)
 		word_64[i] = sha256_ssig1(word_64[i - 2]) + word_64[i - 7] + \
@@ -80,8 +81,6 @@ static void		compute_sha256(uint32_t *word_16, uint32_t *result)
 static int		sha256_loop(unsigned char *padded_str, int padded_size, \
 						char *str_res)
 {
-	(void)padded_size;
-	(void)padded_str;
 	uint32_t	result[8];
 	int			i;
 
@@ -114,7 +113,7 @@ int			sha256(char *str)
 	padded_size = 0;
 	if ((padded_str = pad_len(str, &padded_size)) == NULL)
 		return (-1);
-	if ((padded_str = add_len(padded_str, &padded_size, str_size)) == NULL)
+	if ((padded_str = add_len(padded_str, &padded_size, str_size, 1)) == NULL)
 		return (-1);
 	if ((str_res = (char *)malloc(8 * 8 + 1)) == NULL)
 		return (-1);

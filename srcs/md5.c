@@ -105,7 +105,7 @@ int				md5(char *str)
 	padded_size = 0;
 	if ((padded_str = pad_len(str, &padded_size)) == NULL)
 		return (-1);
-	if ((padded_str = add_len(padded_str, &padded_size, str_size)) == NULL)
+	if ((padded_str = add_len(padded_str, &padded_size, str_size, 0)) == NULL)
 		return (-1);
 	if ((str_res = (char *)malloc(8 * 4 + 1)) == NULL)
 		return (-1);

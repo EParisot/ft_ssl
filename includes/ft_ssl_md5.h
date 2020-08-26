@@ -63,7 +63,7 @@ void				del(void *addr, size_t size);
 
 char				*pad_len(char *str, int *padded_size);
 char				*add_len(char *padded_str, int *padded_size, \
-								uint64_t str_size);
+								uint64_t str_size, int swap);
 
 uint32_t			rot_r(uint32_t x, uint32_t n);
 uint32_t			rot_l(uint32_t x, uint32_t n);
