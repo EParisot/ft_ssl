@@ -38,7 +38,8 @@ char		*pad_len(char *str, int *padded_size)
 	return (new_str);
 }
 
-char		*add_len(char *padded_str, int *padded_size, uint64_t str_size, int swap)
+char		*add_len(char *padded_str, int *padded_size, uint64_t str_size, \
+																int swap)
 {
 	char	*new_str;
 	int		j;
