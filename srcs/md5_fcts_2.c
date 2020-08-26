@@ -12,7 +12,6 @@
 
 #include "../includes/ft_ssl_md5.h"
 
-
 uint32_t			md5k(int i)
 {
 	static uint32_t k[64] = {
@@ -21,7 +20,7 @@ uint32_t			md5k(int i)
 		5, 8, 11, 14, 1, 4, 7, 10, 13, 0, 3, 6, 9, 12, 15, 2,
 		0, 7, 14, 5, 12, 3, 10, 1, 8, 15, 6, 13, 4, 11, 2, 9
 	};
-	
+
 	return (k[i]);
 }
 
