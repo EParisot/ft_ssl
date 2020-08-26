@@ -24,6 +24,7 @@ SRCS	=	ft_atoi.c \
 			ft_itoa.c \
 			ft_itoa_base.c \
 			ft_u_itoa_base.c \
+			ft_lu_itoa_base.c \
 			ft_lstadd.c \
 			ft_lstaddend.c \
 			ft_lstcount.c \

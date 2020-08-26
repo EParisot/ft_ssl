@@ -75,6 +75,7 @@ char				*ft_strrev(char *s);
 char				*ft_itoa(int n);
 char				*ft_itoa_base(int n, int base);
 unsigned char		*ft_u_itoa_base(uint32_t n, int base);
+unsigned char		*ft_lu_itoa_base(uint64_t n, int base);
 void				ft_foreach(int *tab, int len, void(*f)(int));
 void				ft_putchar(char c);
 void				ft_putstr(const char *s);

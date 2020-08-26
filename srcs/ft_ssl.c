@@ -15,7 +15,7 @@
 static void	prefix(t_data *data, int source_type)
 {
 	if (source_type == _STDIN && data->p_opt == 1 && data->q_opt == 0)
-		ft_putendl(((t_string *)(data->strings->content))->string);
+		ft_putstr(((t_string *)(data->strings->content))->string);
 	else if (source_type != _STDIN && data->r_opt == 0 && data->q_opt == 0)
 	{
 		ft_putstr(data->hash->print_name);
@@ -31,7 +31,7 @@ static void	prefix(t_data *data, int source_type)
 				ft_putstr(((t_string *)(data->strings->content))->string);
 				ft_putchar('"');
 			}
-			ft_putchar(')');
+			ft_putstr(") =");
 		}
 		ft_putchar(' ');
 	}
@@ -42,7 +42,14 @@ static void	suffix(t_data *data, int source_type)
 	if (source_type != _STDIN && data->r_opt == 1 && data->q_opt == 0)
 	{
 		ft_putchar(' ');
-		ft_putendl(((t_string *)(data->strings->content))->source);
+		if (source_type == _FILE)
+			ft_putstr(((t_string *)(data->strings->content))->source);
+		else
+		{
+			ft_putchar('"');
+			ft_putstr(((t_string *)(data->strings->content))->string);
+			ft_putchar('"');
+		}
 	}
 }
 

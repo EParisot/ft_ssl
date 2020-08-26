@@ -12,7 +12,7 @@
 
 #include "../includes/ft_ssl_md5.h"
 
-uint32_t			md5k(int i)
+uint32_t			md5_k(int i)
 {
 	static uint32_t k[64] = {
 		0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
@@ -24,7 +24,7 @@ uint32_t			md5k(int i)
 	return (k[i]);
 }
 
-uint32_t			md5t(int i)
+uint32_t			md5_t(int i)
 {
 	static uint32_t	t[64] = {
 		0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee, 0xf57c0faf, 0x4787c62a,
@@ -43,7 +43,7 @@ uint32_t			md5t(int i)
 	return (t[i]);
 }
 
-uint32_t			md5s(int i)
+uint32_t			md5_s(int i)
 {
 	static uint32_t	s[64] = {
 		7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22,

@@ -69,21 +69,22 @@ uint32_t			rot_r(uint32_t x, uint32_t n);
 uint32_t			rot_l(uint32_t x, uint32_t n);
 
 int					md5(char *str);
-uint32_t			md5f(uint32_t x, uint32_t y, uint32_t z);
-uint32_t			md5g(uint32_t x, uint32_t y, uint32_t z);
-uint32_t			md5h(uint32_t x, uint32_t y, uint32_t z);
-uint32_t			md5i(uint32_t x, uint32_t y, uint32_t z);
-uint32_t			md5k(int i);
-uint32_t			md5t(int i);
-uint32_t			md5s(int i);
+uint32_t			md5_f(uint32_t x, uint32_t y, uint32_t z);
+uint32_t			md5_g(uint32_t x, uint32_t y, uint32_t z);
+uint32_t			md5_h(uint32_t x, uint32_t y, uint32_t z);
+uint32_t			md5_i(uint32_t x, uint32_t y, uint32_t z);
+uint32_t			md5_k(int i);
+uint32_t			md5_t(int i);
+uint32_t			md5_s(int i);
 
+int					sha224(char *str);
 int					sha256(char *str);
-uint32_t			sha256ch(uint32_t x, uint32_t y, uint32_t z);
-uint32_t			sha256maj(uint32_t x, uint32_t y, uint32_t z);
+uint32_t			sha256_ch(uint32_t x, uint32_t y, uint32_t z);
+uint32_t			sha256_maj(uint32_t x, uint32_t y, uint32_t z);
 uint32_t			sha256_bsig0(uint32_t x);
 uint32_t			sha256_bsig1(uint32_t x);
 uint32_t			sha256_ssig0(uint32_t x);
 uint32_t			sha256_ssig1(uint32_t x);
-uint32_t			shak(int i);
+uint32_t			sha256_k(int i);
 
 #endif

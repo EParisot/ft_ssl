@@ -20,6 +20,7 @@ SRCS	=	srcs/main.c \
 			srcs/md5.c \
 			srcs/md5_fcts.c \
 			srcs/md5_fcts_2.c \
+			srcs/sha224.c \
 			srcs/sha256.c \
 			srcs/sha256_fcts.c \
 			srcs/sha256_fcts_2.c \

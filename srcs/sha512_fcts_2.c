@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   md5_fcts.c                                         :+:      :+:    :+:   */
+/*   sha512_fcts_2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eparisot <eparisot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,22 +12,22 @@
 
 #include "../includes/ft_ssl_md5.h"
 
-uint32_t			md5_f(uint32_t x, uint32_t y, uint32_t z)
+uint64_t	sha512_bsig0(uint64_t x)
 {
-	return ((x & y) | ((~x) & z));
+	return (rot_r(x, 28) ^ rot_r(x, 34) ^ rot_r(x, 39));
 }
 
-uint32_t			md5_g(uint32_t x, uint32_t y, uint32_t z)
+uint64_t	sha512_bsig1(uint64_t x)
 {
-	return ((x & z) | (y & (~z)));
+	return (rot_r(x, 14) ^ rot_r(x, 18) ^ rot_r(x, 41));
 }
 
-uint32_t			md5_h(uint32_t x, uint32_t y, uint32_t z)
+uint64_t	sha512_ssig0(uint64_t x)
 {
-	return (x ^ y ^ z);
+	return (rot_r(x, 1) ^ rot_r(x, 8) ^ (x >> 7));
 }
 
-uint32_t			md5_i(uint32_t x, uint32_t y, uint32_t z)
+uint64_t	sha512_ssig1(uint64_t x)
 {
-	return (y ^ (x | (~z)));
+	return (rot_r(x, 19) ^ rot_r(x, 61) ^ (x >> 6));
 }
