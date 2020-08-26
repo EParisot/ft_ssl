@@ -85,13 +85,13 @@ static int		sha256_loop(unsigned char *padded_str, int padded_size, \
 	int			i;
 
 	result[0] = 0x6a09e667;
-    result[1] = 0xbb67ae85;
-    result[2] = 0x3c6ef372;
-    result[3] = 0xa54ff53a;
-    result[4] = 0x510e527f;
-    result[5] = 0x9b05688c;
-    result[6] = 0x1f83d9ab;
-    result[7] = 0x5be0cd19;
+	result[1] = 0xbb67ae85;
+	result[2] = 0x3c6ef372;
+	result[3] = 0xa54ff53a;
+	result[4] = 0x510e527f;
+	result[5] = 0x9b05688c;
+	result[6] = 0x1f83d9ab;
+	result[7] = 0x5be0cd19;
 	i = -1;
 	while (++i < (padded_size / 64))
 		compute_sha256((uint32_t *)(padded_str + (i * 64)), result);
@@ -100,7 +100,7 @@ static int		sha256_loop(unsigned char *padded_str, int padded_size, \
 	return (0);
 }
 
-int			sha256(char *str)
+int				sha256(char *str)
 {
 	char			*padded_str;
 	uint64_t		str_size;

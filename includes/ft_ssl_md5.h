@@ -73,7 +73,9 @@ uint32_t			md5f(uint32_t x, uint32_t y, uint32_t z);
 uint32_t			md5g(uint32_t x, uint32_t y, uint32_t z);
 uint32_t			md5h(uint32_t x, uint32_t y, uint32_t z);
 uint32_t			md5i(uint32_t x, uint32_t y, uint32_t z);
-uint32_t			md5kts(int i, char kts);
+uint32_t			md5k(int i);
+uint32_t			md5t(int i);
+uint32_t			md5s(int i);
 
 int					sha256(char *str);
 uint32_t			sha256ch(uint32_t x, uint32_t y, uint32_t z);
