@@ -87,4 +87,9 @@ uint32_t			sha256_ssig0(uint32_t x);
 uint32_t			sha256_ssig1(uint32_t x);
 uint32_t			sha256_k(int i);
 
+int					base64(char *str);
+
+int 				des_cbc(char *str);
+int 				des_ecb(char *str);
+
 #endif

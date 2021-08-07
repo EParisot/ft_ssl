@@ -24,6 +24,9 @@ SRCS	=	srcs/main.c \
 			srcs/sha256.c \
 			srcs/sha256_fcts.c \
 			srcs/sha256_fcts_2.c \
+			srcs/base64.c \
+			srcs/des_ecb.c \
+			srcs/des_cbc.c \
 
 INC		=	includes/ft_ssl_md5.h
 

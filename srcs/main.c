@@ -16,6 +16,9 @@ static t_fct	g_fcts[] = {
 	{"md5", "MD5", &md5},
 	{"sha224", "SHA224", &sha224},
 	{"sha256", "SHA256", &sha256},
+	{"base64", "BASE64", &base64},
+	{"des_cbc", "DES_CBC", &des_cbc},
+	{"des_ecd", "DES_ECB", &des_cbc},
 	{NULL, NULL, NULL}
 };
 
