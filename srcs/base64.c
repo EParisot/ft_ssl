@@ -10,8 +10,18 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../includes/ft_ssl_md5.h"
+
 int					base64(char *str)
 {
-	(void)str;
+	char *cursor = str;
+	while (cursor)
+	{
+		ft_putchar(*cursor);
+		if (cursor[1])
+			cursor++;
+		else
+			break;
+	}
 	return 0;
 }
