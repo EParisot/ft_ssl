@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/ft_ssl_md5.h"
+#include "../includes/ft_ssl.h"
 
 char		*pad_len(char *str, int *padded_size)
 {

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/ft_ssl_md5.h"
+#include "../includes/ft_ssl.h"
 
 uint32_t	sha256_bsig0(uint32_t x)
 {

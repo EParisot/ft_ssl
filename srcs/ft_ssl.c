@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/ft_ssl_md5.h"
+#include "../includes/ft_ssl.h"
 
 static void	prefix(t_data *data, int source_type)
 {

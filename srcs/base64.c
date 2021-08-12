@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/ft_ssl_md5.h"
+#include "../includes/ft_ssl.h"
 
 int 	create_res_str(char *str, char **converted)
 {

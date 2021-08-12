@@ -28,7 +28,7 @@ SRCS	=	srcs/main.c \
 			srcs/des_ecb.c \
 			srcs/des_cbc.c \
 
-INC		=	includes/ft_ssl_md5.h
+INC		=	includes/ft_ssl.h
 
 OBJS	=	$(SRCS:.c=.o)
 

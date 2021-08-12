@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/ft_ssl_md5.h"
+#include "../includes/ft_ssl.h"
 
 uint32_t			md5_f(uint32_t x, uint32_t y, uint32_t z)
 {
