@@ -18,12 +18,8 @@ SRCS	=	srcs/main.c \
 			srcs/padding.c \
 			srcs/ft_ssl.c \
 			srcs/md5.c \
-			srcs/md5_fcts.c \
-			srcs/md5_fcts_2.c \
 			srcs/sha224.c \
 			srcs/sha256.c \
-			srcs/sha256_fcts.c \
-			srcs/sha256_fcts_2.c \
 			srcs/base64.c \
 			srcs/des_ecb.c \
 			srcs/des_cbc.c \

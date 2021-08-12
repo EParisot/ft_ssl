@@ -71,13 +71,6 @@ uint32_t			rot_r(uint32_t x, uint32_t n);
 uint32_t			rot_l(uint32_t x, uint32_t n);
 
 int					md5(char *str);
-uint32_t			md5_f(uint32_t x, uint32_t y, uint32_t z);
-uint32_t			md5_g(uint32_t x, uint32_t y, uint32_t z);
-uint32_t			md5_h(uint32_t x, uint32_t y, uint32_t z);
-uint32_t			md5_i(uint32_t x, uint32_t y, uint32_t z);
-uint32_t			md5_k(int i);
-uint32_t			md5_t(int i);
-uint32_t			md5_s(int i);
 
 int					sha224(char *str);
 int					sha256(char *str);
