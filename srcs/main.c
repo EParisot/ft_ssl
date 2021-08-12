@@ -37,9 +37,7 @@ static int	get_hash_or_file(t_data *data, char *hash_or_file, int i)
 			}
 			++i;
 		}
-		ft_putstr("ft_ssl: Error: '");
-		ft_putstr(hash_or_file);
-		ft_putendl("' is an invalid command.");
+		printf("ft_ssl: Error: '%s' is an invalid command.", hash_or_file);
 		print_help(0, g_fcts);
 		return (-1);
 	}
@@ -90,13 +88,24 @@ static int	parse_args(int ac, char **av, t_data *data, int i)
 				data->q_opt = 1;
 			else if (ft_strcmp(av[i], "-r") == 0)
 				data->r_opt = 1;
-			else if (ft_strcmp(av[i], "-s") == 0 && ac > i + 1)
+			else if (ft_strcmp(av[i], "-s") == 0)
 			{
-				if (get_string(data, av[++i]))
+				if (ac > i + 1)
+				{
+					if (get_string(data, av[++i]))
+						return (-1);
+				}
+				else
+				{
+					print_help(1, g_fcts);
 					return (-1);
+				}
 			}
 			else if (ft_strcmp(av[i], "-h") == 0)
+			{
 				print_help(1, g_fcts);
+				return (-1);
+			}
 			else if (get_hash_or_file(data, av[i], 0))
 				return (-1);
 		}

@@ -15,25 +15,23 @@
 static void	prefix(t_data *data, int source_type)
 {
 	if (source_type == _STDIN && data->p_opt == 1 && data->q_opt == 0)
-		ft_putstr(((t_string *)(data->strings->content))->string);
+		printf("%s", ((t_string *)(data->strings->content))->string);
 	else if (source_type != _STDIN && data->r_opt == 0 && data->q_opt == 0)
 	{
-		ft_putstr(data->hash->print_name);
+		printf("%s", data->hash->print_name);
 		if (((t_string *)(data->strings->content))->source ||
 			((t_string *)(data->strings->content))->string)
 		{
-			ft_putstr(" (");
 			if (source_type == _FILE)
-				ft_putstr(((t_string *)(data->strings->content))->source);
+			{
+				printf(" (%s) = ", ((t_string *)(data->strings->content))->source);
+			}
 			else
 			{
-				ft_putchar('"');
-				ft_putstr(((t_string *)(data->strings->content))->string);
-				ft_putchar('"');
+				printf(" (\"%s\") = ", ((t_string *)(data->strings->content))->string);
 			}
-			ft_putstr(") =");
 		}
-		ft_putchar(' ');
+
 	}
 }
 
@@ -41,14 +39,11 @@ static void	suffix(t_data *data, int source_type)
 {
 	if (source_type != _STDIN && data->r_opt == 1 && data->q_opt == 0)
 	{
-		ft_putchar(' ');
 		if (source_type == _FILE)
-			ft_putstr(((t_string *)(data->strings->content))->source);
+			printf(" %s\n", ((t_string *)(data->strings->content))->source);
 		else
 		{
-			ft_putchar('"');
-			ft_putstr(((t_string *)(data->strings->content))->string);
-			ft_putchar('"');
+			printf(" '%s'\n", ((t_string *)(data->strings->content))->string);
 		}
 	}
 }
@@ -65,7 +60,6 @@ int			hash_string(t_data *data)
 		data->hash->func_ptr(((t_string *)(data->strings->content))->string))
 			return (-1);
 		suffix(data, ((t_string *)(data->strings->content))->source_type);
-		ft_putchar('\n');
 		data->strings = data->strings->next;
 	}
 	data->strings = tmp_lst;
