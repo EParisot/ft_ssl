@@ -17,8 +17,9 @@ static t_fct	g_fcts[] = {
 	{"sha224", "SHA224", &sha224},
 	{"sha256", "SHA256", &sha256},
 	{"base64", "BASE64", &base64},
+	{"des", "DES", &des_cbc},
 	{"des_cbc", "DES_CBC", &des_cbc},
-	{"des_ecd", "DES_ECB", &des_cbc},
+	{"des_ecd", "DES_ECB", &des_ecb},
 	{NULL, NULL, NULL}
 };
 
@@ -88,6 +89,13 @@ static int	parse_args(int ac, char **av, t_data *data, int i)
 				data->q_opt = 1;
 			else if (ft_strcmp(av[i], "-r") == 0)
 				data->r_opt = 1;
+			else if (ft_strcmp(av[i], "-e") == 0)
+				data->e_opt = 1;
+			else if (ft_strcmp(av[i], "-d") == 0)
+			{
+				data->e_opt = 0;
+				data->d_opt = 1;
+			}
 			else if (ft_strcmp(av[i], "-s") == 0)
 			{
 				if (ac > i + 1)
@@ -101,19 +109,45 @@ static int	parse_args(int ac, char **av, t_data *data, int i)
 					return (-1);
 				}
 			}
+			else if (ft_strcmp(av[i], "-i") == 0)
+			{
+				if (ac > i + 1)
+				{
+					if (handle_files(data, av[++i]) == -1)
+						return (-1);
+				}
+				else
+				{
+					print_help(1, g_fcts);
+					return (-1);
+				}
+			}
+			else if (ft_strcmp(av[i], "-o") == 0)
+			{
+				if (ac > i + 1)
+				{
+					// TODO handle output to file
+				}
+				else
+				{
+					print_help(1, g_fcts);
+					return (-1);
+				}
+			}
+			else if (get_hash_or_file(data, av[i], 0))
+				return (-1);
 			else if (ft_strcmp(av[i], "-h") == 0)
 			{
 				print_help(1, g_fcts);
 				return (-1);
 			}
-			else if (get_hash_or_file(data, av[i], 0))
-				return (-1);
 		}
 	return (0);
 }
 
 static int	init_env(t_data *data, int ac, char **av)
 {
+	data->e_opt = 1;
 	if (parse_args(ac, av, data, 0))
 		return (-1);
 	if (data->hash && data->strings == NULL)

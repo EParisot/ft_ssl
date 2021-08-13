@@ -12,8 +12,9 @@
 
 #include "../includes/ft_ssl.h"
 
-int 				des_cbc(char *str)
+int 				des_cbc(char *str, int decode)
 {
+	(void)decode;
 	(void)str;
 	return 0;
 }

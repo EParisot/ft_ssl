@@ -12,12 +12,19 @@
 
 #include "../includes/ft_ssl.h"
 
-int 	create_res_str(char *str, char **converted)
+int 	create_res_str(char *str, char **converted, int decode)
 {
 	int new_size = 0;
-
-	new_size = (ft_strlen(str) / 3 * 4);
-	new_size += (ft_strlen(str) % 3) ? 4 : 0;
+	
+	if (decode == 0)
+	{
+		new_size = (ft_strlen(str) / 3 * 4);
+		new_size += (ft_strlen(str) % 3) ? 4 : 0;
+	}
+	else
+	{
+		new_size = (ft_strlen(str) / 4 * 3);
+	}
 	if ((*converted = malloc(new_size + 1)) == NULL)
 	{
 		return -1;
@@ -26,7 +33,7 @@ int 	create_res_str(char *str, char **converted)
 	return 0;
 }
 
-int		encode_buffer(char *buffer, int i, char **converted)
+void	encode_buffer(char *buffer, int i, char **converted)
 {
 	uint32_t bytes_buf = (buffer[0] << 0x10) + (buffer[1] << 0x08) + buffer[2];
 
@@ -42,10 +49,9 @@ int		encode_buffer(char *buffer, int i, char **converted)
 	{
 		(*converted)[i / 3 * 4 + 3] = '=';
 	}
-	return 0;
 }
 
-int 	encode_str(char *str, char **converted)
+void 	encode_str(char *str, char **converted)
 {
 	char buffer[4];
 
@@ -63,20 +69,43 @@ int 	encode_str(char *str, char **converted)
 			buffer[2] = '\0';
 		encode_buffer(buffer, i, converted);
 	}
+}
+
+int		decode_buffer(char *buffer, int i, char **converted)
+{
+	uint32_t bytes_buf = // TODO;
+
 	return 0;
 }
 
-int		base64(char *str)
+int 	decode_str(char *str, char **converted)
+{
+	char buffer[5];
+
+	ft_bzero(buffer, 5);
+	for (size_t i = 0; i < ft_strlen(str); i += 4)
+	{
+		ft_strncpy(buffer, str + i, 4);
+		decode_buffer(buffer, i, converted);
+	}
+	return 0;
+}
+
+int		base64(char *str, int decode)
 {
 	char *converted = NULL;
 
-	if (create_res_str(str, &converted))
+	if (create_res_str(str, &converted, decode))
 	{
-		return 1;
+		return -1;
 	}
-	if (encode_str(str, &converted))
+	if (decode == 0)
 	{
-		return 1;
+		encode_str(str, &converted);
+	}
+	else
+	{
+		decode_str(str, &converted);
 	}
 	printf("%s\n", converted);
 	free(converted);

@@ -37,7 +37,7 @@ typedef struct		s_fct
 {
 	char			*name;
 	char			*print_name;
-	int				(*func_ptr)(char *str);
+	int				(*func_ptr)(char *str, int decode);
 }					t_fct;
 
 typedef struct		s_string
@@ -52,6 +52,10 @@ typedef struct		s_data
 	int				p_opt;
 	int				q_opt;
 	int				r_opt;
+	int 			e_opt;
+	int				d_opt;
+	int				i_opt;
+	int 			o_opt;
 	t_fct			*hash;
 	t_list			*strings;
 }					t_data;
@@ -70,10 +74,10 @@ char				*add_len(char *padded_str, int *padded_size, \
 uint32_t			rot_r(uint32_t x, uint32_t n);
 uint32_t			rot_l(uint32_t x, uint32_t n);
 
-int					md5(char *str);
+int					md5(char *str, int decode);
 
-int					sha224(char *str);
-int					sha256(char *str);
+int					sha224(char *str, int decode);
+int					sha256(char *str, int decode);
 uint32_t			sha256_ch(uint32_t x, uint32_t y, uint32_t z);
 uint32_t			sha256_maj(uint32_t x, uint32_t y, uint32_t z);
 uint32_t			sha256_bsig0(uint32_t x);
@@ -82,9 +86,9 @@ uint32_t			sha256_ssig0(uint32_t x);
 uint32_t			sha256_ssig1(uint32_t x);
 uint32_t			sha256_k(int i);
 
-int					base64(char *str);
+int					base64(char *str, int decode);
 
-int 				des_cbc(char *str);
-int 				des_ecb(char *str);
+int 				des_cbc(char *str, int decode);
+int 				des_ecb(char *str, int decode);
 
 #endif

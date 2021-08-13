@@ -56,8 +56,7 @@ int			hash_string(t_data *data)
 	while (data->strings)
 	{
 		prefix(data, ((t_string *)(data->strings->content))->source_type);
-		if (data->hash && \
-		data->hash->func_ptr(((t_string *)(data->strings->content))->string))
+		if (data->hash && data->hash->func_ptr(((t_string *)(data->strings->content))->string, data->d_opt))
 			return (-1);
 		suffix(data, ((t_string *)(data->strings->content))->source_type);
 		data->strings = data->strings->next;
