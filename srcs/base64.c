@@ -71,10 +71,41 @@ void 	encode_str(char *str, char **converted)
 	}
 }
 
+int    index_of(char c, char *str)
+{
+	for (size_t i = 0; i < ft_strlen(str); i++)
+	{
+		if (str[i] == c)
+			return i;
+	}
+	return -1;
+}
+
 int		decode_buffer(char *buffer, int i, char **converted)
 {
-	uint32_t bytes_buf = // TODO;
+	uint32_t bytes_buf = 0;
 
+	if (buffer[2] == '=')
+	{
+		buffer[2] = 0;
+	}
+	if (buffer[3] == '=')
+	{
+		buffer[3] = 0;
+	}
+	for (int j = 0; j < 4; j++)
+	{
+		int idx = 0;
+		if ((idx = index_of(buffer[j], BASE64_ALPHA)) == -1)
+		    continue;
+		bytes_buf += idx << ((3-j) * 6);
+	}
+	for (int j = 0; j < 3; j++)
+	{
+		int val = 0;
+		if ((val = bytes_buf >> ((2-j) * 8) & 0xFF))
+			(*converted)[i / 4 * 3 + j] = val;
+	}
 	return 0;
 }
 
@@ -107,7 +138,10 @@ int		base64(char *str, int decode)
 	{
 		decode_str(str, &converted);
 	}
-	printf("%s\n", converted);
+	if (decode == 0)
+		printf("%s\n", converted);
+	else
+		printf("%s", converted);
 	free(converted);
 	return 0;
 }
