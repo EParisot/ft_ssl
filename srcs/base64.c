@@ -12,6 +12,35 @@
 
 #include "../includes/ft_ssl.h"
 
+int    index_of(char c, char *str)
+{
+	for (size_t i = 0; i < ft_strlen(str); i++)
+	{
+		if (str[i] == c)
+			return i;
+	}
+	return -1;
+}
+
+char *remove_char(char *str, char c)
+{
+	for (size_t i = 0; i < ft_strlen(str); i++)
+	{
+		if (str[i] == c)
+		{
+			size_t j = i;
+			for (j = i; j < ft_strlen(str); j++)
+			{
+				str[j] = str[j + 1];
+			}
+			str[j] = '\0';
+			i--;
+		}
+	}
+	return str;
+}
+
+
 int 	create_res_str(char *str, char **converted, int decode)
 {
 	int new_size = 0;
@@ -20,10 +49,12 @@ int 	create_res_str(char *str, char **converted, int decode)
 	{
 		new_size = (ft_strlen(str) / 3 * 4);
 		new_size += (ft_strlen(str) % 3) ? 4 : 0;
+		new_size += new_size / 64 + 1;
 	}
 	else
 	{
 		new_size = (ft_strlen(str) / 4 * 3);
+		new_size += new_size / 64 + 1;
 	}
 	if ((*converted = malloc(new_size + 1)) == NULL)
 	{
@@ -36,18 +67,27 @@ int 	create_res_str(char *str, char **converted, int decode)
 void	encode_buffer(char *buffer, int i, char **converted)
 {
 	uint32_t bytes_buf = (buffer[0] << 0x10) + (buffer[1] << 0x08) + buffer[2];
+	int in_len = 0;
+	int out_len = 0;
 
 	for (int j = 3; j >= 0; j--)
 	{
-		(*converted)[i / 3 * 4 + (3-j)] = BASE64_ALPHA[bytes_buf >> (j * 6) & 0x3F];
+		out_len = ft_strlen(*converted);
+		in_len = i / 3 * 4 + (3-j);
+		if (in_len && in_len % 64 == 0)
+		{
+			(*converted)[out_len] = '\n';
+			out_len += 1;
+		}
+		(*converted)[out_len] = BASE64_ALPHA[bytes_buf >> (j * 6) & 0x3F];
 	}
 	if (buffer[1] == 0)
 	{
-		(*converted)[i / 3 * 4 + 2] = '=';
+		(*converted)[out_len - 1] = '=';
 	}
 	if (buffer[2] == 0)
 	{
-		(*converted)[i / 3 * 4 + 3] = '=';
+		(*converted)[out_len] = '=';
 	}
 }
 
@@ -71,16 +111,6 @@ void 	encode_str(char *str, char **converted)
 	}
 }
 
-int    index_of(char c, char *str)
-{
-	for (size_t i = 0; i < ft_strlen(str); i++)
-	{
-		if (str[i] == c)
-			return i;
-	}
-	return -1;
-}
-
 int		decode_buffer(char *buffer, int i, char **converted)
 {
 	uint32_t bytes_buf = 0;
@@ -102,9 +132,10 @@ int		decode_buffer(char *buffer, int i, char **converted)
 	}
 	for (int j = 0; j < 3; j++)
 	{
+		int idx = i / 4 * 3 + j;
 		int val = 0;
 		if ((val = bytes_buf >> ((2-j) * 8) & 0xFF))
-			(*converted)[i / 4 * 3 + j] = val;
+			(*converted)[idx] = val;
 	}
 	return 0;
 }
@@ -114,6 +145,7 @@ int 	decode_str(char *str, char **converted)
 	char buffer[5];
 
 	ft_bzero(buffer, 5);
+	remove_char(str, '\n');
 	for (size_t i = 0; i < ft_strlen(str); i += 4)
 	{
 		ft_strncpy(buffer, str + i, 4);
@@ -122,7 +154,7 @@ int 	decode_str(char *str, char **converted)
 	return 0;
 }
 
-int		base64(char *str, int decode)
+int		base64(char *str, int decode, FILE *fd)
 {
 	char *converted = NULL;
 
@@ -138,10 +170,19 @@ int		base64(char *str, int decode)
 	{
 		decode_str(str, &converted);
 	}
-	if (decode == 0)
-		printf("%s\n", converted);
+	if (fd == stdout)
+		if (decode == 0)
+			printf("%s\n", converted);
+		else
+			printf("%s", converted);
 	else
-		printf("%s", converted);
+	{
+		if (decode == 0)
+			fprintf(fd, "%s\n", converted);
+		else
+			fprintf(fd, "%s", converted);
+		fclose(fd);
+	}
 	free(converted);
 	return 0;
 }

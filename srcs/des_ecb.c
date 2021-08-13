@@ -12,8 +12,9 @@
 
 #include "../includes/ft_ssl.h"
 
-int 				des_ecb(char *str, int decode)
+int 				des_ecb(char *str, int decode, FILE *fd)
 {
+	(void)fd;
 	(void)decode;
 	(void)str;
 	return 0;

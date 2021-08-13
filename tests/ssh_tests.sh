@@ -9,5 +9,5 @@ for H in ${HASHES[@]}; do for S in ${TEST_STRINGS[@]}; do echo -n "$S" | ./ft_ss
 
 HASHES=(base64)
 base64_STRINGS=("" "YWJj" "Ym9uam91cjQy" "YWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYQ==")
-echo "reverse Tests :"
-for H in ${HASHES[@]}; do var=${H}_STRINGS[@]; for S in ${!var}; do echo -n "$S" | ./ft_ssl $H -d; echo "$S" | openssl $H -d ; echo; done; done
+echo "Decrypt Tests :"
+for H in ${HASHES[@]}; do var=${H}_STRINGS[@]; for S in ${!var}; do echo "$S" | ./ft_ssl $H -d; echo; echo "$S" | openssl $H -d ; echo; done; done

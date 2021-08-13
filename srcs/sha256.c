@@ -155,8 +155,9 @@ static int		sha256_loop(unsigned char *padded_str, int padded_size, \
 	return (0);
 }
 
-int				sha256(char *str, int decode)
+int				sha256(char *str, int decode, FILE *fd)
 {
+	(void)fd;
 	(void)decode;
 	char			*padded_str;
 	uint64_t		str_size;

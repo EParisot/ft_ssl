@@ -126,7 +126,13 @@ static int	parse_args(int ac, char **av, t_data *data, int i)
 			{
 				if (ac > i + 1)
 				{
-					// TODO handle output to file
+					FILE *fd;
+					if ((fd = fopen(av[++i], "w")) == NULL)
+					{
+						printf("ft_ssl: Error: cannot open '%s' for writing.", av[i+1]);
+						return -1;
+					}
+					data->o_opt = fd;
 				}
 				else
 				{
@@ -148,6 +154,7 @@ static int	parse_args(int ac, char **av, t_data *data, int i)
 static int	init_env(t_data *data, int ac, char **av)
 {
 	data->e_opt = 1;
+	data->o_opt = stdout;
 	if (parse_args(ac, av, data, 0))
 		return (-1);
 	if (data->hash && data->strings == NULL)
