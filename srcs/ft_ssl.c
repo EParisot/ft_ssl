@@ -23,7 +23,7 @@ static void	prefix(t_data *data, int source_type)
 	else if (data->r_opt == 0 && data->q_opt == 0)
 	{
 		if (source_type != _STDIN)
-			printf("%s", data->hash->print_name);
+			printf("%s ", data->hash->print_name);
 		if (((t_string *)(data->strings->content))->source ||
 			((t_string *)(data->strings->content))->string)
 		{
