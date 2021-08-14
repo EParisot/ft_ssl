@@ -58,13 +58,13 @@ int			hash_string(t_data *data)
 		if (data->o_opt == 0)
 		{
 			prefix(data, ((t_string *)(data->strings->content))->source_type);
-			if (data->hash && data->hash->func_ptr(((t_string *)(data->strings->content))->string, data->d_opt, data->o_opt))
+			if (data->hash && data->hash->func_ptr(((t_string *)(data->strings->content))->string, data))
 				return (-1);
 			suffix(data, ((t_string *)(data->strings->content))->source_type);
 		}
 		else
 		{
-			if (data->hash && data->hash->func_ptr(((t_string *)(data->strings->content))->string, data->d_opt, data->o_opt))
+			if (data->hash && data->hash->func_ptr(((t_string *)(data->strings->content))->string, data))
 				return (-1);
 		}
 		data->strings = data->strings->next;

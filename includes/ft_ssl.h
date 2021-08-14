@@ -33,19 +33,19 @@ typedef enum		e_source_type
 	_FILE
 }					t_source_type;
 
-typedef struct		s_fct
-{
-	char			*name;
-	char			*print_name;
-	int				(*func_ptr)(char *str, int decode, FILE *fd);
-}					t_fct;
-
 typedef struct		s_string
 {
 	char			*string;
 	char			*source;
 	int				source_type;
 }					t_string;
+
+typedef struct		s_fct
+{
+	char			*name;
+	char			*print_name;
+	int				(*func_ptr)(char *str, void *data);
+}					t_fct;
 
 typedef struct		s_data
 {
@@ -74,10 +74,10 @@ char				*add_len(char *padded_str, int *padded_size, \
 uint32_t			rot_r(uint32_t x, uint32_t n);
 uint32_t			rot_l(uint32_t x, uint32_t n);
 
-int					md5(char *str, int decode, FILE *fd);
+int					md5(char *str, void *data);
 
-int					sha224(char *str, int decode, FILE *fd);
-int					sha256(char *str, int decode, FILE *fd);
+int					sha224(char *str, void *data);
+int					sha256(char *str, void *data);
 uint32_t			sha256_ch(uint32_t x, uint32_t y, uint32_t z);
 uint32_t			sha256_maj(uint32_t x, uint32_t y, uint32_t z);
 uint32_t			sha256_bsig0(uint32_t x);
@@ -86,9 +86,9 @@ uint32_t			sha256_ssig0(uint32_t x);
 uint32_t			sha256_ssig1(uint32_t x);
 uint32_t			sha256_k(int i);
 
-int					base64(char *str, int decode, FILE *fd);
+int					base64(char *str, void *data);
 
-int 				des_cbc(char *str, int decode, FILE *fd);
-int 				des_ecb(char *str, int decode, FILE *fd);
+int 				des_cbc(char *str, void *data);
+int 				des_ecb(char *str, void *data);
 
 #endif
