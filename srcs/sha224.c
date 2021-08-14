@@ -121,7 +121,7 @@ int				sha224(char *str, void *data)
 		return (-1);
 	if (sha224_loop((unsigned char *)padded_str, padded_size, str_res))
 		return (-1);
-	printf("%s\n", str_res);
+	printf("%s", str_res);
 	free(padded_str);
 	free(str_res);
 	return (0);

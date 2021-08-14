@@ -172,10 +172,7 @@ int		base64(char *str, void *data)
 		decode_str(str, &converted);
 	}
 	if (d->o_opt == stdout)
-		if (d->d_opt == 0)
-			printf("%s\n", converted);
-		else
-			printf("%s", converted);
+		printf("%s", converted);
 	else
 	{
 		if (d->d_opt == 0)

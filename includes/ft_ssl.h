@@ -47,6 +47,14 @@ typedef struct		s_fct
 	int				(*func_ptr)(char *str, void *data);
 }					t_fct;
 
+typedef struct		s_key_opt
+{
+	char			*key;
+	char 			*iv;
+	char 			*pass;
+	char			*salt;
+}					t_key_opt;
+
 typedef struct		s_data
 {
 	int				p_opt;
