@@ -12,6 +12,15 @@
 
 #include "../includes/ft_ssl.h"
 
+int				read_stdin(char *buf, int size)
+{
+	if (read(STDIN_FILENO, &buf, size) == size)
+	{
+		return 0;
+	}
+	return -1;
+}
+
 static int		read_loop(char **str, char *buf)
 {
 	char		*str_tmp;
@@ -41,7 +50,7 @@ static int		read_loop(char **str, char *buf)
 	return (0);
 }
 
-int				read_stdin(t_data *data)
+int				read_string(t_data *data)
 {
 	char		buf[BUF_SIZE + 1];
 	t_string	new_string;

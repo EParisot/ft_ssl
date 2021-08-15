@@ -11,10 +11,11 @@
 /* ************************************************************************** */
 
 #include "../includes/ft_ssl.h"
-
+//https://www.geeksforgeeks.org/data-encryption-standard-des-set-1/
 int 				des_ecb(char *str, void *data)
 {
-	(void)data;
-	(void)str;
+	t_data *d = (t_data *)data;
+
+	printf("str=%s pass=%s key=%s salt=%s iv=%s\n", str, d->pass, d->key, d->salt, d->iv);
 	return 0;
 }

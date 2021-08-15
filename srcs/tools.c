@@ -39,6 +39,8 @@ void			del(void *addr, size_t size)
 
 void			clean_data(t_data *data)
 {
+	if (data && data->pass)
+		free(data->pass);
 	if (data && data->strings)
 		ft_lstdel(&data->strings, del);
 	if (data && data->hash)

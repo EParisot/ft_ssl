@@ -19,7 +19,7 @@ static t_fct	g_fcts[] = {
 	{"base64", "BASE64", &base64},
 	{"des", "DES", &des_cbc},
 	{"des_cbc", "DES_CBC", &des_cbc},
-	{"des_ecd", "DES_ECB", &des_ecb},
+	{"des_ecb", "DES_ECB", &des_ecb},
 	{NULL, NULL, NULL}
 };
 
@@ -79,13 +79,7 @@ static int	parse_args(int ac, char **av, t_data *data, int i)
 	if (ac > 1)
 		while (++i < ac)
 		{
-			if (ft_strcmp(av[i], "-p") == 0)
-			{
-				if (read_stdin(data))
-					return (-1);
-				data->p_opt = 1;
-			}
-			else if (ft_strcmp(av[i], "-q") == 0)
+			if (ft_strcmp(av[i], "-q") == 0)
 				data->q_opt = 1;
 			else if (ft_strcmp(av[i], "-r") == 0)
 				data->r_opt = 1;
@@ -96,17 +90,89 @@ static int	parse_args(int ac, char **av, t_data *data, int i)
 				data->e_opt = 0;
 				data->d_opt = 1;
 			}
+			else if (ft_strcmp(av[i], "-p") == 0)
+			{
+				if (ft_strcmp(data->hash->name, "md5") == 0 || ft_strncmp(data->hash->name, "sha", 3) == 0)
+				{
+					if (read_string(data))
+						return (-1);
+					data->p_opt = 1;
+				}
+				else
+				{
+					if (ac > i + 1)
+					{
+						if ((data->pass = malloc(ft_strlen(av[i+1]) + 1)) == NULL)
+							return -1;
+						ft_strcpy(data->pass, av[++i]);
+					}
+					else
+					{
+						if (read_stdin(data->pass, 8))
+							return (-1);
+					}
+				}
+			}
 			else if (ft_strcmp(av[i], "-s") == 0)
 			{
 				if (ac > i + 1)
 				{
-					if (get_string(data, av[++i]))
-						return (-1);
+					if (ft_strcmp(data->hash->name, "md5") == 0 || ft_strncmp(data->hash->name, "sha", 3) == 0)
+					{
+						if (ac > i + 1)
+						{
+							if (get_string(data, av[++i]))
+								return (-1);
+						}
+						else
+						{
+							print_help(1, g_fcts);
+							return (-1);
+						}
+					}
+					else
+					{
+						if (ac > i + 1)
+						{
+							ft_strcpy(data->salt, av[++i]);
+						}
+						else
+						{
+							if (read_stdin(data->salt, 8))
+								return (-1);
+						}
+					}
 				}
-				else
+				
+			}
+			else if (ft_strcmp(av[i], "-k") == 0)
+			{
+				if (ft_strcmp(data->hash->name, "md5") != 0 && ft_strncmp(data->hash->name, "sha", 3) != 0)
 				{
-					print_help(1, g_fcts);
-					return (-1);
+					if (ac > i + 1)
+					{
+						ft_strcpy(data->key, av[++i]);
+					}
+					else
+					{
+						if (read_stdin(data->key, 8))
+							return (-1);
+					}
+				}
+			}
+			else if (ft_strcmp(av[i], "-v") == 0)
+			{
+				if (ft_strcmp(data->hash->name, "md5") != 0 && ft_strncmp(data->hash->name, "sha", 3) != 0)
+				{
+					if (ac > i + 1)
+					{
+						ft_strcpy(data->iv, av[++i]);
+					}
+					else
+					{
+						if (read_stdin(data->iv, 8))
+							return (-1);
+					}
 				}
 			}
 			else if (ft_strcmp(av[i], "-i") == 0)
@@ -159,7 +225,7 @@ static int	init_env(t_data *data, int ac, char **av)
 		return (-1);
 	if (data->hash && data->strings == NULL)
 	{
-		if (read_stdin(data))
+		if (read_string(data))
 			return (-1);
 	}
 	else if (data->hash == NULL)

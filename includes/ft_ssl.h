@@ -47,16 +47,12 @@ typedef struct		s_fct
 	int				(*func_ptr)(char *str, void *data);
 }					t_fct;
 
-typedef struct		s_key_opt
-{
-	char			*key;
-	char 			*iv;
-	char 			*pass;
-	char			*salt;
-}					t_key_opt;
-
 typedef struct		s_data
 {
+	char 			*pass;
+	char			key[9];
+	char 			iv[9];
+	char			salt[9];
 	int				p_opt;
 	int				q_opt;
 	int				r_opt;
@@ -68,7 +64,8 @@ typedef struct		s_data
 	t_list			*strings;
 }					t_data;
 
-int					read_stdin(t_data *data);
+int					read_string(t_data *data);
+int					read_stdin(char *buf, int size);
 int					handle_files(t_data *data, char *filename);
 int					hash_string(t_data *data);
 void				print_help(int usage, t_fct *g_fcts);
