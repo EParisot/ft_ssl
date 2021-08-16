@@ -15,7 +15,7 @@
 int 				des_ecb(char *str, void *data)
 {
 	t_data *d = (t_data *)data;
-
-	printf("str=%s pass=%s key=%s salt=%s iv=%s\n", str, d->pass, d->key, d->salt, d->iv);
+	(void)d;
+	(void)str;
 	return 0;
 }

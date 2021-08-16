@@ -62,6 +62,7 @@ int			hash_string(t_data *data)
 {
 	t_list	*tmp_lst;
 
+	securize(data);
 	tmp_lst = data->strings;
 	while (data->strings)
 	{

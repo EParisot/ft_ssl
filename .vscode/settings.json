@@ -1,5 +1,6 @@
 {
 	"files.associations": {
-		"ft_ssl_md5.h": "c"
+		"ft_ssl_md5.h": "c",
+		"ft_ssl.h": "c"
 	}
 }

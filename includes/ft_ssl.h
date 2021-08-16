@@ -50,9 +50,9 @@ typedef struct		s_fct
 typedef struct		s_data
 {
 	char 			*pass;
-	char			key[9];
-	char 			iv[9];
-	char			salt[9];
+	unsigned char	key[9];
+	unsigned char 	iv[9];
+	unsigned char	salt[9];
 	int				p_opt;
 	int				q_opt;
 	int				r_opt;
@@ -78,6 +78,8 @@ char				*add_len(char *padded_str, int *padded_size, \
 
 uint32_t			rot_r(uint32_t x, uint32_t n);
 uint32_t			rot_l(uint32_t x, uint32_t n);
+
+int 				securize(t_data* data);
 
 int					md5(char *str, void *data);
 
