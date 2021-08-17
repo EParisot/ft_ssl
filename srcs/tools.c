@@ -86,7 +86,7 @@ int 			random_value(unsigned char *r, size_t size)
 }
 
 static void 	PBKDF2(int fct(char *, void *), t_data *data, int c, int d)
-{
+{//https://fr.wikipedia.org/wiki/PBKDF2
 	(void)fct;
 	(void)data;
 	(void)c;

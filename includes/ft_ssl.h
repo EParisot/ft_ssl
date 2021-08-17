@@ -53,6 +53,7 @@ typedef struct		s_data
 	unsigned char	key[9];
 	unsigned char 	iv[9];
 	unsigned char	salt[9];
+	int 			a_opt;
 	int				p_opt;
 	int				q_opt;
 	int				r_opt;
@@ -94,6 +95,8 @@ uint32_t			sha256_ssig1(uint32_t x);
 uint32_t			sha256_k(int i);
 
 int					base64(char *str, void *data);
+void 				b64_encode_str(char *str, char **converted);
+void 				b64_decode_str(char *str, char **converted);
 
 int 				des_cbc(char *str, void *data);
 int 				des_ecb(char *str, void *data);

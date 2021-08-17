@@ -23,8 +23,8 @@ TEST_STRINGS=("" \
 
 for H in ${HASHES[@]} 
 	do for S in ${TEST_STRINGS[@]}
-		do echo -e "${BLUE}./ft_ssl ${H} ${S}${NC}:"
-		echo -n "$S" | ./ft_ssl $H; echo -e "${BLUE}openssl ${H} ${S}${NC}:"
+		do echo -e "${BLUE}./ft_ssl ${H} -q ${S}${NC}:"
+		echo -n "$S" | ./ft_ssl $H -q; echo -e "${BLUE}openssl ${H} ${S}${NC}:"
 		echo -n "$S" | openssl $H | sed 's/(stdin)= //'
 		echo
 	done

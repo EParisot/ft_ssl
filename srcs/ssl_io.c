@@ -102,6 +102,16 @@ static int		read_file(t_string *file)
 	return (0);
 }
 
+static int		file_exists(char *filename)
+{
+	if (open(filename, O_RDONLY) == -1)
+	{
+		printf("ft_ssl: Error file %s not found...\n", filename);
+		return 0;
+	}
+	return 1;
+}
+
 static int		already_exists(t_data *data, char *filename)
 {
 	t_list	*tmp_lst;
@@ -135,7 +145,7 @@ int				handle_files(t_data *data, char *filename)
 
 	new_lst = NULL;
 	tmp_lst = data->strings;
-	if (already_exists(data, filename))
+	if (!file_exists(filename) || already_exists(data, filename))
 		return (-2);
 	if ((new_string.source = (char *)malloc(ft_strlen(filename) + 1)) == NULL)
 		return (-1);

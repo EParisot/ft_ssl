@@ -91,7 +91,7 @@ void	encode_buffer(char *buffer, int i, char **converted)
 	}
 }
 
-void 	encode_str(char *str, char **converted)
+void 	b64_encode_str(char *str, char **converted)
 {
 	char buffer[4];
 
@@ -140,7 +140,7 @@ int		decode_buffer(char *buffer, int i, char **converted)
 	return 0;
 }
 
-int 	decode_str(char *str, char **converted)
+void 	b64_decode_str(char *str, char **converted)
 {
 	char buffer[5];
 
@@ -151,7 +151,6 @@ int 	decode_str(char *str, char **converted)
 		ft_strncpy(buffer, str + i, 4);
 		decode_buffer(buffer, i, converted);
 	}
-	return 0;
 }
 
 int		base64(char *str, void *data)
@@ -165,11 +164,11 @@ int		base64(char *str, void *data)
 	}
 	if (d->d_opt == 0)
 	{
-		encode_str(str, &converted);
+		b64_encode_str(str, &converted);
 	}
 	else
 	{
-		decode_str(str, &converted);
+		b64_decode_str(str, &converted);
 	}
 	if (d->o_opt == stdout)
 		printf("%s", converted);

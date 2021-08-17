@@ -42,7 +42,7 @@ static int	get_hash_or_file(t_data *data, char *hash_or_file, int i)
 		print_help(0, g_fcts);
 		return (-1);
 	}
-	if (handle_files(data, hash_or_file) == -1)
+	if (handle_files(data, hash_or_file))
 		return (-1);
 	return (0);
 }
@@ -92,7 +92,7 @@ static int	parse_args(int ac, char **av, t_data *data, int i)
 			}
 			else if (ft_strcmp(av[i], "-p") == 0)
 			{
-				if (ft_strcmp(data->hash->name, "md5") == 0 || ft_strncmp(data->hash->name, "sha", 3) == 0)
+				if (ft_strncmp(data->hash->name, "des", 3) != 0)
 				{
 					if (read_string(data))
 						return (-1);
@@ -117,7 +117,7 @@ static int	parse_args(int ac, char **av, t_data *data, int i)
 			{
 				if (ac > i + 1)
 				{
-					if (ft_strcmp(data->hash->name, "md5") == 0 || ft_strncmp(data->hash->name, "sha", 3) == 0)
+					if (ft_strncmp(data->hash->name, "des", 3) != 0)
 					{
 						if (ac > i + 1)
 						{
@@ -134,43 +134,54 @@ static int	parse_args(int ac, char **av, t_data *data, int i)
 					{
 						if (ac > i + 1)
 						{
-							ft_strcpy(data->salt, av[++i]);
+							ft_strcpy((char *)data->salt, av[++i]);
 						}
 						else
 						{
-							if (read_stdin(data->salt, 8))
+							if (read_stdin((char *)data->salt, 8))
 								return (-1);
 						}
 					}
 				}
-				
+				else
+				{
+					print_help(1, g_fcts);
+						return (-1);
+				}
+			}
+			else if (ft_strcmp(av[i], "-a") == 0)
+			{
+				if (ft_strncmp(data->hash->name, "des", 3) == 0)
+				{
+					data->a_opt = 1;
+				}
 			}
 			else if (ft_strcmp(av[i], "-k") == 0)
 			{
-				if (ft_strcmp(data->hash->name, "md5") != 0 && ft_strncmp(data->hash->name, "sha", 3) != 0)
+				if (ft_strncmp(data->hash->name, "des", 3) == 0)
 				{
 					if (ac > i + 1)
 					{
-						ft_strcpy(data->key, av[++i]);
+						ft_strcpy((char *)data->key, av[++i]);
 					}
 					else
 					{
-						if (read_stdin(data->key, 8))
+						if (read_stdin((char *)data->key, 8))
 							return (-1);
 					}
 				}
 			}
 			else if (ft_strcmp(av[i], "-v") == 0)
 			{
-				if (ft_strcmp(data->hash->name, "md5") != 0 && ft_strncmp(data->hash->name, "sha", 3) != 0)
+				if (ft_strncmp(data->hash->name, "des", 3) == 0)
 				{
 					if (ac > i + 1)
 					{
-						ft_strcpy(data->iv, av[++i]);
+						ft_strcpy((char *)data->iv, av[++i]);
 					}
 					else
 					{
-						if (read_stdin(data->iv, 8))
+						if (read_stdin((char *)data->iv, 8))
 							return (-1);
 					}
 				}
