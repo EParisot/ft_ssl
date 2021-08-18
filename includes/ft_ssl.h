@@ -51,6 +51,7 @@ typedef struct		s_data
 {
 	char 			*pass;
 	unsigned char	key[9];
+	unsigned char   des_key[9];
 	unsigned char 	iv[9];
 	unsigned char	salt[9];
 	int 			a_opt;
@@ -66,6 +67,7 @@ typedef struct		s_data
 }					t_data;
 
 int 				read_hex(char *hex_str, unsigned char *out);
+void 				print_hex(unsigned char *hex, size_t size);
 int					read_string(t_data *data);
 int					read_stdin(char *buf, int size);
 int					handle_files(t_data *data, char *filename);
