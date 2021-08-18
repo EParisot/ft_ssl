@@ -44,7 +44,7 @@ typedef struct		s_fct
 {
 	char			*name;
 	char			*print_name;
-	int				(*func_ptr)(char *str, void *data);
+	char			*(*func_ptr)(char *str, void *data, int print);
 }					t_fct;
 
 typedef struct		s_data
@@ -65,6 +65,7 @@ typedef struct		s_data
 	t_list			*strings;
 }					t_data;
 
+int 				read_hex(char *hex_str, unsigned char *out);
 int					read_string(t_data *data);
 int					read_stdin(char *buf, int size);
 int					handle_files(t_data *data, char *filename);
@@ -74,18 +75,18 @@ void				clean_data(t_data *data);
 void				del(void *addr, size_t size);
 
 char				*pad_len(char *str, int *padded_size);
-char				*add_len(char *padded_str, int *padded_size, \
-								uint64_t str_size, int swap);
+char				*add_len(char *padded_str, int *padded_size, uint64_t str_size, int swap);
 
 uint32_t			rot_r(uint32_t x, uint32_t n);
 uint32_t			rot_l(uint32_t x, uint32_t n);
 
 int 				securize(t_data* data);
 
-int					md5(char *str, void *data);
+char				*md5(char *str, void *data, int print);
 
-int					sha224(char *str, void *data);
-int					sha256(char *str, void *data);
+char				*sha224(char *str, void *data, int print);
+char				*sha256(char *str, void *data, int print);
+int					sha256_loop(unsigned char *padded_str, int padded_size, char *str_res);
 uint32_t			sha256_ch(uint32_t x, uint32_t y, uint32_t z);
 uint32_t			sha256_maj(uint32_t x, uint32_t y, uint32_t z);
 uint32_t			sha256_bsig0(uint32_t x);
@@ -94,11 +95,11 @@ uint32_t			sha256_ssig0(uint32_t x);
 uint32_t			sha256_ssig1(uint32_t x);
 uint32_t			sha256_k(int i);
 
-int					base64(char *str, void *data);
+char				*base64(char *str, void *data, int print);
 void 				b64_encode_str(char *str, char **converted);
 void 				b64_decode_str(char *str, char **converted);
 
-int 				des_cbc(char *str, void *data);
-int 				des_ecb(char *str, void *data);
+char				*des_cbc(char *str, void *data, int print);
+char				*des_ecb(char *str, void *data, int print);
 
 #endif

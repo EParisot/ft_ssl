@@ -153,14 +153,14 @@ void 	b64_decode_str(char *str, char **converted)
 	}
 }
 
-int		base64(char *str, void *data)
+char		*base64(char *str, void *data, int print)
 {
 	t_data *d = (t_data *)data;
 	char *converted = NULL;
 
 	if (create_res_str(str, &converted, d->d_opt))
 	{
-		return -1;
+		return NULL;
 	}
 	if (d->d_opt == 0)
 	{
@@ -170,7 +170,7 @@ int		base64(char *str, void *data)
 	{
 		b64_decode_str(str, &converted);
 	}
-	if (d->o_opt == stdout)
+	if (d->o_opt == stdout && print)
 		printf("%s", converted);
 	else
 	{
@@ -180,6 +180,5 @@ int		base64(char *str, void *data)
 			fprintf(d->o_opt, "%s", converted);
 		fclose(d->o_opt);
 	}
-	free(converted);
-	return 0;
+	return converted;
 }

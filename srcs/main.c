@@ -106,11 +106,6 @@ static int	parse_args(int ac, char **av, t_data *data, int i)
 							return -1;
 						ft_strcpy(data->pass, av[++i]);
 					}
-					else
-					{
-						if (read_stdin(data->pass, 8))
-							return (-1);
-					}
 				}
 			}
 			else if (ft_strcmp(av[i], "-s") == 0)
@@ -134,12 +129,12 @@ static int	parse_args(int ac, char **av, t_data *data, int i)
 					{
 						if (ac > i + 1)
 						{
-							ft_strcpy((char *)data->salt, av[++i]);
+							read_hex(av[++i], data->salt);
 						}
 						else
 						{
-							if (read_stdin((char *)data->salt, 8))
-								return (-1);
+							print_help(1, g_fcts);
+							return (-1);
 						}
 					}
 				}
@@ -162,12 +157,7 @@ static int	parse_args(int ac, char **av, t_data *data, int i)
 				{
 					if (ac > i + 1)
 					{
-						ft_strcpy((char *)data->key, av[++i]);
-					}
-					else
-					{
-						if (read_stdin((char *)data->key, 8))
-							return (-1);
+						read_hex(av[++i], data->key);
 					}
 				}
 			}
@@ -177,12 +167,7 @@ static int	parse_args(int ac, char **av, t_data *data, int i)
 				{
 					if (ac > i + 1)
 					{
-						ft_strcpy((char *)data->iv, av[++i]);
-					}
-					else
-					{
-						if (read_stdin((char *)data->iv, 8))
-							return (-1);
+						read_hex(av[++i], data->iv);
 					}
 				}
 			}

@@ -101,7 +101,7 @@ static int		sha224_loop(unsigned char *padded_str, int padded_size, \
 	return (0);
 }
 
-int				sha224(char *str, void *data)
+char				*sha224(char *str, void *data, int print)
 {
 	(void)data;
 	char			*padded_str;
@@ -114,15 +114,15 @@ int				sha224(char *str, void *data)
 		str_size = ft_strlen(str);
 	padded_size = 0;
 	if ((padded_str = pad_len(str, &padded_size)) == NULL)
-		return (-1);
+		return (NULL);
 	if ((padded_str = add_len(padded_str, &padded_size, str_size, 1)) == NULL)
-		return (-1);
+		return (NULL);
 	if ((str_res = (char *)malloc(7 * 8 + 1)) == NULL)
-		return (-1);
+		return (NULL);
 	if (sha224_loop((unsigned char *)padded_str, padded_size, str_res))
-		return (-1);
-	printf("%s", str_res);
+		return (NULL);
+	if (print)
+		printf("%s", str_res);
 	free(padded_str);
-	free(str_res);
-	return (0);
+	return str_res;
 }

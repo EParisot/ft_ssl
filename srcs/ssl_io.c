@@ -12,6 +12,38 @@
 
 #include "../includes/ft_ssl.h"
 
+// Read a hex string and convert it to a char array
+int 			read_hex(char *hex_str, unsigned char *out)
+{
+	int i = 0;
+	int j = 0;
+	if (hex_str[0] == '0' && (hex_str[1] == 'x' || hex_str[1] == 'X'))
+		i = 2;
+	while (hex_str[i] != '\0')
+	{
+		for (int k = 0; k < 2; k++)
+		{
+			if (hex_str[i + k] >= '0' && hex_str[i + k] <= '9')
+			{
+				if (k == 0)
+					out[j] += (hex_str[i + k] - '0') * 16;
+				else
+					out[j] += hex_str[i + k] - '0';
+			}
+			else if ((hex_str[i + k] >= 'a' && hex_str[i + k] <= 'f') || (hex_str[i + k] >= 'A' && hex_str[i + k] <= 'F'))
+			{
+				if (k == 0)
+					out[j] += (10 + hex_str[i + k] - 'a') * 16;
+				else
+					out[j] += 10 + hex_str[i + k] - 'a';
+			}
+		}
+		j++;
+		i += 2;
+	}
+	return 0;
+}
+
 int				read_stdin(char *buf, int size)
 {
 	if (read(STDIN_FILENO, &buf, size) == size)

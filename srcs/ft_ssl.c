@@ -61,6 +61,8 @@ static void	suffix(t_data *data, int source_type)
 int			hash_string(t_data *data)
 {
 	t_list	*tmp_lst;
+	char 	*res = NULL;
+	int 	print = 1;
 
 	if (ft_strncmp(data->hash->name, "des", 3) == 0)
 		securize(data);
@@ -70,15 +72,23 @@ int			hash_string(t_data *data)
 		if (data->o_opt == stdout)
 		{
 			prefix(data, ((t_string *)(data->strings->content))->source_type);
-			if (data->hash && data->hash->func_ptr(((t_string *)(data->strings->content))->string, data))
+			if (data->hash && (res = data->hash->func_ptr(((t_string *)(data->strings->content))->string, data, print)) == NULL)
+			{
+				if (res) free(res);
 				return (-1);
+			}
+			free(res);
 			suffix(data, ((t_string *)(data->strings->content))->source_type);
 			printf("\n");
 		}
 		else
 		{
-			if (data->hash && data->hash->func_ptr(((t_string *)(data->strings->content))->string, data))
+			if (data->hash && (res = data->hash->func_ptr(((t_string *)(data->strings->content))->string, data, print)) == NULL)
+			{
+				if (res) free(res);
 				return (-1);
+			}
+			free(res);
 		}
 		data->strings = data->strings->next;
 	}
