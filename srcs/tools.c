@@ -58,6 +58,20 @@ uint32_t		rot_l(uint32_t x, uint32_t n)
 	return ((x << n) | (x >> (32 - n)));
 }
 
+char			*rot_str_l(char *str, int n)
+{
+	for (int i = 0; i < n; i++)
+	{
+		char mem = str[0];
+		for (size_t i = 0; i < strlen(str) - 1; i++)
+		{
+			str[i] = str[i + 1];
+		}
+		str[strlen(str) - 1] = mem;
+	}
+	return str;
+}
+
 void 			print_hex(unsigned char *hex, size_t size)
 {
 	printf("0x");

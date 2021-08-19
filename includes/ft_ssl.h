@@ -51,7 +51,6 @@ typedef struct		s_data
 {
 	char 			*pass;
 	unsigned char	key[9];
-	unsigned char   des_key[8];
 	unsigned char 	iv[9];
 	unsigned char	salt[9];
 	int 			a_opt;
@@ -81,6 +80,8 @@ char				*add_len(char *padded_str, int *padded_size, uint64_t str_size, int swap
 
 uint32_t			rot_r(uint32_t x, uint32_t n);
 uint32_t			rot_l(uint32_t x, uint32_t n);
+
+char				*rot_str_l(char *str, int n);
 
 int 				securize(t_data* data);
 
