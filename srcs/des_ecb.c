@@ -101,7 +101,7 @@ char				*des_ecb(char *str, void *data, int print)
 	char *b64_res = NULL;
 	char *des_res = NULL;
 	size_t b64_res_len = ft_strlen(str) / 3 * 4 + 4 + 1;
-	preprocess_key(d);
+	preprocess_key_alt(d);
 	
 	if (d->a_opt)
 	{

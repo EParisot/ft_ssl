@@ -26,16 +26,23 @@ int 			read_hex(char *hex_str, unsigned char *out)
 			if (hex_str[i + k] >= '0' && hex_str[i + k] <= '9')
 			{
 				if (k == 0)
-					out[j] += (hex_str[i + k] - '0') * 16;
+					out[j] = (hex_str[i + k] - '0') * 16;
 				else
 					out[j] += hex_str[i + k] - '0';
 			}
-			else if ((hex_str[i + k] >= 'a' && hex_str[i + k] <= 'f') || (hex_str[i + k] >= 'A' && hex_str[i + k] <= 'F'))
+			else if (hex_str[i + k] >= 'a' && hex_str[i + k] <= 'f')
 			{
 				if (k == 0)
-					out[j] += (10 + hex_str[i + k] - 'a') * 16;
+					out[j] = (10 + hex_str[i + k] - 'a') * 16;
 				else
 					out[j] += 10 + hex_str[i + k] - 'a';
+			}
+			else if (hex_str[i + k] >= 'A' && hex_str[i + k] <= 'F')
+			{
+				if (k == 0)
+					out[j] = (10 + hex_str[i + k] - 'A') * 16;
+				else
+					out[j] += 10 + hex_str[i + k] - 'A';
 			}
 		}
 		j++;
