@@ -51,7 +51,7 @@ typedef struct		s_data
 {
 	char 			*pass;
 	unsigned char	key[9];
-	unsigned char   des_key[9];
+	unsigned char   des_key[8];
 	unsigned char 	iv[9];
 	unsigned char	salt[9];
 	int 			a_opt;
