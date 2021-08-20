@@ -12,19 +12,38 @@
 
 #include "../includes/ft_ssl.h"
 
-void			print_help(int usage, t_fct *g_fcts)
+void			print_help(int usage)
 {
-	int i;
-
-	i = 0;
 	if (usage)
-		ft_putendl("usage: ./ft_ssl [hash] [opt] [string]");
-	else
 	{
-		ft_putendl("\nMessage Digest commands:");
-		while (g_fcts[i].name)
-			ft_putendl(g_fcts[i++].name);
+		printf("usage: ./ft_ssl [hash] [opt] [string]\n");
+		printf("General options: \n");
+		printf("		-p		Read from STDIN and repeat input on STDOUT\n");
+		printf("		-q		Quiet mode\n");
+		printf("		-s		Read next arg as a string\n");
+		printf("		-hex	Read next arg as an hex string\n");
+		printf("		-r		Reverse output order\n");
+		printf("		-i		Read from input file (specified as next arg)\n");
+		printf("		-o		Output to file (specified as next arg)\n");
+		printf("		-h		Show this Help\n");
+
+		printf("Crypto options: \n");
+		printf("		-a		Encode/Decode to/from base64 before encryption/decryption\n");
+		printf("		-e		Encode (default)\n");
+		printf("		-d		Decode\n");
+		printf("		-p		Password\n");
+		printf("		-k		Key\n");
+		printf("		-s		Salt\n");
+		printf("		-v		IV\n");
 	}
+	printf("\nCommands:\n");
+	printf("		md5\n");
+	printf("		sha224\n");
+	printf("		sha256\n");
+	printf("		base64\n");
+	printf("		des (default to ecb mode)\n");
+	printf("		des_ecb\n");
+	printf("		des_cbc\n");
 }
 
 void			del(void *addr, size_t size)

@@ -69,9 +69,10 @@ int 				read_hex(char *hex_str, unsigned char *out);
 void 				print_hex(unsigned char *hex, size_t size);
 int					read_string(t_data *data);
 int					read_stdin(char *buf, int size);
+int					get_string(t_data *data, char *str, int hex);
 int					handle_files(t_data *data, char *filename);
 int					hash_string(t_data *data);
-void				print_help(int usage, t_fct *g_fcts);
+void				print_help(int usage);
 void				clean_data(t_data *data);
 void				del(void *addr, size_t size);
 

@@ -116,6 +116,42 @@ int				read_string(t_data *data)
 	return (0);
 }
 
+int				get_string(t_data *data, char *str, int hex)
+{
+	t_list		*tmp_lst;
+	t_list		*new_lst;
+	t_string	new_string;
+
+	new_lst = NULL;
+	tmp_lst = data->strings;
+	while (data->strings && data->strings->next)
+		data->strings = data->strings->next;
+	new_string.source = NULL;
+	new_string.source_type = _STRING;
+	if ((new_string.string = (char *)malloc(ft_strlen(str) + 1)) == NULL)
+		return (-1);
+	bzero(new_string.string, ft_strlen(str) + 1);
+	if (hex)
+	{
+		if (read_hex(str, (unsigned char *)new_string.string))
+			return (-1);
+	}
+	else
+	{
+		ft_strcpy(new_string.string, str);
+	}
+	if ((new_lst = ft_lstnew(&new_string, sizeof(t_string))) == NULL)
+		return (-1);
+	if (data->strings)
+	{
+		data->strings->next = new_lst;
+		data->strings = tmp_lst;
+	}
+	else
+		data->strings = new_lst;
+	return (0);
+}
+
 static int		read_file(t_string *file)
 {
 	int		fd;

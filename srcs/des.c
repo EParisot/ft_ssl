@@ -25,7 +25,7 @@ void 				preprocess_key(t_data *data, char *key)
 							14, 6, 61, 53, 45, 37, 29,
 							21, 13, 5, 28, 20, 12, 4};
 	char k[65];
-
+	// convert key to binary string
 	bzero(k, 65);
 	for (int i = 0; i < 8; i++)
 	{
@@ -34,6 +34,7 @@ void 				preprocess_key(t_data *data, char *key)
 			k[i * 8 + j] = '0' + ((data->key[i] >> (7 - j)) & 1);
 		}
 	}
+	// permute from kperm array
 	for (int i = 0; i < 56; i++)
 	{
 		key[i] = k[kperm[i] - 1];
@@ -57,11 +58,13 @@ int 				subkeys_routine(char *key, char **keys)
 	char **key_pairs[2] = {l_keys, r_keys};
 	char *concat_keys[16];
 
+	// split key in 2 parts
 	bzero(l_key, 29);
 	bzero(r_key, 29);
 	ft_strncpy(l_key, key, 28);
 	ft_strncpy(r_key, key + 28, 28);
 
+	// rotate key pairs
 	for (int i = 0; i < 16; i++)
 	{
 		if ((key_pairs[0][i] = malloc(29)) == NULL)
@@ -89,12 +92,14 @@ int 				subkeys_routine(char *key, char **keys)
 			ft_strcpy(key_pairs[1][i], rot_str_l(key_pairs[1][i-1], 2));
 		}
 
+		// concat rotated key pairs
 		if ((concat_keys[i] = malloc(57)) == NULL)
 			return -1;
 		bzero(concat_keys[i], 57);
 		ft_strncpy(concat_keys[i], key_pairs[0][i], 28);
 		ft_strncat(concat_keys[i], key_pairs[1][i], 28);
 
+		// permute from key_comp array
 		if ((keys[i] = malloc(49)) == NULL)
 			return -1;
 		bzero(keys[i], 49);
@@ -102,7 +107,6 @@ int 				subkeys_routine(char *key, char **keys)
 		{
 			keys[i][j] = concat_keys[i][key_comp[j] - 1];
 		}
-		//printf("%02d: %s\n", i, keys[i]);
 	}
 	for (int i = 0; i < 16; i++)
 	{
@@ -118,6 +122,7 @@ char 				*preprocess_message(char *str)
 	char *message;
 	size_t msg_len = ft_strlen(str);
 
+	// padd message
 	while (msg_len % 8 != 0)
 	{
 		msg_len++;
@@ -139,12 +144,79 @@ void 				des_clean(char **keys, char *message)
 		free(message);
 }
 
+void  				f_function(char *r, char *key, char *res)
+{
+	(void)r,(void)key,(void)res;
+}
+
+void  				xor_add(char *a, char *b)
+{
+	(void)a, (void)b;
+}
+
 // ECB
 
 void 				des_encrypt_buf(char *buf, char **res, char **keys)
-{
-	(void)res,(void)keys;
-	printf("%s\n", buf);
+{(void)res, (void)keys;
+	int initial_perm[64] = {58, 50, 42, 34, 26, 18, 10, 2,
+							60, 52, 44, 36, 28, 20, 12, 4,
+							62, 54, 46, 38, 30, 22, 14, 6,
+							64, 56, 48, 40, 32, 24, 16, 8,
+							57, 49, 41, 33, 25, 17, 9, 1,
+							59, 51, 43, 35, 27, 19, 11, 3,
+							61, 53, 45, 37, 29, 21, 13, 5,
+							63, 55, 47, 39, 31, 23, 15, 7};
+	char bin_buf[9 * 8];
+	char ip_res[65];
+	char l_block[33];
+	char r_block[33];
+	char Ln[33];
+	char Rn[33];
+	char Ln_1[33];
+	char Rn_1[33];
+
+	// convert message to binary string
+	bzero(bin_buf, 9 * 8);
+	bzero(ip_res, 65);
+	bzero(l_block, 33);
+	bzero(r_block, 33);
+	bzero(Ln, 33);
+	bzero(Rn, 33);
+	bzero(Ln_1, 33);
+	bzero(Rn_1, 33);
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			bin_buf[i * 8 + j] = '0' + ((buf[i] >> (7 - j)) & 1);
+		}
+	}
+	// initial permutation
+	for (int i = 0; i < 64; i++)
+	{
+		ip_res[i] = bin_buf[initial_perm[i] - 1];
+	}
+	// split in 2 halves
+	ft_strncpy(l_block, ip_res, 32);
+	ft_strncpy(r_block, ip_res + 32, 32);
+	// 16 rounds of F
+	for (int i = 0; i < 16; i++)
+	{
+		if (i == 0)
+		{
+			ft_strcpy(Ln, r_block);
+			f_function(r_block, keys[i], Rn);
+			xor_add(l_block, Rn);
+		}
+		else
+		{
+			ft_strcpy(Ln, Rn_1);
+			f_function(Rn_1, keys[i], Rn);
+			xor_add(Ln_1, Rn);
+		}
+		ft_strcpy(Ln_1, Ln);
+		ft_strcpy(Rn_1, Rn);
+	}
 }
 
 int 				des_ecb_encrypt(char *str, char **res, char **keys)

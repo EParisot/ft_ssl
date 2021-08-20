@@ -39,38 +39,11 @@ static int	get_hash_or_file(t_data *data, char *hash_or_file, int i)
 			++i;
 		}
 		printf("ft_ssl: Error: '%s' is an invalid command.", hash_or_file);
-		print_help(0, g_fcts);
+		print_help(0);
 		return (-1);
 	}
 	if (handle_files(data, hash_or_file))
 		return (-1);
-	return (0);
-}
-
-static int	get_string(t_data *data, char *str)
-{
-	t_list		*tmp_lst;
-	t_list		*new_lst;
-	t_string	new_string;
-
-	new_lst = NULL;
-	tmp_lst = data->strings;
-	while (data->strings && data->strings->next)
-		data->strings = data->strings->next;
-	new_string.source = NULL;
-	new_string.source_type = _STRING;
-	if ((new_string.string = (char *)malloc(ft_strlen(str) + 1)) == NULL)
-		return (-1);
-	ft_strcpy(new_string.string, str);
-	if ((new_lst = ft_lstnew(&new_string, sizeof(t_string))) == NULL)
-		return (-1);
-	if (data->strings)
-	{
-		data->strings->next = new_lst;
-		data->strings = tmp_lst;
-	}
-	else
-		data->strings = new_lst;
 	return (0);
 }
 
@@ -120,7 +93,7 @@ static int	parse_args(int ac, char **av, t_data *data, int i)
 						}
 						else
 						{
-							print_help(1, g_fcts);
+							print_help(1);
 							return (-1);
 						}
 					}
@@ -128,20 +101,33 @@ static int	parse_args(int ac, char **av, t_data *data, int i)
 					{
 						if (ac > i + 1)
 						{
-							if (get_string(data, av[++i]))
+							if (get_string(data, av[++i], 0))
 								return (-1);
 						}
 						else
 						{
-							print_help(1, g_fcts);
+							print_help(1);
 							return (-1);
 						}
 					}
 				}
 				else
 				{
-					print_help(1, g_fcts);
+					print_help(1);
 						return (-1);
+				}
+			}
+			else if (ft_strcmp(av[i], "-hex") == 0 && ac > i + 1)
+			{
+				if (ac > i + 1)
+				{
+					if (get_string(data, av[++i], 1))
+						return (-1);
+				}
+				else
+				{
+					print_help(1);
+					return (-1);
 				}
 			}
 			else if (ft_strcmp(av[i], "-a") == 0)
@@ -180,7 +166,7 @@ static int	parse_args(int ac, char **av, t_data *data, int i)
 				}
 				else
 				{
-					print_help(1, g_fcts);
+					print_help(1);
 					return (-1);
 				}
 			}
@@ -198,17 +184,17 @@ static int	parse_args(int ac, char **av, t_data *data, int i)
 				}
 				else
 				{
-					print_help(1, g_fcts);
+					print_help(1);
 					return (-1);
 				}
 			}
-			else if (get_hash_or_file(data, av[i], 0))
-				return (-1);
 			else if (ft_strcmp(av[i], "-h") == 0)
 			{
-				print_help(1, g_fcts);
+				print_help(1);
 				return (-1);
 			}
+			else if (get_hash_or_file(data, av[i], 0))
+				return (-1);
 		}
 	return (0);
 }
@@ -226,7 +212,7 @@ static int	init_env(t_data *data, int ac, char **av)
 	}
 	else if (data->hash == NULL)
 	{
-		print_help(1, g_fcts);
+		print_help(1);
 		return (-1);
 	}
 	return (0);
