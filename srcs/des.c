@@ -113,9 +113,52 @@ int 				subkeys_routine(char *key, char **keys)
 	return 0;
 }
 
+char 				*preprocess_message(char *str)
+{
+	char *message;
+	size_t msg_len = ft_strlen(str);
+
+	while (msg_len % 8 != 0)
+	{
+		msg_len++;
+	}
+	if ((message = malloc(msg_len + 1)) == NULL)
+		return NULL;
+	bzero(message, msg_len + 1);
+	ft_strcpy(message, str);
+	return message;
+}
+
+void 				des_clean(char **keys, char *message)
+{
+	for (int i = 0; i < 16; i++)
+	{
+		free(keys[i]);
+	}
+	if (message != NULL)
+		free(message);
+}
+
+// ECB
+
+void 				des_encrypt_buf(char *buf, char **res, char **keys)
+{
+	(void)res,(void)keys;
+	printf("%s\n", buf);
+}
+
 int 				des_ecb_encrypt(char *str, char **res, char **keys)
 {
-	(void)str,(void)res,(void)keys;
+	int j = 0;
+	char buf[8];
+
+	while (str[j])
+	{
+		bzero(buf, 8);
+		ft_memcpy(buf, str + j, 8);
+		des_encrypt_buf(buf, res, keys);
+		j += 8;
+	}
 	return (0);
 }
 
@@ -123,14 +166,6 @@ int 				des_ecb_decrypt(char *str, char **res, char **keys)
 {
 	(void)str,(void)res,(void)keys;
 	return (0);
-}
-
-void 				des_clean(char **keys)
-{
-	for (int i = 0; i < 16; i++)
-	{
-		free(keys[i]);
-	}
 }
 
 char				*des_ecb(char *str, void *data, int print)
@@ -141,6 +176,7 @@ char				*des_ecb(char *str, void *data, int print)
 	size_t b64_res_len = ft_strlen(str) / 3 * 4 + 4 + 1;
 	char key[56];
 	char *keys[16];
+	char *message = NULL;
 
 	bzero(key, 56);
 	preprocess_key(d, key);
@@ -153,30 +189,117 @@ char				*des_ecb(char *str, void *data, int print)
 		{
 			if ((b64_res = malloc(b64_res_len)) == NULL)
 			{
-				des_clean(keys);
+				des_clean(keys, message);
 				return NULL;
 			}
 			bzero(b64_res, b64_res_len);
 			b64_decode_str(str, &b64_res);
-			des_ecb_decrypt(b64_res, &des_res, keys);
+			if ((message = preprocess_message(b64_res)) == NULL)
+				return NULL;
+			des_ecb_decrypt(message, &des_res, keys);
 			if (print)
 				printf("%s", des_res);
-			des_clean(keys);
+			des_clean(keys, message);
 			return des_res;
 		}
 		if (d->e_opt)
 		{
 			if ((b64_res = malloc(b64_res_len)) == NULL)
 			{
-				des_clean(keys);
+				des_clean(keys, message);
 				return NULL;
 			}
 			bzero(b64_res, b64_res_len);
-			des_ecb_encrypt(str, &des_res, keys);
+			if ((message = preprocess_message(str)) == NULL)
+				return NULL;
+			des_ecb_encrypt(message, &des_res, keys);
 			b64_encode_str(des_res, &b64_res);
 			if (print)
 				printf("%s", b64_res);
-			des_clean(keys);
+			des_clean(keys, message);
+			return b64_res;
+		}
+	}
+	else
+	{
+		if ((message = preprocess_message(str)) == NULL)
+			return NULL;
+		if (d->d_opt)
+		{
+			des_ecb_decrypt(message, &des_res, keys);
+		}
+		else if (d->e_opt)
+		{
+			des_ecb_encrypt(message, &des_res, keys);
+		}
+	}
+	if (print)
+		printf("%s", des_res);
+	des_clean(keys, message);
+	return des_res;
+}
+
+// CBC
+
+int 				des_cbc_encrypt(char *str, char **res, char **keys)
+{
+	(void)str,(void)res,(void)keys;
+	return (0);
+}
+
+int 				des_cbc_decrypt(char *str, char **res, char **keys)
+{
+	(void)str,(void)res,(void)keys;
+	return (0);
+}
+
+char				*des_cbc(char *str, void *data, int print)
+{
+	t_data *d = (t_data *)data;
+	char *b64_res = NULL;
+	char *des_res = NULL;
+	size_t b64_res_len = ft_strlen(str) / 3 * 4 + 4 + 1;
+	char key[56];
+	char *keys[16];
+	char *message = NULL;
+
+	bzero(key, 56);
+	preprocess_key(d, key);
+	if (subkeys_routine(key, keys))
+		return NULL;
+	if ((message = preprocess_message(str)) == NULL)
+		return NULL;
+
+	if (d->a_opt)
+	{
+		if (d->d_opt)
+		{
+			if ((b64_res = malloc(b64_res_len)) == NULL)
+			{
+				des_clean(keys, message);
+				return NULL;
+			}
+			bzero(b64_res, b64_res_len);
+			b64_decode_str(str, &b64_res);
+			des_cbc_decrypt(b64_res, &des_res, keys);
+			if (print)
+				printf("%s", des_res);
+			des_clean(keys, message);
+			return des_res;
+		}
+		if (d->e_opt)
+		{
+			if ((b64_res = malloc(b64_res_len)) == NULL)
+			{
+				des_clean(keys, message);
+				return NULL;
+			}
+			bzero(b64_res, b64_res_len);
+			des_cbc_encrypt(str, &des_res, keys);
+			b64_encode_str(des_res, &b64_res);
+			if (print)
+				printf("%s", b64_res);
+			des_clean(keys, message);
 			return b64_res;
 		}
 	}
@@ -184,15 +307,15 @@ char				*des_ecb(char *str, void *data, int print)
 	{
 		if (d->d_opt)
 		{
-			des_ecb_decrypt(str, &des_res, keys);
+			des_cbc_decrypt(str, &des_res, keys);
 		}
 		else if (d->e_opt)
 		{
-			des_ecb_encrypt(str, &des_res, keys);
+			des_cbc_encrypt(str, &des_res, keys);
 		}
 	}
 	if (print)
 		printf("%s", des_res);
-	des_clean(keys);
+	des_clean(keys, message);
 	return des_res;
 }

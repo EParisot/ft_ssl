@@ -21,8 +21,8 @@ SRCS	=	srcs/main.c \
 			srcs/sha224.c \
 			srcs/sha256.c \
 			srcs/base64.c \
-			srcs/des_ecb.c \
-			srcs/des_cbc.c \
+			srcs/des.c \
+
 
 INC		=	includes/ft_ssl.h
 

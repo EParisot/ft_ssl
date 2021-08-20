@@ -92,13 +92,7 @@ static int	parse_args(int ac, char **av, t_data *data, int i)
 			}
 			else if (ft_strcmp(av[i], "-p") == 0)
 			{
-				if (ft_strncmp(data->hash->name, "des", 3) != 0)
-				{
-					if (read_string(data))
-						return (-1);
-					data->p_opt = 1;
-				}
-				else
+				if (data->hash && ft_strncmp(data->hash->name, "des", 3) == 0)
 				{
 					if (ac > i + 1)
 					{
@@ -107,17 +101,22 @@ static int	parse_args(int ac, char **av, t_data *data, int i)
 						ft_strcpy(data->pass, av[++i]);
 					}
 				}
+				else
+				{
+					if (read_string(data))
+						return (-1);
+					data->p_opt = 1;
+				}
 			}
 			else if (ft_strcmp(av[i], "-s") == 0)
 			{
 				if (ac > i + 1)
 				{
-					if (ft_strncmp(data->hash->name, "des", 3) != 0)
+					if (data->hash && ft_strncmp(data->hash->name, "des", 3) == 0)
 					{
 						if (ac > i + 1)
 						{
-							if (get_string(data, av[++i]))
-								return (-1);
+							read_hex(av[++i], data->salt);
 						}
 						else
 						{
@@ -129,7 +128,8 @@ static int	parse_args(int ac, char **av, t_data *data, int i)
 					{
 						if (ac > i + 1)
 						{
-							read_hex(av[++i], data->salt);
+							if (get_string(data, av[++i]))
+								return (-1);
 						}
 						else
 						{
@@ -146,14 +146,14 @@ static int	parse_args(int ac, char **av, t_data *data, int i)
 			}
 			else if (ft_strcmp(av[i], "-a") == 0)
 			{
-				if (ft_strncmp(data->hash->name, "des", 3) == 0)
+				if (data->hash && ft_strncmp(data->hash->name, "des", 3) == 0)
 				{
 					data->a_opt = 1;
 				}
 			}
 			else if (ft_strcmp(av[i], "-k") == 0)
 			{
-				if (ft_strncmp(data->hash->name, "des", 3) == 0)
+				if (data->hash && ft_strncmp(data->hash->name, "des", 3) == 0)
 				{
 					if (ac > i + 1)
 					{
@@ -163,7 +163,7 @@ static int	parse_args(int ac, char **av, t_data *data, int i)
 			}
 			else if (ft_strcmp(av[i], "-v") == 0)
 			{
-				if (ft_strncmp(data->hash->name, "des", 3) == 0)
+				if (data->hash && ft_strncmp(data->hash->name, "des", 3) == 0)
 				{
 					if (ac > i + 1)
 					{
