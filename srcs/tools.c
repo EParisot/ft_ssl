@@ -98,7 +98,6 @@ void 			print_hex(unsigned char *hex, size_t size)
 	{
 		printf("%02x", hex[i]);
 	}
-	printf("\n");
 }
 
 int 			random_value(unsigned char *r, size_t size)

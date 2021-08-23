@@ -37,7 +37,14 @@ static void	prefix(t_data *data, int source_type)
 			}
 			else
 			{
-				printf("(\"%s\")= ", ((t_string *)(data->strings->content))->string);
+				if (data->hex)
+				{
+					printf("(\"");
+					print_hex((unsigned char *)((t_string *)(data->strings->content))->string, ft_strlen(((t_string *)(data->strings->content))->string));
+					printf("\")= ");
+				}
+				else
+					printf("(\"%s\")= ", ((t_string *)(data->strings->content))->string);
 			}
 		}
 	}
@@ -53,7 +60,14 @@ static void	suffix(t_data *data, int source_type)
 			printf(" %s", ((t_string *)(data->strings->content))->source);
 		else
 		{
-			printf(" '%s'", ((t_string *)(data->strings->content))->string);
+			if (data->hex)
+				{
+					printf(" (\"");
+					print_hex((unsigned char *)((t_string *)(data->strings->content))->string, ft_strlen(((t_string *)(data->strings->content))->string));
+					printf("\")");
+				}
+				else
+					printf(" (\"%s\")", ((t_string *)(data->strings->content))->string);
 		}
 	}
 }

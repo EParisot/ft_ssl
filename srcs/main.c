@@ -121,6 +121,7 @@ static int	parse_args(int ac, char **av, t_data *data, int i)
 			{
 				if (ac > i + 1)
 				{
+					data->hex = 1;
 					if (get_string(data, av[++i], 1))
 						return (-1);
 				}

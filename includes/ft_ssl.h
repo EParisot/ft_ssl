@@ -57,6 +57,7 @@ typedef struct		s_data
 	int				p_opt;
 	int				q_opt;
 	int				r_opt;
+	int				hex;
 	int 			e_opt;
 	int				d_opt;
 	int				i_opt;
