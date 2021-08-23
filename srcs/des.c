@@ -406,7 +406,7 @@ char				*des_ecb(char *str, void *data, int print)
 	t_data *d = (t_data *)data;
 	char *b64_res = NULL;
 	char *des_res = NULL;
-	size_t b64_res_len = ft_strlen(str) / 3 * 4 + 4 + 1;
+	size_t b64_res_len = 0;
 	char key[56];
 	char *keys[16];
 	char *message = NULL;
@@ -421,6 +421,7 @@ char				*des_ecb(char *str, void *data, int print)
 	{
 		if (d->d_opt)
 		{
+			b64_res_len = ft_strlen(str) / 3 * 4 + 4 + 1;
 			if ((b64_res = malloc(b64_res_len)) == NULL)
 			{
 				des_clean(keys, message);
@@ -430,6 +431,7 @@ char				*des_ecb(char *str, void *data, int print)
 			b64_decode_str(str, &b64_res);
 			if ((message = preprocess_message(b64_res, &str_size)) == NULL)
 				return NULL;
+			free(b64_res);
 			des_ecb_decrypt(message, str_size, &des_res, keys);
 			if (print)
 				printf("%s", des_res);
@@ -438,16 +440,18 @@ char				*des_ecb(char *str, void *data, int print)
 		}
 		if (d->e_opt)
 		{
+			if ((message = preprocess_message(str, &str_size)) == NULL)
+				return NULL;
+			des_ecb_encrypt(message, str_size, &des_res, keys);
+			b64_res_len = ft_strlen(des_res) / 3 * 4 + 4 + 1;
 			if ((b64_res = malloc(b64_res_len)) == NULL)
 			{
 				des_clean(keys, message);
 				return NULL;
 			}
 			bzero(b64_res, b64_res_len);
-			if ((message = preprocess_message(str, &str_size)) == NULL)
-				return NULL;
-			des_ecb_encrypt(message, str_size, &des_res, keys);
 			b64_encode_str(des_res, &b64_res);
+			free(des_res);
 			if (print)
 				printf("%s", b64_res);
 			des_clean(keys, message);
