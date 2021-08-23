@@ -66,7 +66,7 @@ int 	create_res_str(char *str, char **converted, int decode)
 
 void	encode_buffer(char *buffer, int i, char **converted)
 {
-	uint32_t bytes_buf = (buffer[0] << 0x10) + (buffer[1] << 0x08) + buffer[2];
+	uint32_t bytes_buf = (((uint8_t)buffer[0]) << 0x10) + (((uint8_t)buffer[1]) << 0x08) + (uint8_t)buffer[2];
 	int in_len = 0;
 	int out_len = 0;
 
@@ -79,7 +79,7 @@ void	encode_buffer(char *buffer, int i, char **converted)
 			(*converted)[out_len] = '\n';
 			out_len += 1;
 		}
-		(*converted)[out_len] = BASE64_ALPHA[bytes_buf >> (j * 6) & 0x3F];
+		(*converted)[out_len] = BASE64_ALPHA[(bytes_buf >> (j * 6)) & 0x3F];
 	}
 	if (buffer[1] == 0)
 	{

@@ -380,14 +380,14 @@ void 				des_encrypt_buf(char *buf, char **res, char **keys)
 int 				des_ecb_encrypt(char *str, size_t str_size, char **res, char **keys)
 {
 	int j = 0;
-	char buf[8];
+	char buf[9];
 
 	if ((*res = malloc(str_size + 1)) == NULL)
 		return -1;
 	bzero(*res, str_size + 1);
 	while (str[j])
 	{
-		bzero(buf, 8);
+		bzero(buf, 9);
 		ft_memcpy(buf, str + j, 8);
 		des_encrypt_buf(buf, res, keys);
 		j += 8;
