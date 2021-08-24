@@ -12,67 +12,6 @@ echo -e "${YELLOW}Compiling...${NC}"
 make
 echo
 
-echo -e "${YELLOW}Simple Tests${NC}:"; echo
-
-HASHES=(md5 sha224 sha256 base64)
-TEST_STRINGS=("" \
-			"abc" \
-			"bonjour42" \
-			"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" \
-)
-
-for H in ${HASHES[@]} 
-	do for S in ${TEST_STRINGS[@]}
-		do echo -e "${BLUE}./ft_ssl ${H} -q ${S}${NC}:"
-		echo -n "$S" | ./ft_ssl $H -q; echo -e "${BLUE}openssl ${H} ${S}${NC}:"
-		echo -n "$S" | openssl $H | sed 's/(stdin)= //'
-		echo
-	done
-done
-
-echo -e "${YELLOW}Decode Tests${NC}:"; echo
-
-HASHES=(base64)
-base64_STRINGS=("" \
-			"YWJj" \
-			"Ym9uam91cjQy" \
-			"YWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYQ==" \
-)
-for H in ${HASHES[@]}
-	do var=${H}_STRINGS[@]
-	for S in ${!var}
-		do echo -e "${BLUE}./ft_ssl ${H} -d ${S}${NC}:"
-		echo "$S" | ./ft_ssl $H -d -q; echo
-		echo -e "${BLUE}openssl ${H} -d ${S}${NC}:"
-		echo "$S" | openssl $H -d ; echo
-		echo
-	done
-done
-
-echo -e "${YELLOW}DES-ECB${NC}:"; echo
-echo -e "${BLUE}echo \"foo bar\" | ./ft_ssl des_ecb -k 133457799BBCDFF1 -q -a${NC}"
-echo "foo bar" | ./ft_ssl des_ecb -k 133457799BBCDFF1 -q -a
-echo -e "${BLUE}echo \"foo bar\" | openssl des-ecb -K 133457799BBCDFF1 -nopad -a${NC}"
-echo "foo bar" | openssl des-ecb -K 133457799BBCDFF1 -nopad -a
-echo
-echo -e "${BLUE}echo \"O4LusmJIpRk=\" | ./ft_ssl des_ecb -d -k 133457799BBCDFF1 -q -a${NC}"
-echo "O4LusmJIpRk=" | ./ft_ssl des_ecb -d -k 133457799BBCDFF1 -q -a
-echo -e "${BLUE}echo \"O4LusmJIpRk=\" | openssl dec des-ecb -K 133457799BBCDFF1 -nopad -a${NC}"
-echo "O4LusmJIpRk=" | openssl des-ecb -d -K 133457799BBCDFF1 -nopad -a
-echo
-
-echo -e "${YELLOW}DES-CBC${NC}:"; echo
-echo -e "${BLUE}echo \"foo bar\" | ./ft_ssl des_cbc -k 133457799BBCDFF1 -v 133457799BBCDFF1 -q -a${NC}"
-echo "foo bar" | ./ft_ssl des_cbc -k 133457799BBCDFF1 -v 133457799BBCDFF1 -q -a
-echo -e "${BLUE}echo \"foo bar\" | openssl des-cbc -K 133457799BBCDFF1 -iv 133457799BBCDFF1 -nopad -a${NC}"
-echo "foo bar" | openssl des-cbc -K 133457799BBCDFF1 -iv 133457799BBCDFF1 -nopad -a
-echo
-echo -e "${BLUE}echo \"O4LusmJIpRk=\" | ./ft_ssl des_cbc -d -k 133457799BBCDFF1 -v 133457799BBCDFF1 -q -a${NC}"
-echo "O4LusmJIpRk=" | ./ft_ssl des_cbc -d -k 133457799BBCDFF1 -v 133457799BBCDFF1 -q -a
-echo -e "${BLUE}echo \"O4LusmJIpRk=\" | openssl dec des-cbc -K 133457799BBCDFF1 -iv 133457799BBCDFF1 -nopad -a${NC}"
-echo "O4LusmJIpRk=" | openssl des-cbc -d -K 133457799BBCDFF1 -iv 133457799BBCDFF1 -nopad -a
-echo
-
 echo -e "${YELLOW}Subject Examples :${NC}"
 echo
 
@@ -123,3 +62,61 @@ echo
 
 echo -e "${BLUE}echo \"just to be extra clear\" | ./ft_ssl md5 -r -q -p -s \"foo\" file${NC}"
 echo "just to be extra clear" | ./ft_ssl md5 -r -q -p -s "foo" file
+echo
+echo -e "${YELLOW}Simple Tests${NC}:"; echo
+
+HASHES=(md5 sha224 sha256 base64)
+TEST_STRINGS=("" \
+			"abc" \
+			"bonjour42" \
+			"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" \
+)
+
+for H in ${HASHES[@]} 
+	do for S in ${TEST_STRINGS[@]}
+		do echo -e "${BLUE}./ft_ssl ${H} -q ${S}${NC}:"
+		echo -n "$S" | ./ft_ssl $H -q; echo -e "${BLUE}openssl ${H} ${S}${NC}:"
+		echo -n "$S" | openssl $H | sed 's/(stdin)= //'
+		echo
+	done
+done
+
+echo -e "${YELLOW}Reverse BASE64 Tests${NC}:"; echo
+
+BASE64_STRINGS=("" \
+			"YWJj" \
+			"Ym9uam91cjQy" \
+			"YWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYQ==" \
+)
+for S in ${BASE64_STRINGS[@]}
+	do echo -e "${BLUE}./ft_ssl base64 -d ${S}${NC}:"
+	echo "$S" | ./ft_ssl base64 -d -q; echo
+	echo -e "${BLUE}openssl base64 -d ${S}${NC}:"
+	echo "$S" | openssl base64 -d ; echo
+	echo
+done
+
+
+echo -e "${YELLOW}DES-ECB${NC}:"; echo
+echo -e "${BLUE}echo \"foo bar\" | ./ft_ssl des_ecb -k 133457799BBCDFF1 -q -a${NC}"
+echo "foo bar" | ./ft_ssl des_ecb -k 133457799BBCDFF1 -q -a
+echo -e "${BLUE}echo \"foo bar\" | openssl des-ecb -K 133457799BBCDFF1 -nopad -a${NC}"
+echo "foo bar" | openssl des-ecb -K 133457799BBCDFF1 -nopad -a
+echo
+echo -e "${BLUE}echo \"O4LusmJIpRk=\" | ./ft_ssl des_ecb -d -k 133457799BBCDFF1 -q -a${NC}"
+echo "O4LusmJIpRk=" | ./ft_ssl des_ecb -d -k 133457799BBCDFF1 -q -a
+echo -e "${BLUE}echo \"O4LusmJIpRk=\" | openssl dec des-ecb -K 133457799BBCDFF1 -nopad -a${NC}"
+echo "O4LusmJIpRk=" | openssl des-ecb -d -K 133457799BBCDFF1 -nopad -a
+echo
+
+echo -e "${YELLOW}DES-CBC${NC}:"; echo
+echo -e "${BLUE}echo \"foo bar\" | ./ft_ssl des_cbc -k 133457799BBCDFF1 -v 133457799BBCDFF1 -q -a${NC}"
+echo "foo bar" | ./ft_ssl des_cbc -k 133457799BBCDFF1 -v 133457799BBCDFF1 -q -a
+echo -e "${BLUE}echo \"foo bar\" | openssl des-cbc -K 133457799BBCDFF1 -iv 133457799BBCDFF1 -nopad -a${NC}"
+echo "foo bar" | openssl des-cbc -K 133457799BBCDFF1 -iv 133457799BBCDFF1 -nopad -a
+echo
+echo -e "${BLUE}echo \"O4LusmJIpRk=\" | ./ft_ssl des_cbc -d -k 133457799BBCDFF1 -v 133457799BBCDFF1 -q -a${NC}"
+echo "O4LusmJIpRk=" | ./ft_ssl des_cbc -d -k 133457799BBCDFF1 -v 133457799BBCDFF1 -q -a
+echo -e "${BLUE}echo \"O4LusmJIpRk=\" | openssl dec des-cbc -K 133457799BBCDFF1 -iv 133457799BBCDFF1 -nopad -a${NC}"
+echo "O4LusmJIpRk=" | openssl des-cbc -d -K 133457799BBCDFF1 -iv 133457799BBCDFF1 -nopad -a
+echo
