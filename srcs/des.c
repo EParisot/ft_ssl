@@ -27,13 +27,7 @@ void 				preprocess_key(t_data *data, char *key)
 	char k[65];
 	// convert key to binary string
 	bzero(k, 65);
-	for (int i = 0; i < 8; i++)
-	{
-		for (int j = 0; j < 8; j++)
-		{
-			k[i * 8 + j] = '0' + ((data->key[i] >> (7 - j)) & 1);
-		}
-	}
+	str_to_bin((char *)data->key, k);
 	// permute from kperm array
 	for (int i = 0; i < 56; i++)
 	{
@@ -135,52 +129,6 @@ char 				*preprocess_message(char *str, size_t *str_len)
 	return message;
 }
 
-void 				des_clean(char **keys, char *message)
-{
-	for (int i = 0; i < 16; i++)
-	{
-		free(keys[i]);
-	}
-	if (message != NULL)
-		free(message);
-}
-
-int 				bitstoint(char *binstr)
-{
-	int res = 0;
-	int i = 0;
-	while (binstr[i] != '\0')
-	{
-		res *= 2;
-		if (binstr[i] == '1') res += 1;
-		++i;
-	}
-	return res;
-}
-
-char 				*inttobits(int num, char *bits, size_t size)
-{
-	int i = 0;
-
-	while (size > 0)
-	{
-		if (num > 0)
-		{
-			bits[i] = (num % 2) ? '1' : '0';
-			++i;
-			--size;
-			num /= 2;
-		}
-		else
-		{
-			bits[i] = '0';
-			++i;
-			--size;
-		}
-	}
-	return ft_strrev(bits);
-}
-
 void  				f_function(char *r, char *key, char *res)
 {
 	int exp_d[48] = {32, 1, 2, 3, 4, 5, 4, 5,
@@ -274,17 +222,8 @@ void  				f_function(char *r, char *key, char *res)
 	}
 }
 
-void  				xor_add(char *a, char *b)
-{
-	for (int i = 0; i < 32; i++)
-	{
-		b[i] = ((b[i] - '0') ^ (a[i] - '0')) + '0';
-	}
-}
-
 // ECB
-
-void 				des_encrypt_buf(char *buf, char **res, char **keys)
+void 				des_buf(char *buf, char **res, char **keys, int mode)
 {
 	int initial_perm[64] = {58, 50, 42, 34, 26, 18, 10, 2,
 							60, 52, 44, 36, 28, 20, 12, 4,
@@ -324,13 +263,7 @@ void 				des_encrypt_buf(char *buf, char **res, char **keys)
 	bzero(Fn, 65);
 	bzero(bin_res, 65);
 	// convert message to binary string
-	for (int i = 0; i < 8; i++)
-	{
-		for (int j = 0; j < 8; j++)
-		{
-			bin_buf[i * 8 + j] = '0' + ((buf[i] >> (7 - j)) & 1);
-		}
-	}
+	str_to_bin(buf, bin_buf);
 	// initial permutation
 	for (int i = 0; i < 64; i++)
 	{
@@ -345,7 +278,7 @@ void 				des_encrypt_buf(char *buf, char **res, char **keys)
 		if (i == 0)
 		{
 			ft_strcpy(Ln, r_block);
-			f_function(r_block, keys[i], Rn);
+			f_function(r_block, keys[(mode == 0) ? i : 15 - i], Rn);
 			//printf("%s + %s ", l_block, Rn);
 			xor_add(l_block, Rn);
 			//printf("= %s\n", Rn);
@@ -353,7 +286,7 @@ void 				des_encrypt_buf(char *buf, char **res, char **keys)
 		else
 		{
 			ft_strcpy(Ln, Rn_1);
-			f_function(Rn_1, keys[i], Rn);
+			f_function(Rn_1, keys[(mode == 0) ? i : 15 - i], Rn);
 			xor_add(Ln_1, Rn);
 		}
 		ft_strcpy(Ln_1, Ln);
@@ -368,16 +301,10 @@ void 				des_encrypt_buf(char *buf, char **res, char **keys)
 		bin_res[i] = Fn[final_perm[i] - 1];
 	}
 	// convert binary string to char
-	for (int i = 0; i < 8; i++)
-	{
-		for (int j = 0; j < 8; j++)
-		{
-			(*res)[i] += (bin_res[i * 8 + j] - '0') * (1 << (7 - j));
-		}
-	}
+	bin_to_str(bin_res, *res);
 }
 
-int 				des_ecb_encrypt(char *str, size_t str_size, char **res, char **keys)
+int 				des_ecb_loop(char *str, size_t str_size, char **res, char **keys, int mode)
 {
 	int j = 0;
 	char buf[9];
@@ -389,16 +316,20 @@ int 				des_ecb_encrypt(char *str, size_t str_size, char **res, char **keys)
 	{
 		bzero(buf, 9);
 		ft_memcpy(buf, str + j, 8);
-		des_encrypt_buf(buf, res, keys);
+		des_buf(buf, res, keys, mode);
 		j += 8;
 	}
 	return (0);
 }
 
-int 				des_ecb_decrypt(char *str, size_t str_size, char **res, char **keys)
+void 				des_clean(char **keys, char *message)
 {
-	(void)str,(void)str_size,(void)res,(void)keys;
-	return (0);
+	for (int i = 0; i < 16; i++)
+	{
+		free(keys[i]);
+	}
+	if (message != NULL)
+		free(message);
 }
 
 char				*des_ecb(char *str, void *data, int print)
@@ -432,7 +363,7 @@ char				*des_ecb(char *str, void *data, int print)
 			if ((message = preprocess_message(b64_res, &str_size)) == NULL)
 				return NULL;
 			free(b64_res);
-			des_ecb_decrypt(message, str_size, &des_res, keys);
+			des_ecb_loop(message, str_size, &des_res, keys, DECRYPT);
 			if (print)
 				printf("%s", des_res);
 			des_clean(keys, message);
@@ -442,7 +373,7 @@ char				*des_ecb(char *str, void *data, int print)
 		{
 			if ((message = preprocess_message(str, &str_size)) == NULL)
 				return NULL;
-			des_ecb_encrypt(message, str_size, &des_res, keys);
+			des_ecb_loop(message, str_size, &des_res, keys, ENCRYPT);
 			b64_res_len = ft_strlen(des_res) / 3 * 4 + 4 + 1;
 			if ((b64_res = malloc(b64_res_len)) == NULL)
 			{
@@ -462,14 +393,8 @@ char				*des_ecb(char *str, void *data, int print)
 	{
 		if ((message = preprocess_message(str, &str_size)) == NULL)
 			return NULL;
-		if (d->d_opt)
-		{
-			des_ecb_decrypt(message, str_size, &des_res, keys);
-		}
-		else if (d->e_opt)
-		{
-			des_ecb_encrypt(message, str_size, &des_res, keys);
-		}
+		des_ecb_loop(message, str_size, &des_res, keys, d->d_opt);
+
 	}
 	if (print)
 	{
@@ -483,7 +408,6 @@ char				*des_ecb(char *str, void *data, int print)
 }
 
 // CBC
-
 int 				des_cbc_encrypt(char *str, char **res, char **keys)
 {
 	(void)str,(void)res,(void)keys;

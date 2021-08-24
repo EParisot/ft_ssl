@@ -38,7 +38,6 @@ base64_STRINGS=("" \
 			"Ym9uam91cjQy" \
 			"YWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYWFhYQ==" \
 )
-
 for H in ${HASHES[@]}
 	do var=${H}_STRINGS[@]
 	for S in ${!var}
@@ -50,6 +49,17 @@ for H in ${HASHES[@]}
 	done
 done
 
+echo -e "${YELLOW}DES-ECB${NC}:"; echo
+echo -e "${BLUE}echo \"foo bar\" | ./ft_ssl des_ecb -k 133457799BBCDFF1 -q -a${NC}"
+echo "foo bar" | ./ft_ssl des_ecb -k 133457799BBCDFF1 -q -a
+echo -e "${BLUE}echo \"foo bar\" | openssl des-ecb -K 133457799BBCDFF1 -nopad -a${NC}"
+echo "foo bar" | openssl des-ecb -K 133457799BBCDFF1 -nopad -a
+echo
+echo -e "${BLUE}echo \"O4LusmJIpRk=\" | ./ft_ssl des_ecb -d -k 133457799BBCDFF1 -q -a${NC}"
+echo "O4LusmJIpRk=" | ./ft_ssl des_ecb -d -k 133457799BBCDFF1 -q -a
+echo -e "${BLUE}echo \"O4LusmJIpRk=\" | openssl dec des-ecb -K 133457799BBCDFF1 -nopad -a${NC}"
+echo "O4LusmJIpRk=" | openssl des-ecb -d -K 133457799BBCDFF1 -nopad -a
+echo
 
 echo -e "${YELLOW}Subject Examples :${NC}"
 echo

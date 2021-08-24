@@ -33,6 +33,12 @@ typedef enum		e_source_type
 	_FILE
 }					t_source_type;
 
+typedef enum		e_enc_type
+{
+	ENCRYPT,
+	DECRYPT
+}					t_enc_type;
+
 typedef struct		s_string
 {
 	char			*string;
@@ -68,6 +74,11 @@ typedef struct		s_data
 
 int 				read_hex(char *hex_str, unsigned char *out);
 void 				print_hex(unsigned char *hex, size_t size);
+int 				bitstoint(char *binstr);
+char 				*inttobits(int num, char *bits, size_t size);
+char 				*str_to_bin(char *str, char *binstr);
+char 				*bin_to_str(char *binstr, char *str);
+void				xor_add(char *a, char *b);
 int					read_string(t_data *data);
 int					read_stdin(char *buf, int size);
 int					get_string(t_data *data, char *str, int hex);

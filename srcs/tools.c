@@ -91,6 +91,14 @@ char			*rot_str_l(char *str, int n)
 	return str;
 }
 
+void			xor_add(char *a, char *b)
+{
+	for (int i = 0; i < 32; i++)
+	{
+		b[i] = ((b[i] - '0') ^ (a[i] - '0')) + '0';
+	}
+}
+
 void 			print_hex(unsigned char *hex, size_t size)
 {
 	printf("0x");
@@ -98,6 +106,66 @@ void 			print_hex(unsigned char *hex, size_t size)
 	{
 		printf("%02x", hex[i]);
 	}
+}
+
+int 				bitstoint(char *binstr)
+{
+	int res = 0;
+	int i = 0;
+	while (binstr[i] != '\0')
+	{
+		res *= 2;
+		if (binstr[i] == '1') res += 1;
+		++i;
+	}
+	return res;
+}
+
+char 				*inttobits(int num, char *bits, size_t size)
+{
+	int i = 0;
+
+	while (size > 0)
+	{
+		if (num > 0)
+		{
+			bits[i] = (num % 2) ? '1' : '0';
+			++i;
+			--size;
+			num /= 2;
+		}
+		else
+		{
+			bits[i] = '0';
+			++i;
+			--size;
+		}
+	}
+	return ft_strrev(bits);
+}
+
+char 			*str_to_bin(char *str, char *binstr)
+{
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			binstr[i * 8 + j] = '0' + ((str[i] >> (7 - j)) & 1);
+		}
+	}
+	return binstr;
+}
+
+char 			*bin_to_str(char *binstr, char *str)
+{
+	for (int i = 0; i < 8; i++)
+	{
+		for (int j = 0; j < 8; j++)
+		{
+			str[i] += (binstr[i * 8 + j] - '0') * (1 << (7 - j));
+		}
+	}
+	return str;
 }
 
 int 			random_value(unsigned char *r, size_t size)
