@@ -61,6 +61,18 @@ echo -e "${BLUE}echo \"O4LusmJIpRk=\" | openssl dec des-ecb -K 133457799BBCDFF1 
 echo "O4LusmJIpRk=" | openssl des-ecb -d -K 133457799BBCDFF1 -nopad -a
 echo
 
+echo -e "${YELLOW}DES-CBC${NC}:"; echo
+echo -e "${BLUE}echo \"foo bar\" | ./ft_ssl des_cbc -k 133457799BBCDFF1 -v 133457799BBCDFF1 -q -a${NC}"
+echo "foo bar" | ./ft_ssl des_cbc -k 133457799BBCDFF1 -v 133457799BBCDFF1 -q -a
+echo -e "${BLUE}echo \"foo bar\" | openssl des-cbc -K 133457799BBCDFF1 -iv 133457799BBCDFF1 -nopad -a${NC}"
+echo "foo bar" | openssl des-cbc -K 133457799BBCDFF1 -iv 133457799BBCDFF1 -nopad -a
+echo
+echo -e "${BLUE}echo \"O4LusmJIpRk=\" | ./ft_ssl des_cbc -d -k 133457799BBCDFF1 -v 133457799BBCDFF1 -q -a${NC}"
+echo "O4LusmJIpRk=" | ./ft_ssl des_cbc -d -k 133457799BBCDFF1 -v 133457799BBCDFF1 -q -a
+echo -e "${BLUE}echo \"O4LusmJIpRk=\" | openssl dec des-cbc -K 133457799BBCDFF1 -iv 133457799BBCDFF1 -nopad -a${NC}"
+echo "O4LusmJIpRk=" | openssl des-cbc -d -K 133457799BBCDFF1 -iv 133457799BBCDFF1 -nopad -a
+echo
+
 echo -e "${YELLOW}Subject Examples :${NC}"
 echo
 

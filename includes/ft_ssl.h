@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ssl_md5.h                                       :+:      :+:    :+:   */
+/*   ft_ssl.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: eparisot <eparisot@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_SSL_MD5_H
+#ifndef FT_SSL_H
 
-# define FT_SSL_MD5_H
+# define FT_SSL_H
 
 # include "../libft/libft.h"
 # include <stdlib.h>
@@ -87,14 +87,12 @@ int					hash_string(t_data *data);
 void				print_help(int usage);
 void				clean_data(t_data *data);
 void				del(void *addr, size_t size);
-
 char				*pad_len(char *str, int *padded_size);
 char				*add_len(char *padded_str, int *padded_size, uint64_t str_size, int swap);
-
 uint32_t			rot_r(uint32_t x, uint32_t n);
 uint32_t			rot_l(uint32_t x, uint32_t n);
-
 char				*rot_str_l(char *str, int n);
+int		 			random_value(unsigned char *r, size_t size);
 
 int 				securize(t_data* data);
 

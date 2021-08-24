@@ -21,10 +21,14 @@ SRCS	=	srcs/main.c \
 			srcs/sha224.c \
 			srcs/sha256.c \
 			srcs/base64.c \
-			srcs/des.c \
+			srcs/des_ecb.c \
+			srcs/des_cbc.c \
+			srcs/des_tools.c \
+			srcs/pbkdf.c
 
 
-INC		=	includes/ft_ssl.h
+INC		=	includes/ft_ssl.h \
+			includes/des.h \
 
 OBJS	=	$(SRCS:.c=.o)
 
