@@ -91,11 +91,19 @@ char			*rot_str_l(char *str, int n)
 	return str;
 }
 
-void			xor_add(char *a, char *b)
+void			xor_bin(char *a, char *b)
 {
 	for (int i = 0; i < 32; i++)
 	{
 		b[i] = ((b[i] - '0') ^ (a[i] - '0')) + '0';
+	}
+}
+
+void			xor(unsigned char *a, unsigned char *b)
+{
+	for (int i = 0; i < 8; i++)
+	{
+		b[i] ^= a[i];
 	}
 }
 

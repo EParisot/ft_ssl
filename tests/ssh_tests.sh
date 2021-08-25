@@ -98,25 +98,47 @@ done
 
 
 echo -e "${YELLOW}DES-ECB${NC}:"; echo
-echo -e "${BLUE}echo \"foo bar\" | ./ft_ssl des_ecb -k 133457799BBCDFF1 -q -a${NC}"
-echo "foo bar" | ./ft_ssl des_ecb -k 133457799BBCDFF1 -q -a
-echo -e "${BLUE}echo \"foo bar\" | openssl des-ecb -K 133457799BBCDFF1 -nopad -a${NC}"
-echo "foo bar" | openssl des-ecb -K 133457799BBCDFF1 -nopad -a
+echo -e "${BLUE}echo \"foo bar\" | ./ft_ssl des-ecb -k 133457799BBCDFF1 -q -a${NC}"
+echo "foo bar" | ./ft_ssl des-ecb -k 133457799BBCDFF1 -q -a
+echo -e "${BLUE}echo \"foo bar\" | openssl des-ecb -K 133457799BBCDFF1 -a${NC}"
+echo "foo bar" | openssl des-ecb -K 133457799BBCDFF1 -a
 echo
-echo -e "${BLUE}echo \"O4LusmJIpRk=\" | ./ft_ssl des_ecb -d -k 133457799BBCDFF1 -q -a${NC}"
-echo "O4LusmJIpRk=" | ./ft_ssl des_ecb -d -k 133457799BBCDFF1 -q -a
-echo -e "${BLUE}echo \"O4LusmJIpRk=\" | openssl dec des-ecb -K 133457799BBCDFF1 -nopad -a${NC}"
-echo "O4LusmJIpRk=" | openssl des-ecb -d -K 133457799BBCDFF1 -nopad -a
+echo -e "${BLUE}echo \"O4LusmJIpRn98uF0SSki+A==\" | ./ft_ssl des-ecb -d -k 133457799BBCDFF1 -q -a${NC}"
+echo "O4LusmJIpRn98uF0SSki+A==" | ./ft_ssl des-ecb -d -k 133457799BBCDFF1 -q -a
+echo -e "${BLUE}echo \"O4LusmJIpRn98uF0SSki+A==\" | openssl -d des-ecb -K 133457799BBCDFF1 -a${NC}"
+echo "O4LusmJIpRn98uF0SSki+A==" | openssl des-ecb -d -K 133457799BBCDFF1 -a
+echo
+echo -e "${BLUE}echo \"one deep secret\" | ./ft_ssl des-ecb -k 133457799BBCDFF1 -q -a${NC}"
+echo "one deep secret" | ./ft_ssl des-ecb -k 133457799BBCDFF1 -q -a
+echo -e "${BLUE}echo \"one deep secret\" | openssl des-ecb -K 133457799BBCDFF1 -a${NC}"
+echo "one deep secret" | openssl des-ecb -K 133457799BBCDFF1 -a
+echo
+echo -e "${BLUE}echo \"mJWdy4+Oe1fBEj0N3cTox/3y4XRJKSL4\" | ./ft_ssl des-ecb -d -k 133457799BBCDFF1 -q -a${NC}"
+echo "mJWdy4+Oe1fBEj0N3cTox/3y4XRJKSL4" | ./ft_ssl des-ecb -d -k 133457799BBCDFF1 -q -a
+echo -e "${BLUE}echo \"mJWdy4+Oe1fBEj0N3cTox/3y4XRJKSL4\" | openssl -d des-ecb -K 133457799BBCDFF1 -a${NC}"
+echo "mJWdy4+Oe1fBEj0N3cTox/3y4XRJKSL4" | openssl des-ecb -d -K 133457799BBCDFF1 -a
 echo
 
-echo -e "${YELLOW}DES-CBC${NC}:"; echo
-echo -e "${BLUE}echo \"foo bar\" | ./ft_ssl des_cbc -k 133457799BBCDFF1 -v 133457799BBCDFF1 -q -a${NC}"
-echo "foo bar" | ./ft_ssl des_cbc -k 133457799BBCDFF1 -v 133457799BBCDFF1 -q -a
-echo -e "${BLUE}echo \"foo bar\" | openssl des-cbc -K 133457799BBCDFF1 -iv 133457799BBCDFF1 -nopad -a${NC}"
-echo "foo bar" | openssl des-cbc -K 133457799BBCDFF1 -iv 133457799BBCDFF1 -nopad -a
+echo -e "${YELLOW}DES-CBC${NC}:";
+
+echo -e "${BLUE}echo \"foo bar\" | ./ft_ssl des-cbc -q -a -k 133457799BBCDFF1 -v 133457799BBCDFF1${NC}"
+echo "foo bar" | ./ft_ssl des-cbc -q -a -k 133457799BBCDFF1 -v 133457799BBCDFF1
+echo -e "${BLUE}echo \"foo bar\" | openssl des-cbc -a -K 133457799BBCDFF1 -iv 133457799BBCDFF1${NC}"
+echo "foo bar" | openssl des-cbc -a -K 133457799BBCDFF1 -iv 133457799BBCDFF1
 echo
-echo -e "${BLUE}echo \"O4LusmJIpRk=\" | ./ft_ssl des_cbc -d -k 133457799BBCDFF1 -v 133457799BBCDFF1 -q -a${NC}"
-echo "O4LusmJIpRk=" | ./ft_ssl des_cbc -d -k 133457799BBCDFF1 -v 133457799BBCDFF1 -q -a
-echo -e "${BLUE}echo \"O4LusmJIpRk=\" | openssl dec des-cbc -K 133457799BBCDFF1 -iv 133457799BBCDFF1 -nopad -a${NC}"
-echo "O4LusmJIpRk=" | openssl des-cbc -d -K 133457799BBCDFF1 -iv 133457799BBCDFF1 -nopad -a
+echo -e "${BLUE}echo \"czo9ml0T2SSYtazEJhwzVw==\" | ./ft_ssl des-cbc -q -a -d -k 133457799BBCDFF1 -v 133457799BBCDFF1${NC}"
+echo "czo9ml0T2SSYtazEJhwzVw==" | ./ft_ssl des-cbc -q -a -d -k 133457799BBCDFF1 -v 133457799BBCDFF1
+echo -e "${BLUE}echo \"czo9ml0T2SSYtazEJhwzVw==\" | openssl des-cbc -d -a -K 133457799BBCDFF1 -iv 133457799BBCDFF1${NC}"
+echo "czo9ml0T2SSYtazEJhwzVw==" | openssl des-cbc -d -a -K 133457799BBCDFF1 -iv 133457799BBCDFF1
+echo
+echo
+echo -e "${BLUE}echo \"one deep secret\" | ./ft_ssl des-cbc -q -a -k 6162636461626364 -v 0011223344556677${NC}"
+echo "one deep secret" | ./ft_ssl des-cbc -q -a -k 6162636461626364 -v 0011223344556677
+echo -e "${BLUE}echo \"one deep secret\" | openssl des-cbc -a -K 6162636461626364 -iv 0011223344556677${NC}"
+echo "one deep secret" | openssl des-cbc -a -K 6162636461626364 -iv 0011223344556677
+echo
+echo -e "${BLUE}echo \"zqYWONX68rWNxl7msIdGC67Uh2HfVEBo\" | ./ft_ssl des-cbc -q -d -a -k 6162636461626364 -v 0011223344556677${NC}"
+echo "zqYWONX68rWNxl7msIdGC67Uh2HfVEBo" | ./ft_ssl des-cbc -q -d -a -k 6162636461626364 -v 0011223344556677
+echo -e "${BLUE}echo \"zqYWONX68rWNxl7msIdGC67Uh2HfVEBo\" | openssl des-cbc -d -a -K 6162636461626364 -iv 0011223344556677${NC}"
+echo "zqYWONX68rWNxl7msIdGC67Uh2HfVEBo" | openssl des-cbc -d -a -K 6162636461626364 -iv 0011223344556677
 echo

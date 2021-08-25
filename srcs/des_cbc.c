@@ -12,13 +12,15 @@
 
 #include "../includes/des.h"
 
-void 				des_cbc_buf(char *buf, char *last_buf, char **res, char **keys, int mode)
-{(void)last_buf;
+void 				des_cbc_buf(unsigned char *buf, char **res, char **keys, int mode)
+{
 	t_des des;
+	char tmp[9];
 
+	bzero(tmp, 9);
 	bzero(&des, sizeof(t_des));
 	// convert message to binary string
-	str_to_bin(buf, des.bin_buf);
+	str_to_bin((char *)buf, des.bin_buf);
 	// initial permutation
 	for (int i = 0; i < 64; i++)
 	{
@@ -35,14 +37,14 @@ void 				des_cbc_buf(char *buf, char *last_buf, char **res, char **keys, int mod
 			ft_strcpy(des.Ln, des.r_block);
 			f_function(des.r_block, keys[(mode == 0) ? i : 15 - i], des.Rn);
 			//printf("%s + %s ", des.l_block, des.Rn);
-			xor_add(des.l_block, des.Rn);
+			xor_bin(des.l_block, des.Rn);
 			//printf("= %s\n", des.Rn);
 		}
 		else
 		{
 			ft_strcpy(des.Ln, des.Rn_1);
 			f_function(des.Rn_1, keys[(mode == 0) ? i : 15 - i], des.Rn);
-			xor_add(des.Ln_1, des.Rn);
+			xor_bin(des.Ln_1, des.Rn);
 		}
 		ft_strcpy(des.Ln_1, des.Ln);
 		ft_strcpy(des.Rn_1, des.Rn);
@@ -56,16 +58,19 @@ void 				des_cbc_buf(char *buf, char *last_buf, char **res, char **keys, int mod
 		des.bin_res[i] = des.Fn[final_perm[i] - 1];
 	}
 	// convert binary string to char
-	bin_to_str(des.bin_res, *res);
+	bin_to_str(des.bin_res, tmp);
+	ft_strcat(*res, tmp);
+	ft_strcpy((char *)buf, tmp);
 }
 
-int 				des_cbc_loop(char *str, size_t str_size, char **res, char **keys, int mode)
+int 				des_cbc_loop(char *str, size_t str_size, char **res, char **keys, unsigned char *iv, int mode)
 {
 	int j = 0;
-	char buf[9];
-	char last_buf[9];
+	unsigned char buf[9];
+	unsigned char last_buf[9];
 
 	bzero(last_buf, 9);
+	ft_memcpy(last_buf, iv, 9);
 	if ((*res = malloc(str_size + 1)) == NULL)
 		return -1;
 	bzero(*res, str_size + 1);
@@ -73,7 +78,12 @@ int 				des_cbc_loop(char *str, size_t str_size, char **res, char **keys, int mo
 	{
 		bzero(buf, 9);
 		ft_memcpy(buf, str + j, 8);
-		des_cbc_buf(buf, last_buf, res, keys, mode);
+		if (mode == 0)
+			xor(last_buf, buf);
+		des_cbc_buf(buf, res, keys, mode);
+		if (mode == 1)
+			xor(last_buf, buf);
+		ft_memcpy(last_buf, buf, 9);
 		j += 8;
 	}
 	return (0);
@@ -107,10 +117,10 @@ char				*des_cbc(char *str, void *data, int print)
 			}
 			bzero(b64_res, b64_res_len);
 			b64_decode_str(str, &b64_res);
-			if ((message = preprocess_message(b64_res, &str_size)) == NULL)
+			if ((message = preprocess_message(b64_res, &str_size, d->e_opt)) == NULL)
 				return NULL;
 			free(b64_res);
-			des_cbc_loop(message, str_size, &des_res, keys, DECRYPT);
+			des_cbc_loop(message, str_size, &des_res, keys, d->iv, DECRYPT);
 			if (print)
 				printf("%s", des_res);
 			des_clean(keys, message);
@@ -118,9 +128,9 @@ char				*des_cbc(char *str, void *data, int print)
 		}
 		if (d->e_opt)
 		{
-			if ((message = preprocess_message(str, &str_size)) == NULL)
+			if ((message = preprocess_message(str, &str_size, d->e_opt)) == NULL)
 				return NULL;
-			des_cbc_loop(message, str_size, &des_res, keys, ENCRYPT);
+			des_cbc_loop(message, str_size, &des_res, keys, d->iv, ENCRYPT);
 			b64_res_len = ft_strlen(des_res) / 3 * 4 + 4 + 1;
 			if ((b64_res = malloc(b64_res_len)) == NULL)
 			{
@@ -138,9 +148,9 @@ char				*des_cbc(char *str, void *data, int print)
 	}
 	else
 	{
-		if ((message = preprocess_message(str, &str_size)) == NULL)
+		if ((message = preprocess_message(str, &str_size, d->e_opt)) == NULL)
 			return NULL;
-		des_cbc_loop(message, str_size, &des_res, keys, d->d_opt);
+		des_cbc_loop(message, str_size, &des_res, keys, d->iv, d->d_opt);
 
 	}
 	if (print)

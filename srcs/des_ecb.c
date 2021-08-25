@@ -17,7 +17,9 @@
 void 				des_ecb_buf(char *buf, char **res, char **keys, int mode)
 {
 	t_des des;
+	char tmp[9];
 
+	bzero(tmp, 9);
 	bzero(&des, sizeof(t_des));
 	// convert message to binary string
 	str_to_bin(buf, des.bin_buf);
@@ -37,14 +39,14 @@ void 				des_ecb_buf(char *buf, char **res, char **keys, int mode)
 			ft_strcpy(des.Ln, des.r_block);
 			f_function(des.r_block, keys[(mode == 0) ? i : 15 - i], des.Rn);
 			//printf("%s + %s ", des.l_block, des.Rn);
-			xor_add(des.l_block, des.Rn);
+			xor_bin(des.l_block, des.Rn);
 			//printf("= %s\n", des.Rn);
 		}
 		else
 		{
 			ft_strcpy(des.Ln, des.Rn_1);
 			f_function(des.Rn_1, keys[(mode == 0) ? i : 15 - i], des.Rn);
-			xor_add(des.Ln_1, des.Rn);
+			xor_bin(des.Ln_1, des.Rn);
 		}
 		ft_strcpy(des.Ln_1, des.Ln);
 		ft_strcpy(des.Rn_1, des.Rn);
@@ -58,7 +60,8 @@ void 				des_ecb_buf(char *buf, char **res, char **keys, int mode)
 		des.bin_res[i] = des.Fn[final_perm[i] - 1];
 	}
 	// convert binary string to char
-	bin_to_str(des.bin_res, *res);
+	bin_to_str(des.bin_res, tmp);
+	ft_strcat(*res, tmp);
 }
 
 int 				des_ecb_loop(char *str, size_t str_size, char **res, char **keys, int mode)
@@ -107,7 +110,7 @@ char				*des_ecb(char *str, void *data, int print)
 			}
 			bzero(b64_res, b64_res_len);
 			b64_decode_str(str, &b64_res);
-			if ((message = preprocess_message(b64_res, &str_size)) == NULL)
+			if ((message = preprocess_message(b64_res, &str_size, d->e_opt)) == NULL)
 				return NULL;
 			free(b64_res);
 			des_ecb_loop(message, str_size, &des_res, keys, DECRYPT);
@@ -118,7 +121,7 @@ char				*des_ecb(char *str, void *data, int print)
 		}
 		if (d->e_opt)
 		{
-			if ((message = preprocess_message(str, &str_size)) == NULL)
+			if ((message = preprocess_message(str, &str_size, d->e_opt)) == NULL)
 				return NULL;
 			des_ecb_loop(message, str_size, &des_res, keys, ENCRYPT);
 			b64_res_len = ft_strlen(des_res) / 3 * 4 + 4 + 1;
@@ -138,7 +141,7 @@ char				*des_ecb(char *str, void *data, int print)
 	}
 	else
 	{
-		if ((message = preprocess_message(str, &str_size)) == NULL)
+		if ((message = preprocess_message(str, &str_size, d->e_opt)) == NULL)
 			return NULL;
 		des_ecb_loop(message, str_size, &des_res, keys, d->d_opt);
 

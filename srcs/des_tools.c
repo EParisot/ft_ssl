@@ -178,21 +178,38 @@ int 				subkeys_routine(char *key, char **keys)
 	return 0;
 }
 
-char 				*preprocess_message(char *str, size_t *str_len)
+char 				*preprocess_message(char *str, size_t *str_len, int mode)
 {
 	char *message;
 	size_t msg_len = ft_strlen(str);
-
-	// padd message
-	while (msg_len % 8 != 0)
+	if (mode == 1)
 	{
-		msg_len++;
+		size_t pad_len = 8;
+
+		// padd message
+		while ((msg_len + pad_len) % 8 != 0)
+		{
+			pad_len--;
+		}
+		if ((message = malloc(msg_len + pad_len + 1)) == NULL)
+			return NULL;
+		bzero(message, msg_len + pad_len + 1);
+		ft_strcpy(message, str);
+		for (size_t i = 0; i < pad_len; i++)
+		{
+			message[msg_len + i] = pad_len;
+		}
+		*str_len = msg_len + pad_len;
 	}
-	if ((message = malloc(msg_len + 1)) == NULL)
-		return NULL;
-	bzero(message, msg_len + 1);
-	ft_strcpy(message, str);
-	*str_len = msg_len;
+	else
+	{
+		// remove padding
+		if ((message = malloc(msg_len + 1)) == NULL)
+			return NULL;
+		bzero(message, msg_len + 1);
+		ft_strcpy(message, str);
+		*str_len = msg_len;
+	}
 	return message;
 }
 

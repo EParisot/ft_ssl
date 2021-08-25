@@ -18,8 +18,8 @@ static t_fct	g_fcts[] = {
 	{"sha256", "SHA256", &sha256},
 	{"base64", "BASE64", &base64},
 	{"des", "DES", &des_cbc},
-	{"des_cbc", "DES_CBC", &des_cbc},
-	{"des_ecb", "DES_ECB", &des_ecb},
+	{"des-cbc", "DES_CBC", &des_cbc},
+	{"des-ecb", "DES_ECB", &des_ecb},
 	{NULL, NULL, NULL}
 };
 
