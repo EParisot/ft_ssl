@@ -98,11 +98,6 @@ done
 
 
 echo -e "${YELLOW}DES-ECB${NC}:"; echo
-echo -e "${BLUE}echo \"foo bar\" | ./ft_ssl des-ecb -k 133457799BBCDFF1 -q -a${NC}"
-echo "foo bar" | ./ft_ssl des-ecb -k 133457799BBCDFF1 -q -a
-echo -e "${BLUE}echo \"foo bar\" | openssl des-ecb -K 133457799BBCDFF1 -a${NC}"
-echo "foo bar" | openssl des-ecb -K 133457799BBCDFF1 -a
-echo
 echo -e "${BLUE}echo \"O4LusmJIpRn98uF0SSki+A==\" | ./ft_ssl des-ecb -d -k 133457799BBCDFF1 -q -a${NC}"
 echo "O4LusmJIpRn98uF0SSki+A==" | ./ft_ssl des-ecb -d -k 133457799BBCDFF1 -q -a
 echo -e "${BLUE}echo \"O4LusmJIpRn98uF0SSki+A==\" | openssl -d des-ecb -K 133457799BBCDFF1 -a${NC}"
@@ -119,8 +114,7 @@ echo -e "${BLUE}echo \"mJWdy4+Oe1fBEj0N3cTox/3y4XRJKSL4\" | openssl -d des-ecb -
 echo "mJWdy4+Oe1fBEj0N3cTox/3y4XRJKSL4" | openssl des-ecb -d -K 133457799BBCDFF1 -a
 echo
 
-echo -e "${YELLOW}DES-CBC${NC}:";
-
+echo -e "${YELLOW}DES-CBC${NC}:"; echo
 echo -e "${BLUE}echo \"foo bar\" | ./ft_ssl des-cbc -q -a -k 133457799BBCDFF1 -v 133457799BBCDFF1${NC}"
 echo "foo bar" | ./ft_ssl des-cbc -q -a -k 133457799BBCDFF1 -v 133457799BBCDFF1
 echo -e "${BLUE}echo \"foo bar\" | openssl des-cbc -a -K 133457799BBCDFF1 -iv 133457799BBCDFF1${NC}"

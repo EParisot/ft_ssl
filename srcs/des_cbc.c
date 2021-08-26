@@ -11,11 +11,11 @@
 /* ************************************************************************** */
 
 #include "../includes/des.h"
-
-void 				des_cbc_buf(char *buf, char **keys, int mode)
+// https://csrc.nist.gov/CSRC/media/Publications/fips/46/1/archive/1988-01-22/documents/NBS.FIPS.46-1.pdf
+void 		des_cbc_buf(char *buf, char **keys, int mode)
 {
-	t_des des;
-	char tmp[9];
+	t_des 	des;
+	char 	tmp[9];
 
 	bzero(tmp, 9);
 	bzero(&des, sizeof(t_des));
@@ -62,14 +62,16 @@ void 				des_cbc_buf(char *buf, char **keys, int mode)
 	ft_strcpy(buf, tmp);
 }
 
-int 				des_cbc_loop(char *str, size_t str_size, char **res, char **keys, unsigned char *iv, int mode)
+int 		des_cbc_loop(char *str, size_t str_size, char **res, char **keys, t_data *data)
 {
-	size_t j = 0;
-	char buf[9];
-	char last_buf[9];
+	size_t 	j = 0;
+	char 	buf[9];
+	char 	tmp[9];
+	char 	last_buf[9];
 
 	bzero(last_buf, 9);
-	ft_memcpy(last_buf, iv, 8);
+	bzero(tmp, 9);
+	ft_memcpy(last_buf, data->iv, 8);
 	if ((*res = malloc(str_size + 1)) == NULL)
 		return -1;
 	bzero(*res, str_size + 1);
@@ -77,28 +79,34 @@ int 				des_cbc_loop(char *str, size_t str_size, char **res, char **keys, unsign
 	{
 		bzero(buf, 9);
 		ft_memcpy(buf, str + j, 8);
-		if (mode == 0)
+		if (data->d_opt == DECRYPT)
+			ft_memcpy(tmp, buf, 8);
+		if (data->d_opt == ENCRYPT)
 			xor(last_buf, buf);
-		des_cbc_buf(buf, keys, mode);
-		if (mode == 1)
+		des_cbc_buf(buf, keys, data->d_opt);
+		if (data->d_opt == DECRYPT)
+		{
 			xor(last_buf, buf);
-		ft_memcpy(*res + j, buf, 8);
-		ft_memcpy(last_buf, buf, 8);
+			ft_memcpy(last_buf, tmp, 8);
+		}
+		ft_memcpy(*res + j, buf, 8);	
+		if (data->d_opt == ENCRYPT)
+			ft_memcpy(last_buf, buf, 8);
 		j += 8;
 	}
 	return (0);
 }
 
-char				*des_cbc(char *str, void *data, int print)
+char		*des_cbc(char *str, void *data, int print)
 {
-	t_data *d = (t_data *)data;
-	char *b64_res = NULL;
-	char *des_res = NULL;
-	size_t b64_res_len = 0;
-	char key[56];
-	char *keys[16];
-	char *message = NULL;
-	size_t str_size = 0;
+	t_data 	*d = (t_data *)data;
+	char 	*b64_res = NULL;
+	char 	*des_res = NULL;
+	size_t 	b64_res_len = 0;
+	char 	key[56];
+	char 	*keys[16];
+	char 	*message = NULL;
+	size_t 	str_size = 0;
 
 	bzero(key, 56);
 	preprocess_key(d, key);
@@ -120,14 +128,8 @@ char				*des_cbc(char *str, void *data, int print)
 			if ((message = preprocess_message(b64_res, &str_size, d->e_opt)) == NULL)
 				return NULL;
 			free(b64_res);
-			for (size_t i = 0; i < ft_strlen(message); i++)
-				printf("%d ", message[i]);
-			printf("\n");
-			des_cbc_loop(message, str_size, &des_res, keys, d->iv, DECRYPT);
+			des_cbc_loop(message, str_size, &des_res, keys, d);
 			postprocess_message(des_res, str_size);
-			for (size_t i = 0; i < ft_strlen(des_res); i++)
-				printf("%d ", des_res[i]);
-			printf("\n");
 			if (print)
 				printf("%s", des_res);
 			des_clean(keys, message);
@@ -137,13 +139,7 @@ char				*des_cbc(char *str, void *data, int print)
 		{
 			if ((message = preprocess_message(str, &str_size, d->e_opt)) == NULL)
 				return NULL;
-			for (size_t i = 0; i < ft_strlen(message); i++)
-				printf("%d ", message[i]);
-			printf("\n");
-			des_cbc_loop(message, str_size, &des_res, keys, d->iv, ENCRYPT);
-			for (size_t i = 0; i < ft_strlen(des_res); i++)
-				printf("%d ", des_res[i]);
-			printf("\n");
+			des_cbc_loop(message, str_size, &des_res, keys, d);
 			b64_res_len = ft_strlen(des_res) / 3 * 4 + 4 + 1;
 			if ((b64_res = malloc(b64_res_len)) == NULL)
 			{
@@ -163,7 +159,7 @@ char				*des_cbc(char *str, void *data, int print)
 	{
 		if ((message = preprocess_message(str, &str_size, d->e_opt)) == NULL)
 			return NULL;
-		des_cbc_loop(message, str_size, &des_res, keys, d->iv, d->d_opt);
+		des_cbc_loop(message, str_size, &des_res, keys, d);
 		if (d->d_opt)
 			postprocess_message(des_res, str_size);
 	}
