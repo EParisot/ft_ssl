@@ -181,40 +181,35 @@ int 				subkeys_routine(char *key, char **keys)
 char 				*preprocess_message(char *str, size_t *str_len, int mode)
 {
 	char *message;
-	size_t msg_len = ft_strlen(str);
-	if (mode == 1)
+
+	if (mode == ENCRYPT)
 	{
 		size_t pad_len = 8;
 
 		// padd message
-		while ((msg_len + pad_len) % 8 != 0)
+		while ((*str_len + pad_len) % 8 != 0)
 		{
 			pad_len--;
 		}
-		if ((message = malloc(msg_len + pad_len + 1)) == NULL)
+		if ((message = malloc(*str_len + pad_len + 1)) == NULL)
 			return NULL;
-		bzero(message, msg_len + pad_len + 1);
+		bzero(message, *str_len + pad_len + 1);
 		ft_strcpy(message, str);
 		for (size_t i = 0; i < pad_len; i++)
 		{
-			message[msg_len + i] = pad_len;
+			message[*str_len + i] = pad_len;
 		}
-		*str_len = msg_len + pad_len;
+		*str_len = *str_len + pad_len;
 	}
 	else
 	{
-		if (msg_len % 8 != 0)
-		{
-			printf("ft_ssl: Error: invalid cipher len (must be multiple of 8).\n");
-			return NULL;
-		}
 		// remove padding
-		if ((message = malloc(msg_len + 1)) == NULL)
+		if ((message = malloc(*str_len + 1)) == NULL)
 			return NULL;
-		bzero(message, msg_len + 1);
+		bzero(message, *str_len + 1);
 		int n = -1;
 		int c = 0;
-		for (int i = msg_len - 1; i >= 0; i--)
+		for (int i = *str_len - 1; i >= 0; i--)
 		{
 			if (n == -1)
 			{
@@ -240,20 +235,20 @@ char 				*preprocess_message(char *str, size_t *str_len, int mode)
 		{
 			for (int i = 0; i < c; i++)
 			{
-				str[msg_len - 1 - i] = '\0';
+				str[*str_len - 1 - i] = '\0';
 			}
+			*str_len = *str_len - c;
 		}
-		ft_strcpy(message, str);
-		*str_len = msg_len;
+		ft_memcpy(message, str, *str_len);
 	}
 	return message;
 }
 
-void 					postprocess_message(char *str, size_t str_len)
+void 					postprocess_message(char *str, size_t *str_len)
 {
 	int n = -1;
 	int c = 0;
-	for (int i = str_len - 1; i >= 0; i--)
+	for (int i = *str_len - 1; i >= 0; i--)
 	{
 		if (n == -1)
 		{
@@ -279,8 +274,9 @@ void 					postprocess_message(char *str, size_t str_len)
 	{
 		for (int i = 0; i < c; i++)
 		{
-			str[str_len - 1 - i] = '\0';
+			str[*str_len - 1 - i] = '\0';
 		}
+		*str_len = *str_len - c;
 	}
 }
 

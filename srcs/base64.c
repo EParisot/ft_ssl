@@ -153,8 +153,9 @@ void 	b64_decode_str(char *str, char **converted)
 	}
 }
 
-char		*base64(char *str, void *data)
+char		*base64(char *str, void *data, size_t *size)
 {
+	(void)size;
 	t_data *d = (t_data *)data;
 	char *converted = NULL;
 
@@ -170,5 +171,6 @@ char		*base64(char *str, void *data)
 	{
 		b64_decode_str(str, &converted);
 	}
+	*size = ft_strlen(converted);
 	return converted;
 }

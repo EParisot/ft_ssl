@@ -61,7 +61,7 @@ void 		des_ecb_buf(char *buf, char **keys, int mode)
 	}
 	// convert binary string to char
 	bin_to_str(des.bin_res, tmp);
-	ft_strncpy(buf, tmp, 8);
+	ft_memcpy(buf, tmp, 8);
 }
 
 int 		des_ecb_loop(char *str, size_t str_size, char **res, char **keys, t_data *data)
@@ -77,13 +77,13 @@ int 		des_ecb_loop(char *str, size_t str_size, char **res, char **keys, t_data *
 		bzero(buf, 9);
 		ft_memcpy(buf, str + j, 8);
 		des_ecb_buf(buf, keys, data->d_opt);
-		ft_memcpy(*res + j, buf, 8);
+		ft_memcpy((*res) + j, buf, 8);
 		j += 8;
 	}
 	return (0);
 }
 
-char				*des_ecb(char *str, void *data)
+char				*des_ecb(char *str, void *data, size_t *size)
 {
 	t_data *d = (t_data *)data;
 	char *b64_res = NULL;
@@ -92,7 +92,6 @@ char				*des_ecb(char *str, void *data)
 	char key[56];
 	char *keys[16];
 	char *message = NULL;
-	size_t str_size = 0;
 
 	bzero(key, 56);
 	preprocess_key(d, key);
@@ -103,7 +102,7 @@ char				*des_ecb(char *str, void *data)
 	{
 		if (d->d_opt)
 		{
-			b64_res_len = ft_strlen(str) / 3 * 4 + 4 + 1;
+			b64_res_len = *size / 3 * 4 + 4 + 1;
 			if ((b64_res = malloc(b64_res_len)) == NULL)
 			{
 				des_clean(keys, message);
@@ -111,27 +110,28 @@ char				*des_ecb(char *str, void *data)
 			}
 			bzero(b64_res, b64_res_len);
 			b64_decode_str(str, &b64_res);
-			if ((message = preprocess_message(b64_res, &str_size, d->e_opt)) == NULL)
+			*size = ft_strlen(b64_res);
+			if ((message = preprocess_message(b64_res, size, d->d_opt)) == NULL)
 			{
 				free(b64_res);
 				des_clean(keys, message);
 				return NULL;
 			}
 			free(b64_res);
-			des_ecb_loop(message, str_size, &des_res, keys, d);
-			postprocess_message(des_res, str_size);
+			des_ecb_loop(message, *size, &des_res, keys, d);
+			postprocess_message(des_res, size);
 			des_clean(keys, message);
 			return des_res;
 		}
 		if (d->e_opt)
 		{
-			if ((message = preprocess_message(str, &str_size, d->e_opt)) == NULL)
+			if ((message = preprocess_message(str, size, d->d_opt)) == NULL)
 			{
 				des_clean(keys, message);
 				return NULL;
 			}
-			des_ecb_loop(message, str_size, &des_res, keys, d);
-			b64_res_len = ft_strlen(des_res) / 3 * 4 + 4 + 1;
+			des_ecb_loop(message, *size, &des_res, keys, d);
+			b64_res_len = *size / 3 * 4 + 4 + 1;
 			if ((b64_res = malloc(b64_res_len)) == NULL)
 			{
 				des_clean(keys, message);
@@ -139,6 +139,7 @@ char				*des_ecb(char *str, void *data)
 			}
 			bzero(b64_res, b64_res_len);
 			b64_encode_str(des_res, &b64_res);
+			*size = b64_res_len;
 			free(des_res);
 			des_clean(keys, message);
 			return b64_res;
@@ -146,14 +147,14 @@ char				*des_ecb(char *str, void *data)
 	}
 	else
 	{
-		if ((message = preprocess_message(str, &str_size, d->e_opt)) == NULL)
+		if ((message = preprocess_message(str, size, d->d_opt)) == NULL)
 		{
 			des_clean(keys, message);
 			return NULL;
 		}
-		des_ecb_loop(message, str_size, &des_res, keys, d);
+		des_ecb_loop(message, *size, &des_res, keys, d);
 		if (d->d_opt)
-			postprocess_message(des_res, str_size);
+			postprocess_message(des_res, size);
 	}
 	des_clean(keys, message);
 	return des_res;

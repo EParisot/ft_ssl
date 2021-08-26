@@ -85,7 +85,7 @@ int			hash_string(t_data *data)
 		if (data->o_opt == stdout)
 		{
 			prefix(data, ((t_string *)(data->strings->content))->source_type);
-			if (data->hash && (res = data->hash->func_ptr(((t_string *)(data->strings->content))->string, data)) == NULL)
+			if (data->hash && (res = data->hash->func_ptr(((t_string *)(data->strings->content))->string, data, &((t_string *)(data->strings->content))->len)) == NULL)
 			{
 				if (res) free(res);
 				return (-1);
@@ -93,19 +93,19 @@ int			hash_string(t_data *data)
 			if (data->hex)
 				print_hex((unsigned char *)res, ft_strlen(res));
 			else
-				printf("%s", res);
+				print_res(res, ((t_string *)(data->strings->content))->len, data->o_opt);
 			free(res);
 			suffix(data, ((t_string *)(data->strings->content))->source_type);
 			printf("\n");
 		}
 		else
 		{
-			if (data->hash && (res = data->hash->func_ptr(((t_string *)(data->strings->content))->string, data)) == NULL)
+			if (data->hash && (res = data->hash->func_ptr(((t_string *)(data->strings->content))->string, data, &((t_string *)(data->strings->content))->len)) == NULL)
 			{
 				if (res) free(res);
 				return (-1);
 			}
-			fprintf(data->o_opt, "%s", res);
+			print_res(res, ((t_string *)(data->strings->content))->len, data->o_opt);
 			fclose(data->o_opt);
 			free(res);
 		}

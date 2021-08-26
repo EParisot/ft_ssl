@@ -12,7 +12,7 @@
 
 #include "../includes/ft_ssl.h"
 
-static int 	PBKDF2(char *fct(char *, void *), t_data *data, int nIter, int dKlen)
+static int 	PBKDF2(char *fct(char *, void *, size_t *), t_data *data, int nIter, int dKlen)
 {//https://fr.wikipedia.org/wiki/PBKDF2
 	int hlen = 256;
 	int l = (dKlen + hlen - 1) / hlen;
@@ -44,7 +44,7 @@ static int 	PBKDF2(char *fct(char *, void *), t_data *data, int nIter, int dKlen
 				ft_memmove((char*)input + ft_strlen((char*)data->pass) + 8, (char*)&i, sizeof(i));
 				//printf("%s\n", (char*)input);
 				//print_hex(input, input_len);
-				char *hash = fct((char*)input, (void*)data);
+				char *hash = fct((char*)input, (void*)data, NULL);
 				if (read_hex(hash, output))
 					return -1;
 				//print_hex(input, input_len);
@@ -66,7 +66,7 @@ static int 	PBKDF2(char *fct(char *, void *), t_data *data, int nIter, int dKlen
 				ft_memmove((char*)input + ft_strlen((char*)data->pass), (char*)output, hlen);
 				bzero((char*)output, hlen);
 				//printf("%s\n", (char*)input);
-				char *hash = fct((char*)input, (void*)data);
+				char *hash = fct((char*)input, (void*)data, NULL);
 				if (read_hex(hash, output))
 					return -1;
 				//printf("%ld %s %ld %s\n", ft_strlen((char*)input), (char*)input, ft_strlen((char*)output), (char*)output);

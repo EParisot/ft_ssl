@@ -43,6 +43,7 @@ typedef struct		s_string
 {
 	char			*string;
 	char			*source;
+	size_t			len;
 	int				source_type;
 }					t_string;
 
@@ -50,7 +51,7 @@ typedef struct		s_fct
 {
 	char			*name;
 	char			*print_name;
-	char			*(*func_ptr)(char *str, void *data);
+	char			*(*func_ptr)(char *str, void *data, size_t *size);
 }					t_fct;
 
 typedef struct		s_data
@@ -81,7 +82,6 @@ char 				*bin_to_str(char *binstr, char *str);
 void				xor_bin(char *a, char *b);
 void				xor(char *a, char *b);
 int					read_string(t_data *data);
-int					read_stdin(char *buf, int size);
 int					get_string(t_data *data, char *str, int hex);
 int					handle_files(t_data *data, char *filename);
 int					hash_string(t_data *data);
@@ -94,13 +94,14 @@ uint32_t			rot_r(uint32_t x, uint32_t n);
 uint32_t			rot_l(uint32_t x, uint32_t n);
 char				*rot_str_l(char *str, int n);
 int		 			random_value(unsigned char *r, size_t size);
+void 				print_res(char *res, size_t size, FILE *fp);
 
 int 				securize(t_data* data);
 
-char				*md5(char *str, void *data);
+char				*md5(char *str, void *data, size_t *size);
 
-char				*sha224(char *str, void *data);
-char				*sha256(char *str, void *data);
+char				*sha224(char *str, void *data, size_t *size);
+char				*sha256(char *str, void *data, size_t *size);
 int					sha256_loop(unsigned char *padded_str, int padded_size, char *str_res);
 uint32_t			sha256_ch(uint32_t x, uint32_t y, uint32_t z);
 uint32_t			sha256_maj(uint32_t x, uint32_t y, uint32_t z);
@@ -110,11 +111,11 @@ uint32_t			sha256_ssig0(uint32_t x);
 uint32_t			sha256_ssig1(uint32_t x);
 uint32_t			sha256_k(int i);
 
-char				*base64(char *str, void *data);
+char				*base64(char *str, void *data, size_t *size);
 void 				b64_encode_str(char *str, char **converted);
 void 				b64_decode_str(char *str, char **converted);
 
-char				*des_cbc(char *str, void *data);
-char				*des_ecb(char *str, void *data);
+char				*des_cbc(char *str, void *data, size_t *size);
+char				*des_ecb(char *str, void *data, size_t *size);
 
 #endif

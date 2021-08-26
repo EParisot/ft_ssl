@@ -51,15 +51,6 @@ int 			read_hex(char *hex_str, unsigned char *out)
 	return 0;
 }
 
-int				read_stdin(char *buf, int size)
-{
-	if (read(STDIN_FILENO, &buf, size) == size)
-	{
-		return 0;
-	}
-	return -1;
-}
-
 static int		read_loop(char **str, char *buf)
 {
 	char		*str_tmp;
@@ -77,7 +68,9 @@ static int		read_loop(char **str, char *buf)
 		free(*str);
 	}
 	if (len)
+	{
 		*str = ft_strjoin(str_tmp, buf);
+	}
 	else
 	{
 		if ((*str = (char *)malloc(BUF_SIZE + 1)) == NULL)
@@ -101,12 +94,14 @@ int				read_string(t_data *data)
 	ft_strcpy(new_string.source, "(stdin)");
 	new_string.string = NULL;
 	new_string.source_type = _STDIN;
+	
 	while (read(STDIN_FILENO, &buf, BUF_SIZE))
 	{
 		if (read_loop(&new_string.string, buf))
 			return (-1);
 		ft_memset(buf, 0, BUF_SIZE + 1);
 	}
+	new_string.len = ft_strlen(new_string.string);
 	if ((new_lst = ft_lstnew(&new_string, sizeof(t_string))) == NULL)
 		return (-1);
 	if (data->strings == NULL)
@@ -128,9 +123,10 @@ int				get_string(t_data *data, char *str, int hex)
 		data->strings = data->strings->next;
 	new_string.source = NULL;
 	new_string.source_type = _STRING;
-	if ((new_string.string = (char *)malloc(ft_strlen(str) + 1)) == NULL)
+	new_string.len = ft_strlen(str);
+	if ((new_string.string = (char *)malloc(new_string.len + 1)) == NULL)
 		return (-1);
-	bzero(new_string.string, ft_strlen(str) + 1);
+	bzero(new_string.string, new_string.len + 1);
 	if (hex)
 	{
 		if (read_hex(str, (unsigned char *)new_string.string))
@@ -171,7 +167,10 @@ static int		read_file(t_string *file)
 	if ((fd = open(file->source, O_RDONLY)) == -1)
 		return (-1);
 	while (read(fd, &c, 1))
+	{
+		(file->len)++;
 		file->string[i++] = c;
+	}
 	file->string[i] = 0;
 	close(fd);
 	return (0);
@@ -226,6 +225,7 @@ int				handle_files(t_data *data, char *filename)
 		return (-1);
 	ft_strcpy(new_string.source, filename);
 	new_string.source_type = _FILE;
+	new_string.len = 0;
 	if ((new_lst = ft_lstnew(&new_string, sizeof(t_string))) == NULL)
 		return (-1);
 	if (read_file((t_string *)(new_lst->content)))
@@ -238,4 +238,15 @@ int				handle_files(t_data *data, char *filename)
 	else
 		data->strings = new_lst;
 	return (0);
+}
+
+void 			print_res(char *res, size_t size, FILE *fp)
+{
+	for (size_t i = 0; i < size; i++)
+	{
+		if (fp == stdout)
+			write(1, &(res[i]), 1);
+		else
+			fprintf(fp, "%c", res[i]);
+	}
 }
