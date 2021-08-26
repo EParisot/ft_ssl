@@ -99,7 +99,7 @@ void			xor_bin(char *a, char *b)
 	}
 }
 
-void			xor(unsigned char *a, unsigned char *b)
+void			xor(char *a, char *b)
 {
 	for (int i = 0; i < 8; i++)
 	{

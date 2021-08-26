@@ -91,17 +91,27 @@ static int 	PBKDF2(char *fct(char *, void *, int), t_data *data, int nIter, int 
 	return 0;
 }
 
+int 			is_empty(unsigned char *str, int len)
+{
+	for (int i = 0; i < len; ++i)
+	{
+		if (str[i] != 0)
+			return 0;
+	}
+	return 1;
+}
+
 int 			securize(t_data *data)
 {
 	char *tmp = NULL;
 	char *tmp0 = NULL;
 	char *tmp1 = NULL;
 
-	if (ft_strcmp((char *)data->salt, "\0") == 0)
+	if (is_empty(data->salt, 8))
 	{
 		random_value(data->salt, 8);
 	}
-	if (ft_strcmp((char *)data->key, "\0") == 0)
+	if (is_empty(data->key, 8))
 	{
 		while (data->pass == NULL)
 		{
@@ -127,7 +137,7 @@ int 			securize(t_data *data)
 		if (PBKDF2(sha256, data, 256, 64))
 			return -1;
 	}
-	if (ft_strcmp((char *)data->iv, "\0") == 0)
+	if (is_empty(data->iv, 8))
 	{
 		random_value(data->iv, 8);
 	}

@@ -14,7 +14,7 @@
 
 //http://page.math.tu-berlin.de/~kant/teaching/hess/krypto-ws2006/des.htm
 
-void 				des_ecb_buf(char *buf, char **res, char **keys, int mode)
+void 				des_ecb_buf(char *buf, char **keys, int mode)
 {
 	t_des des;
 	char tmp[9];
@@ -61,22 +61,23 @@ void 				des_ecb_buf(char *buf, char **res, char **keys, int mode)
 	}
 	// convert binary string to char
 	bin_to_str(des.bin_res, tmp);
-	ft_strcat(*res, tmp);
+	ft_strncpy(buf, tmp, 8);
 }
 
 int 				des_ecb_loop(char *str, size_t str_size, char **res, char **keys, int mode)
 {
-	int j = 0;
+	size_t j = 0;
 	char buf[9];
 
 	if ((*res = malloc(str_size + 1)) == NULL)
 		return -1;
 	bzero(*res, str_size + 1);
-	while (str[j])
+	while (j < str_size)
 	{
 		bzero(buf, 9);
 		ft_memcpy(buf, str + j, 8);
-		des_ecb_buf(buf, res, keys, mode);
+		des_ecb_buf(buf, keys, mode);
+		ft_memcpy(*res + j, buf, 8);
 		j += 8;
 	}
 	return (0);
@@ -114,6 +115,7 @@ char				*des_ecb(char *str, void *data, int print)
 				return NULL;
 			free(b64_res);
 			des_ecb_loop(message, str_size, &des_res, keys, DECRYPT);
+			postprocess_message(des_res, str_size);
 			if (print)
 				printf("%s", des_res);
 			des_clean(keys, message);
@@ -144,7 +146,8 @@ char				*des_ecb(char *str, void *data, int print)
 		if ((message = preprocess_message(str, &str_size, d->e_opt)) == NULL)
 			return NULL;
 		des_ecb_loop(message, str_size, &des_res, keys, d->d_opt);
-
+		if (d->d_opt)
+			postprocess_message(des_res, str_size);
 	}
 	if (print)
 	{

@@ -131,7 +131,6 @@ echo "czo9ml0T2SSYtazEJhwzVw==" | ./ft_ssl des-cbc -q -a -d -k 133457799BBCDFF1 
 echo -e "${BLUE}echo \"czo9ml0T2SSYtazEJhwzVw==\" | openssl des-cbc -d -a -K 133457799BBCDFF1 -iv 133457799BBCDFF1${NC}"
 echo "czo9ml0T2SSYtazEJhwzVw==" | openssl des-cbc -d -a -K 133457799BBCDFF1 -iv 133457799BBCDFF1
 echo
-echo
 echo -e "${BLUE}echo \"one deep secret\" | ./ft_ssl des-cbc -q -a -k 6162636461626364 -v 0011223344556677${NC}"
 echo "one deep secret" | ./ft_ssl des-cbc -q -a -k 6162636461626364 -v 0011223344556677
 echo -e "${BLUE}echo \"one deep secret\" | openssl des-cbc -a -K 6162636461626364 -iv 0011223344556677${NC}"

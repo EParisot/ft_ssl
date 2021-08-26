@@ -207,10 +207,76 @@ char 				*preprocess_message(char *str, size_t *str_len, int mode)
 		if ((message = malloc(msg_len + 1)) == NULL)
 			return NULL;
 		bzero(message, msg_len + 1);
+		int n = -1;
+		int c = 0;
+		for (int i = msg_len - 1; i >= 0; i--)
+		{
+			if (n == -1)
+			{
+				n = str[i];
+				if (n > 0 && n <= 8)
+				{
+					c++;
+				}
+				else
+				{
+					break;
+				}
+			}
+			else
+			{
+				if (str[i] == n)
+				{
+					c++;
+				}
+			}
+		}
+		if (c == n)
+		{
+			for (int i = 0; i < c; i++)
+			{
+				str[msg_len - 1 - i] = '\0';
+			}
+		}
 		ft_strcpy(message, str);
 		*str_len = msg_len;
 	}
 	return message;
+}
+
+void 					postprocess_message(char *str, size_t str_len)
+{
+	int n = -1;
+	int c = 0;
+	for (int i = str_len - 1; i >= 0; i--)
+	{
+		if (n == -1)
+		{
+			n = str[i];
+			if (n > 0 && n <= 8)
+			{
+				c++;
+			}
+			else
+			{
+				break;
+			}
+		}
+		else
+		{
+			if (str[i] == n)
+			{
+				c++;
+			}
+		}
+	}
+	if (c == n)
+	{
+		for (int i = 0; i < c; i++)
+		{
+			str[str_len - 1 - i] = '\0';
+		}
+	}
 }
 
 void  				f_function(char *r, char *key, char *res)

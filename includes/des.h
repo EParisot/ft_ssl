@@ -41,6 +41,7 @@ extern 	int final_perm[64];
 void 	preprocess_key(t_data *data, char *key);
 int 	subkeys_routine(char *key, char **keys);
 char 	*preprocess_message(char *str, size_t *str_len, int mode);
+void 	postprocess_message(char *str, size_t str_len);
 void  	f_function(char *r, char *key, char *res);
 void 	des_clean(char **keys, char *message);
 

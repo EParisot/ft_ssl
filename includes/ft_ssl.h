@@ -79,7 +79,7 @@ char 				*inttobits(int num, char *bits, size_t size);
 char 				*str_to_bin(char *str, char *binstr);
 char 				*bin_to_str(char *binstr, char *str);
 void				xor_bin(char *a, char *b);
-void				xor(unsigned char *a, unsigned char *b);
+void				xor(char *a, char *b);
 int					read_string(t_data *data);
 int					read_stdin(char *buf, int size);
 int					get_string(t_data *data, char *str, int hex);

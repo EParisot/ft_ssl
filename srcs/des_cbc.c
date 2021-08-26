@@ -12,7 +12,7 @@
 
 #include "../includes/des.h"
 
-void 				des_cbc_buf(unsigned char *buf, char **res, char **keys, int mode)
+void 				des_cbc_buf(char *buf, char **keys, int mode)
 {
 	t_des des;
 	char tmp[9];
@@ -38,7 +38,7 @@ void 				des_cbc_buf(unsigned char *buf, char **res, char **keys, int mode)
 			f_function(des.r_block, keys[(mode == 0) ? i : 15 - i], des.Rn);
 			//printf("%s + %s ", des.l_block, des.Rn);
 			xor_bin(des.l_block, des.Rn);
-			//printf("= %s\n", des.Rn);
+			//printf("= %s", des.Rn);
 		}
 		else
 		{
@@ -59,31 +59,31 @@ void 				des_cbc_buf(unsigned char *buf, char **res, char **keys, int mode)
 	}
 	// convert binary string to char
 	bin_to_str(des.bin_res, tmp);
-	ft_strcat(*res, tmp);
-	ft_strcpy((char *)buf, tmp);
+	ft_strcpy(buf, tmp);
 }
 
 int 				des_cbc_loop(char *str, size_t str_size, char **res, char **keys, unsigned char *iv, int mode)
 {
-	int j = 0;
-	unsigned char buf[9];
-	unsigned char last_buf[9];
+	size_t j = 0;
+	char buf[9];
+	char last_buf[9];
 
 	bzero(last_buf, 9);
-	ft_memcpy(last_buf, iv, 9);
+	ft_memcpy(last_buf, iv, 8);
 	if ((*res = malloc(str_size + 1)) == NULL)
 		return -1;
 	bzero(*res, str_size + 1);
-	while (str[j])
+	while (j < str_size)
 	{
 		bzero(buf, 9);
 		ft_memcpy(buf, str + j, 8);
 		if (mode == 0)
 			xor(last_buf, buf);
-		des_cbc_buf(buf, res, keys, mode);
+		des_cbc_buf(buf, keys, mode);
 		if (mode == 1)
 			xor(last_buf, buf);
-		ft_memcpy(last_buf, buf, 9);
+		ft_memcpy(*res + j, buf, 8);
+		ft_memcpy(last_buf, buf, 8);
 		j += 8;
 	}
 	return (0);
@@ -120,17 +120,30 @@ char				*des_cbc(char *str, void *data, int print)
 			if ((message = preprocess_message(b64_res, &str_size, d->e_opt)) == NULL)
 				return NULL;
 			free(b64_res);
+			for (size_t i = 0; i < ft_strlen(message); i++)
+				printf("%d ", message[i]);
+			printf("\n");
 			des_cbc_loop(message, str_size, &des_res, keys, d->iv, DECRYPT);
+			postprocess_message(des_res, str_size);
+			for (size_t i = 0; i < ft_strlen(des_res); i++)
+				printf("%d ", des_res[i]);
+			printf("\n");
 			if (print)
 				printf("%s", des_res);
 			des_clean(keys, message);
 			return des_res;
 		}
-		if (d->e_opt)
+		else if (d->e_opt)
 		{
 			if ((message = preprocess_message(str, &str_size, d->e_opt)) == NULL)
 				return NULL;
+			for (size_t i = 0; i < ft_strlen(message); i++)
+				printf("%d ", message[i]);
+			printf("\n");
 			des_cbc_loop(message, str_size, &des_res, keys, d->iv, ENCRYPT);
+			for (size_t i = 0; i < ft_strlen(des_res); i++)
+				printf("%d ", des_res[i]);
+			printf("\n");
 			b64_res_len = ft_strlen(des_res) / 3 * 4 + 4 + 1;
 			if ((b64_res = malloc(b64_res_len)) == NULL)
 			{
@@ -151,7 +164,8 @@ char				*des_cbc(char *str, void *data, int print)
 		if ((message = preprocess_message(str, &str_size, d->e_opt)) == NULL)
 			return NULL;
 		des_cbc_loop(message, str_size, &des_res, keys, d->iv, d->d_opt);
-
+		if (d->d_opt)
+			postprocess_message(des_res, str_size);
 	}
 	if (print)
 	{
