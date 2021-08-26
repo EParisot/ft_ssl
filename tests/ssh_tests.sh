@@ -122,6 +122,11 @@ echo -e "${BLUE}./ft_ssl des-ecb -q -d -k 6162636461626364 -v 0011223344556677 -
 ./ft_ssl des-ecb -q -d -k 6162636461626364 -v 0011223344556677 -i file -o test1
 echo -e "${BLUE}openssl des-ecb -d -K 6162636461626364 -iv 0011223344556677 -in file -out test2 -nopad${NC}"
 openssl des-ecb -d -K 6162636461626364 -iv 0011223344556677 -in file -out test2 -nopad
+echo
+echo -e "${BLUE}./ft_ssl des-ecb -q -k 6162636461626364 -v 0011223344556677 -o file -i test1${NC}"
+./ft_ssl des-ecb -q -k 6162636461626364 -v 0011223344556677 -o file -i test1
+echo -e "${BLUE}openssl des-ecb -K 6162636461626364 -iv 0011223344556677 -out file -in test2 -nopad${NC}"
+openssl des-ecb -K 6162636461626364 -iv 0011223344556677 -out file -in test2 -nopad
 diff test1 test2
 echo
 
@@ -150,6 +155,11 @@ echo -e "${BLUE}./ft_ssl des-cbc -q -d -k 6162636461626364 -v 0011223344556677 -
 ./ft_ssl des-cbc -q -d -k 6162636461626364 -v 0011223344556677 -i file -o test1
 echo -e "${BLUE}openssl des-cbc -d -K 6162636461626364 -iv 0011223344556677 -in file -out test2 -nopad${NC}"
 openssl des-cbc -d -K 6162636461626364 -iv 0011223344556677 -in file -out test2 -nopad
+echo
+echo -e "${BLUE}./ft_ssl des-cbc -q -k 6162636461626364 -v 0011223344556677 -o file -i test1${NC}"
+./ft_ssl des-cbc -q -k 6162636461626364 -v 0011223344556677 -o file -i test1
+echo -e "${BLUE}openssl des-cbc -K 6162636461626364 -iv 0011223344556677 -out file -in test2 -nopad${NC}"
+openssl des-cbc -K 6162636461626364 -iv 0011223344556677 -out file -in test2
 diff test1 test2
 echo
 rm file test1 test2
