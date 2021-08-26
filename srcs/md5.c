@@ -155,7 +155,7 @@ static int		md5_loop(unsigned char *padded_str, int padded_size, \
 	return (0);
 }
 
-char				*md5(char *str, void *data, int print)
+char				*md5(char *str, void *data)
 {
 	(void)data;
 	char			*padded_str;
@@ -175,8 +175,6 @@ char				*md5(char *str, void *data, int print)
 		return (NULL);
 	if (md5_loop((unsigned char *)padded_str, padded_size, str_res))
 		return (NULL);
-	if (print)
-		printf("%s", str_res);
 	free(padded_str);
 	return str_res;
 }

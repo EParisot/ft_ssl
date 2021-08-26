@@ -96,7 +96,7 @@ for S in ${BASE64_STRINGS[@]}
 	echo
 done
 
-
+echo "42 is awesome !" > file
 echo -e "${YELLOW}DES-ECB${NC}:"; echo
 echo -e "${BLUE}echo \"foo bar\" | ./ft_ssl des-ecb -q -a -k 133457799BBCDFF1${NC}"
 echo "foo bar" | ./ft_ssl des-ecb -q -a -k 133457799BBCDFF1
@@ -117,6 +117,12 @@ echo -e "${BLUE}echo \"mJWdy4+Oe1fBEj0N3cTox/3y4XRJKSL4\" | ./ft_ssl des-ecb -d 
 echo "mJWdy4+Oe1fBEj0N3cTox/3y4XRJKSL4" | ./ft_ssl des-ecb -d -k 133457799BBCDFF1 -q -a
 echo -e "${BLUE}echo \"mJWdy4+Oe1fBEj0N3cTox/3y4XRJKSL4\" | openssl -d des-ecb -K 133457799BBCDFF1 -a${NC}"
 echo "mJWdy4+Oe1fBEj0N3cTox/3y4XRJKSL4" | openssl des-ecb -d -K 133457799BBCDFF1 -a
+echo
+echo -e "${BLUE}./ft_ssl des-ecb -q -d -k 6162636461626364 -v 0011223344556677 -i file -o test1${NC}"
+./ft_ssl des-ecb -q -d -k 6162636461626364 -v 0011223344556677 -i file -o test1
+echo -e "${BLUE}openssl des-ecb -d -K 6162636461626364 -iv 0011223344556677 -in file -out test2 -nopad${NC}"
+openssl des-ecb -d -K 6162636461626364 -iv 0011223344556677 -in file -out test2 -nopad
+diff test1 test2
 echo
 
 echo -e "${YELLOW}DES-CBC${NC}:"; echo
@@ -140,4 +146,10 @@ echo "zqYWONX68rWNxl7msIdGC67Uh2HfVEBo" | ./ft_ssl des-cbc -q -d -a -k 616263646
 echo -e "${BLUE}echo \"zqYWONX68rWNxl7msIdGC67Uh2HfVEBo\" | openssl des-cbc -d -a -K 6162636461626364 -iv 0011223344556677${NC}"
 echo "zqYWONX68rWNxl7msIdGC67Uh2HfVEBo" | openssl des-cbc -d -a -K 6162636461626364 -iv 0011223344556677
 echo
-rm file
+echo -e "${BLUE}./ft_ssl des-cbc -q -d -k 6162636461626364 -v 0011223344556677 -i file -o test1${NC}"
+./ft_ssl des-cbc -q -d -k 6162636461626364 -v 0011223344556677 -i file -o test1
+echo -e "${BLUE}openssl des-cbc -d -K 6162636461626364 -iv 0011223344556677 -in file -out test2 -nopad${NC}"
+openssl des-cbc -d -K 6162636461626364 -iv 0011223344556677 -in file -out test2 -nopad
+diff test1 test2
+echo
+rm file test1 test2

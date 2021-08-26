@@ -162,7 +162,7 @@ static int	parse_args(int ac, char **av, t_data *data, int i)
 			{
 				if (ac > i + 1)
 				{
-					if (handle_files(data, av[++i]) == -1)
+					if (handle_files(data, av[++i]))
 						return (-1);
 				}
 				else

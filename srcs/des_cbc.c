@@ -97,7 +97,7 @@ int 		des_cbc_loop(char *str, size_t str_size, char **res, char **keys, t_data *
 	return (0);
 }
 
-char		*des_cbc(char *str, void *data, int print)
+char		*des_cbc(char *str, void *data)
 {
 	t_data 	*d = (t_data *)data;
 	char 	*b64_res = NULL;
@@ -126,19 +126,24 @@ char		*des_cbc(char *str, void *data, int print)
 			bzero(b64_res, b64_res_len);
 			b64_decode_str(str, &b64_res);
 			if ((message = preprocess_message(b64_res, &str_size, d->e_opt)) == NULL)
+			{
+				free(b64_res);
+				des_clean(keys, message);
 				return NULL;
+			}
 			free(b64_res);
 			des_cbc_loop(message, str_size, &des_res, keys, d);
 			postprocess_message(des_res, str_size);
-			if (print)
-				printf("%s", des_res);
 			des_clean(keys, message);
 			return des_res;
 		}
 		else if (d->e_opt)
 		{
 			if ((message = preprocess_message(str, &str_size, d->e_opt)) == NULL)
+			{
+				des_clean(keys, message);
 				return NULL;
+			}
 			des_cbc_loop(message, str_size, &des_res, keys, d);
 			b64_res_len = ft_strlen(des_res) / 3 * 4 + 4 + 1;
 			if ((b64_res = malloc(b64_res_len)) == NULL)
@@ -149,8 +154,6 @@ char		*des_cbc(char *str, void *data, int print)
 			bzero(b64_res, b64_res_len);
 			b64_encode_str(des_res, &b64_res);
 			free(des_res);
-			if (print)
-				printf("%s", b64_res);
 			des_clean(keys, message);
 			return b64_res;
 		}
@@ -158,17 +161,13 @@ char		*des_cbc(char *str, void *data, int print)
 	else
 	{
 		if ((message = preprocess_message(str, &str_size, d->e_opt)) == NULL)
+		{
+			des_clean(keys, message);
 			return NULL;
+		}
 		des_cbc_loop(message, str_size, &des_res, keys, d);
 		if (d->d_opt)
 			postprocess_message(des_res, str_size);
-	}
-	if (print)
-	{
-		if (d->hex)
-			print_hex((unsigned char *)des_res, ft_strlen(des_res));
-		else
-			printf("%s", des_res);
 	}
 	des_clean(keys, message);
 	return des_res;

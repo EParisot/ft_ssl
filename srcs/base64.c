@@ -153,7 +153,7 @@ void 	b64_decode_str(char *str, char **converted)
 	}
 }
 
-char		*base64(char *str, void *data, int print)
+char		*base64(char *str, void *data)
 {
 	t_data *d = (t_data *)data;
 	char *converted = NULL;
@@ -169,16 +169,6 @@ char		*base64(char *str, void *data, int print)
 	else
 	{
 		b64_decode_str(str, &converted);
-	}
-	if (d->o_opt == stdout && print)
-		printf("%s", converted);
-	else
-	{
-		if (d->d_opt == 0)
-			fprintf(d->o_opt, "%s\n", converted);
-		else
-			fprintf(d->o_opt, "%s", converted);
-		fclose(d->o_opt);
 	}
 	return converted;
 }

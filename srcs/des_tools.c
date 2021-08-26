@@ -203,6 +203,11 @@ char 				*preprocess_message(char *str, size_t *str_len, int mode)
 	}
 	else
 	{
+		if (msg_len % 8 != 0)
+		{
+			printf("ft_ssl: Error: invalid cipher len (must be multiple of 8).\n");
+			return NULL;
+		}
 		// remove padding
 		if ((message = malloc(msg_len + 1)) == NULL)
 			return NULL;

@@ -50,7 +50,7 @@ typedef struct		s_fct
 {
 	char			*name;
 	char			*print_name;
-	char			*(*func_ptr)(char *str, void *data, int print);
+	char			*(*func_ptr)(char *str, void *data);
 }					t_fct;
 
 typedef struct		s_data
@@ -97,10 +97,10 @@ int		 			random_value(unsigned char *r, size_t size);
 
 int 				securize(t_data* data);
 
-char				*md5(char *str, void *data, int print);
+char				*md5(char *str, void *data);
 
-char				*sha224(char *str, void *data, int print);
-char				*sha256(char *str, void *data, int print);
+char				*sha224(char *str, void *data);
+char				*sha256(char *str, void *data);
 int					sha256_loop(unsigned char *padded_str, int padded_size, char *str_res);
 uint32_t			sha256_ch(uint32_t x, uint32_t y, uint32_t z);
 uint32_t			sha256_maj(uint32_t x, uint32_t y, uint32_t z);
@@ -110,11 +110,11 @@ uint32_t			sha256_ssig0(uint32_t x);
 uint32_t			sha256_ssig1(uint32_t x);
 uint32_t			sha256_k(int i);
 
-char				*base64(char *str, void *data, int print);
+char				*base64(char *str, void *data);
 void 				b64_encode_str(char *str, char **converted);
 void 				b64_decode_str(char *str, char **converted);
 
-char				*des_cbc(char *str, void *data, int print);
-char				*des_ecb(char *str, void *data, int print);
+char				*des_cbc(char *str, void *data);
+char				*des_ecb(char *str, void *data);
 
 #endif

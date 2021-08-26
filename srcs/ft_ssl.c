@@ -76,7 +76,6 @@ int			hash_string(t_data *data)
 {
 	t_list	*tmp_lst;
 	char 	*res = NULL;
-	int 	print = 1;
 
 	if (ft_strncmp(data->hash->name, "des", 3) == 0)
 		securize(data);
@@ -86,22 +85,28 @@ int			hash_string(t_data *data)
 		if (data->o_opt == stdout)
 		{
 			prefix(data, ((t_string *)(data->strings->content))->source_type);
-			if (data->hash && (res = data->hash->func_ptr(((t_string *)(data->strings->content))->string, data, print)) == NULL)
+			if (data->hash && (res = data->hash->func_ptr(((t_string *)(data->strings->content))->string, data)) == NULL)
 			{
 				if (res) free(res);
 				return (-1);
 			}
+			if (data->hex)
+				print_hex((unsigned char *)res, ft_strlen(res));
+			else
+				printf("%s", res);
 			free(res);
 			suffix(data, ((t_string *)(data->strings->content))->source_type);
 			printf("\n");
 		}
 		else
 		{
-			if (data->hash && (res = data->hash->func_ptr(((t_string *)(data->strings->content))->string, data, print)) == NULL)
+			if (data->hash && (res = data->hash->func_ptr(((t_string *)(data->strings->content))->string, data)) == NULL)
 			{
 				if (res) free(res);
 				return (-1);
 			}
+			fprintf(data->o_opt, "%s", res);
+			fclose(data->o_opt);
 			free(res);
 		}
 		data->strings = data->strings->next;

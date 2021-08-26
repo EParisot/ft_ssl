@@ -12,9 +12,8 @@
 
 #include "../includes/ft_ssl.h"
 
-static int 	PBKDF2(char *fct(char *, void *, int), t_data *data, int nIter, int dKlen)
+static int 	PBKDF2(char *fct(char *, void *), t_data *data, int nIter, int dKlen)
 {//https://fr.wikipedia.org/wiki/PBKDF2
-	int print = 0;
 	int hlen = 256;
 	int l = (dKlen + hlen - 1) / hlen;
 	unsigned char *input = NULL;
@@ -45,7 +44,7 @@ static int 	PBKDF2(char *fct(char *, void *, int), t_data *data, int nIter, int 
 				ft_memmove((char*)input + ft_strlen((char*)data->pass) + 8, (char*)&i, sizeof(i));
 				//printf("%s\n", (char*)input);
 				//print_hex(input, input_len);
-				char *hash = fct((char*)input, (void*)data, print);
+				char *hash = fct((char*)input, (void*)data);
 				if (read_hex(hash, output))
 					return -1;
 				//print_hex(input, input_len);
@@ -67,7 +66,7 @@ static int 	PBKDF2(char *fct(char *, void *, int), t_data *data, int nIter, int 
 				ft_memmove((char*)input + ft_strlen((char*)data->pass), (char*)output, hlen);
 				bzero((char*)output, hlen);
 				//printf("%s\n", (char*)input);
-				char *hash = fct((char*)input, (void*)data, print);
+				char *hash = fct((char*)input, (void*)data);
 				if (read_hex(hash, output))
 					return -1;
 				//printf("%ld %s %ld %s\n", ft_strlen((char*)input), (char*)input, ft_strlen((char*)output), (char*)output);
@@ -140,6 +139,10 @@ int 			securize(t_data *data)
 	if (is_empty(data->iv, 8))
 	{
 		random_value(data->iv, 8);
+	}
+	else if (ft_strcmp(data->hash->name, "des-ecb") == 0)
+	{
+		printf("ft_ssl: Warning: iv not used by this cypher\n");
 	}
 	/*printf("Key  : ");
 	print_hex(data->key, 8);
