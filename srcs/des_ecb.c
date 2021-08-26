@@ -14,10 +14,10 @@
 
 //http://page.math.tu-berlin.de/~kant/teaching/hess/krypto-ws2006/des.htm
 
-void 				des_ecb_buf(char *buf, char **keys, int mode)
+void 		des_ecb_buf(char *buf, char **keys, int mode)
 {
-	t_des des;
-	char tmp[9];
+	t_des 	des;
+	char 	tmp[9];
 
 	bzero(tmp, 9);
 	bzero(&des, sizeof(t_des));
@@ -64,10 +64,10 @@ void 				des_ecb_buf(char *buf, char **keys, int mode)
 	ft_strncpy(buf, tmp, 8);
 }
 
-int 				des_ecb_loop(char *str, size_t str_size, char **res, char **keys, int mode)
+int 		des_ecb_loop(char *str, size_t str_size, char **res, char **keys, t_data *data)
 {
-	size_t j = 0;
-	char buf[9];
+	size_t 	j = 0;
+	char 	buf[9];
 
 	if ((*res = malloc(str_size + 1)) == NULL)
 		return -1;
@@ -76,7 +76,7 @@ int 				des_ecb_loop(char *str, size_t str_size, char **res, char **keys, int mo
 	{
 		bzero(buf, 9);
 		ft_memcpy(buf, str + j, 8);
-		des_ecb_buf(buf, keys, mode);
+		des_ecb_buf(buf, keys, data->d_opt);
 		ft_memcpy(*res + j, buf, 8);
 		j += 8;
 	}
@@ -114,7 +114,7 @@ char				*des_ecb(char *str, void *data, int print)
 			if ((message = preprocess_message(b64_res, &str_size, d->e_opt)) == NULL)
 				return NULL;
 			free(b64_res);
-			des_ecb_loop(message, str_size, &des_res, keys, DECRYPT);
+			des_ecb_loop(message, str_size, &des_res, keys, d);
 			postprocess_message(des_res, str_size);
 			if (print)
 				printf("%s", des_res);
@@ -125,7 +125,7 @@ char				*des_ecb(char *str, void *data, int print)
 		{
 			if ((message = preprocess_message(str, &str_size, d->e_opt)) == NULL)
 				return NULL;
-			des_ecb_loop(message, str_size, &des_res, keys, ENCRYPT);
+			des_ecb_loop(message, str_size, &des_res, keys, d);
 			b64_res_len = ft_strlen(des_res) / 3 * 4 + 4 + 1;
 			if ((b64_res = malloc(b64_res_len)) == NULL)
 			{
@@ -145,7 +145,7 @@ char				*des_ecb(char *str, void *data, int print)
 	{
 		if ((message = preprocess_message(str, &str_size, d->e_opt)) == NULL)
 			return NULL;
-		des_ecb_loop(message, str_size, &des_res, keys, d->d_opt);
+		des_ecb_loop(message, str_size, &des_res, keys, d);
 		if (d->d_opt)
 			postprocess_message(des_res, str_size);
 	}
