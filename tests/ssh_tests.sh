@@ -7,6 +7,24 @@ YELLOW='\033[0;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
+print_res () {
+	if [ "$1" = "$2" ]; then
+	printf "\t\t\t\t\t\t\t\t\t\t${GREEN}\xE2\x9C\x94\x0a${NC}"
+	else
+	printf "\t\t\t\t\t\t\t\t\t\t${RED}\xE2\x9D\x8C\x0a${NC}"
+	fi
+}
+
+print_diff () {
+	DIFF=$(diff $1 $2) 
+	if [ "$DIFF" == "" ]  ; then
+	printf "\t\t\t\t\t\t\t\t\t\t${GREEN}\xE2\x9C\x94\x0a${NC}"
+	else
+	printf "$DIFF"
+	printf "\t\t\t\t\t\t\t\t\t\t${RED}\xE2\x9D\x8C\x0a${NC}"
+	fi
+}
+
 echo -e "${GREEN}FT_SSL Tests:${NC}"; echo
 echo -e "${YELLOW}Compiling...${NC}"
 make
@@ -73,10 +91,12 @@ TEST_STRINGS=("" \
 )
 
 for H in ${HASHES[@]} 
-	do for S in ${TEST_STRINGS[@]}
+	do for S in ${TEST_STRINGS[@]} 
 		do echo -e "${BLUE}./ft_ssl ${H} -q ${S}${NC}:"
-		echo -n "$S" | ./ft_ssl $H -q; echo -e "${BLUE}openssl ${H} ${S}${NC}:"
-		echo -n "$S" | openssl $H | sed 's/(stdin)= //'
+		CMDA=$(echo -n "$S" | ./ft_ssl $H -q);printf "$CMDA\n"
+		echo -e "${BLUE}openssl ${H} ${S}${NC}:"
+		CMDB=$(echo -n "$S" | openssl $H | sed 's/(stdin)= //');printf "$CMDB\n"
+		print_res "$CMDA" "$CMDB"
 		echo
 	done
 done
@@ -90,9 +110,10 @@ BASE64_STRINGS=("" \
 )
 for S in ${BASE64_STRINGS[@]}
 	do echo -e "${BLUE}./ft_ssl base64 -d ${S}${NC}:"
-	echo "$S" | ./ft_ssl base64 -d -q; echo
+	CMDA=$(echo "$S" | ./ft_ssl base64 -d -q);printf "$CMDA\n"
 	echo -e "${BLUE}openssl base64 -d ${S}${NC}:"
-	echo "$S" | openssl base64 -d ; echo
+	CMDB=$(echo "$S" | openssl base64 -d);printf "$CMDB\n"
+	print_res "$CMDA" "$CMDB"
 	echo
 done
 
@@ -105,97 +126,118 @@ Nulla est nulla, varius at vulputate eu, eleifend a nunc. Pellentesque elit mass
 Ut malesuada felis orci, eget rhoncus ligula mollis ac. Morbi egestas malesuada elit id eleifend. Mauris eros magna, posuere in purus nec, vehicula iaculis est. Proin sodales laoreet lorem, et pretium arcu dictum at. Pellentesque arcu felis, egestas ut ultricies nec, scelerisque non quam. Sed porta iaculis vehicula. Aliquam erat volutpat. Curabitur non metus non lorem blandit commodo quis non sem. Donec turpis augue, ultricies sit amet turpis at, vehicula tincidunt tellus. Aliquam erat volutpat. Integer vitae diam sit amet elit varius facilisis in sit amet velit. Curabitur facilisis tempus aliquam. Praesent ac tortor eget velit aliquet vehicula non eget enim. Aliquam lobortis mollis nulla, vel porttitor massa aliquet in.
 
 Donec a consectetur erat. Nulla aliquet felis at ornare ultrices. Pellentesque lobortis in metus ut rutrum. Curabitur sit amet eros ac justo feugiat vehicula. Proin ut augue feugiat, ultrices nisi sodales, imperdiet orci. Nunc tincidunt sollicitudin pulvinar. Aliquam ac mauris dolor. Sed mauris purus, aliquam nec neque a, dignissim fermentum nulla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae;" > file
+
+
+echo -e "${BLUE}./ft_ssl base64 -i file -o test1${NC}:"
+./ft_ssl base64 -i file -o test1;
+echo -e "${BLUE}openssl base64 -in file -out test2${NC}:"
+openssl base64 -in file -out test2;
+print_diff test1 test2
+echo
+echo -e "${BLUE}./ft_ssl base64 -d -i test1 -o out1${NC}:"
+./ft_ssl base64 -d -i test1 -o out1;
+echo -e "${BLUE}openssl base64 -d -in test2 -out out2${NC}:"
+openssl base64 -d -in test2 -out out2;
+print_diff test1 test2
+echo
+
 echo -e "${YELLOW}DES-ECB${NC}:"; echo
 echo -e "${BLUE}echo \"foo bar\" | ./ft_ssl des-ecb -q -a -k 133457799BBCDFF1${NC}"
-echo "foo bar" | ./ft_ssl des-ecb -q -a -k 133457799BBCDFF1
+CMDA=$(echo "foo bar" | ./ft_ssl des-ecb -q -a -k 133457799BBCDFF1);echo $CMDA
 echo -e "${BLUE}echo \"foo bar\" | openssl des-ecb -a -K 133457799BBCDFF1${NC}"
-echo "foo bar" | openssl des-ecb -a -K 133457799BBCDFF1
+CMDB=$(echo "foo bar" | openssl des-ecb -a -K 133457799BBCDFF1);echo $CMDB
+print_res "$CMDA" "$CMDB";
 echo
 echo -e "${BLUE}echo \"O4LusmJIpRn98uF0SSki+A==\" | ./ft_ssl des-ecb -d -k 133457799BBCDFF1 -q -a${NC}"
-echo "O4LusmJIpRn98uF0SSki+A==" | ./ft_ssl des-ecb -d -k 133457799BBCDFF1 -q -a
-echo -e "${BLUE}echo \"O4LusmJIpRn98uF0SSki+A==\" | openssl -d des-ecb -K 133457799BBCDFF1 -a${NC}"
-echo "O4LusmJIpRn98uF0SSki+A==" | openssl des-ecb -d -K 133457799BBCDFF1 -a
+CMDA=$(echo "O4LusmJIpRn98uF0SSki+A==" | ./ft_ssl des-ecb -d -k 133457799BBCDFF1 -q -a);echo $CMDA
+echo -e "${BLUE}echo \"O4LusmJIpRn98uF0SSki+A==\" | openssl des-ecb -d -K 133457799BBCDFF1 -a${NC}"
+CMDB=$(echo "O4LusmJIpRn98uF0SSki+A==" | openssl des-ecb -d -K 133457799BBCDFF1 -a);echo $CMDB
+print_res "$CMDA" "$CMDB";
 echo
 echo -e "${BLUE}echo \"one deep secret\" | ./ft_ssl des-ecb -k 133457799BBCDFF1 -q -a${NC}"
-echo "one deep secret" | ./ft_ssl des-ecb -k 133457799BBCDFF1 -q -a
+CMDA=$(echo "one deep secret" | ./ft_ssl des-ecb -k 133457799BBCDFF1 -q -a);echo $CMDA
 echo -e "${BLUE}echo \"one deep secret\" | openssl des-ecb -K 133457799BBCDFF1 -a${NC}"
-echo "one deep secret" | openssl des-ecb -K 133457799BBCDFF1 -a
+CMDB=$(echo "one deep secret" | openssl des-ecb -K 133457799BBCDFF1 -a);echo $CMDB
+print_res "$CMDA" "$CMDB";
 echo
 echo -e "${BLUE}echo \"mJWdy4+Oe1fBEj0N3cTox/3y4XRJKSL4\" | ./ft_ssl des-ecb -d -k 133457799BBCDFF1 -q -a${NC}"
-echo "mJWdy4+Oe1fBEj0N3cTox/3y4XRJKSL4" | ./ft_ssl des-ecb -d -k 133457799BBCDFF1 -q -a
+CMDA=$(echo "mJWdy4+Oe1fBEj0N3cTox/3y4XRJKSL4" | ./ft_ssl des-ecb -d -k 133457799BBCDFF1 -q -a);echo $CMDA
 echo -e "${BLUE}echo \"mJWdy4+Oe1fBEj0N3cTox/3y4XRJKSL4\" | openssl -d des-ecb -K 133457799BBCDFF1 -a${NC}"
-echo "mJWdy4+Oe1fBEj0N3cTox/3y4XRJKSL4" | openssl des-ecb -d -K 133457799BBCDFF1 -a
+CMDB=$(echo "mJWdy4+Oe1fBEj0N3cTox/3y4XRJKSL4" | openssl des-ecb -d -K 133457799BBCDFF1 -a);echo $CMDB
+print_res "$CMDA" "$CMDB";
 echo
 echo -e "${BLUE}./ft_ssl des-ecb -q -k 6162636461626364 -v 0011223344556677 -i file -o test1${NC}"
 ./ft_ssl des-ecb -q -k 6162636461626364 -v 0011223344556677 -i file -o test1
 echo -e "${BLUE}openssl des-ecb -K 6162636461626364 -iv 0011223344556677 -in file -out test2${NC}"
 openssl des-ecb -K 6162636461626364 -iv 0011223344556677 -in file -out test2
-diff test1 test2
+print_diff test1 test2
 echo
 echo -e "${BLUE}./ft_ssl des-ecb -d -q -k 6162636461626364 -v 0011223344556677 -o out1 -i test1${NC}"
 ./ft_ssl des-ecb -d -q -k 6162636461626364 -v 0011223344556677 -o out1 -i test1
 echo -e "${BLUE}openssl des-ecb -d -K 6162636461626364 -iv 0011223344556677 -out out2 -in test2${NC}"
 openssl des-ecb -d -K 6162636461626364 -iv 0011223344556677 -out out2 -in test2
-diff out1 out2
+print_diff out1 out2
 echo
 echo -e "${BLUE}./ft_ssl des-ecb -a -k 6162636461626364 -v 0011223344556677 -i file -o test1${NC}"
 ./ft_ssl des-ecb -a -k 6162636461626364 -v 0011223344556677 -i file -o test1
 echo -e "${BLUE}openssl des-ecb -a -K 6162636461626364 -iv 0011223344556677 -in file -out test2${NC}"
 openssl des-ecb -a -K 6162636461626364 -iv 0011223344556677 -in file -out test2
-diff test1 test2
+print_diff test1 test2
 echo
 echo -e "${BLUE}./ft_ssl des-ecb -d -a -k 6162636461626364 -v 0011223344556677 -o out1 -i test1${NC}"
 ./ft_ssl des-ecb -d -a -k 6162636461626364 -v 0011223344556677 -o out1 -i test1
 echo -e "${BLUE}openssl des-ecb -a -d -K 6162636461626364 -iv 0011223344556677 -out out2 -in test2${NC}"
 openssl des-ecb -a -d -K 6162636461626364 -iv 0011223344556677 -out out2 -in test2
-diff out1 out2
+print_diff out1 out2
 echo
-
-##exit 0;
 
 echo -e "${YELLOW}DES-CBC${NC}:"; echo
 echo -e "${BLUE}echo \"foo bar\" | ./ft_ssl des-cbc -q -a -k 133457799BBCDFF1 -v 133457799BBCDFF1${NC}"
-echo "foo bar" | ./ft_ssl des-cbc -q -a -k 133457799BBCDFF1 -v 133457799BBCDFF1
+CMDA=$(echo "foo bar" | ./ft_ssl des-cbc -q -a -k 133457799BBCDFF1 -v 133457799BBCDFF1);echo $CMDA
 echo -e "${BLUE}echo \"foo bar\" | openssl des-cbc -a -K 133457799BBCDFF1 -iv 133457799BBCDFF1${NC}"
-echo "foo bar" | openssl des-cbc -a -K 133457799BBCDFF1 -iv 133457799BBCDFF1
+CMDB=$(echo "foo bar" | openssl des-cbc -a -K 133457799BBCDFF1 -iv 133457799BBCDFF1);echo $CMDB
+print_res "$CMDA" "$CMDB";
 echo
 echo -e "${BLUE}echo \"czo9ml0T2SSYtazEJhwzVw==\" | ./ft_ssl des-cbc -q -a -d -k 133457799BBCDFF1 -v 133457799BBCDFF1${NC}"
-echo "czo9ml0T2SSYtazEJhwzVw==" | ./ft_ssl des-cbc -q -a -d -k 133457799BBCDFF1 -v 133457799BBCDFF1
+CMDA=$(echo "czo9ml0T2SSYtazEJhwzVw==" | ./ft_ssl des-cbc -q -a -d -k 133457799BBCDFF1 -v 133457799BBCDFF1);echo $CMDA
 echo -e "${BLUE}echo \"czo9ml0T2SSYtazEJhwzVw==\" | openssl des-cbc -d -a -K 133457799BBCDFF1 -iv 133457799BBCDFF1${NC}"
-echo "czo9ml0T2SSYtazEJhwzVw==" | openssl des-cbc -d -a -K 133457799BBCDFF1 -iv 133457799BBCDFF1
+CMDB=$(echo "czo9ml0T2SSYtazEJhwzVw==" | openssl des-cbc -d -a -K 133457799BBCDFF1 -iv 133457799BBCDFF1);echo $CMDB
+print_res "$CMDA" "$CMDB";
 echo
 echo -e "${BLUE}echo \"one deep secret\" | ./ft_ssl des-cbc -q -a -k 6162636461626364 -v 0011223344556677${NC}"
-echo "one deep secret" | ./ft_ssl des-cbc -q -a -k 6162636461626364 -v 0011223344556677
+CMDA=$(echo "one deep secret" | ./ft_ssl des-cbc -q -a -k 6162636461626364 -v 0011223344556677);echo $CMDA
 echo -e "${BLUE}echo \"one deep secret\" | openssl des-cbc -a -K 6162636461626364 -iv 0011223344556677${NC}"
-echo "one deep secret" | openssl des-cbc -a -K 6162636461626364 -iv 0011223344556677
+CMDB=$(echo "one deep secret" | openssl des-cbc -a -K 6162636461626364 -iv 0011223344556677);echo $CMDB
+print_res "$CMDA" "$CMDB";
 echo
 echo -e "${BLUE}echo \"zqYWONX68rWNxl7msIdGC67Uh2HfVEBo\" | ./ft_ssl des-cbc -q -d -a -k 6162636461626364 -v 0011223344556677${NC}"
-echo "zqYWONX68rWNxl7msIdGC67Uh2HfVEBo" | ./ft_ssl des-cbc -q -d -a -k 6162636461626364 -v 0011223344556677
+CMDA=$(echo "zqYWONX68rWNxl7msIdGC67Uh2HfVEBo" | ./ft_ssl des-cbc -q -d -a -k 6162636461626364 -v 0011223344556677);echo $CMDA
 echo -e "${BLUE}echo \"zqYWONX68rWNxl7msIdGC67Uh2HfVEBo\" | openssl des-cbc -d -a -K 6162636461626364 -iv 0011223344556677${NC}"
-echo "zqYWONX68rWNxl7msIdGC67Uh2HfVEBo" | openssl des-cbc -d -a -K 6162636461626364 -iv 0011223344556677
+CMDB=$(echo "zqYWONX68rWNxl7msIdGC67Uh2HfVEBo" | openssl des-cbc -d -a -K 6162636461626364 -iv 0011223344556677);echo $CMDB
+print_res "$CMDA" "$CMDB";
 echo
 echo -e "${BLUE}./ft_ssl des-cbc -q -k 6162636461626364 -v 0011223344556677 -i file -o test1${NC}"
 ./ft_ssl des-cbc -q -k 6162636461626364 -v 0011223344556677 -i file -o test1
 echo -e "${BLUE}openssl des-cbc -K 6162636461626364 -iv 0011223344556677 -in file -out test2${NC}"
 openssl des-cbc -K 6162636461626364 -iv 0011223344556677 -in file -out test2
-diff test1 test2
+print_diff test1 test2
 echo
 echo -e "${BLUE}./ft_ssl des-cbc -d -q -k 6162636461626364 -v 0011223344556677 -o out1 -i test1${NC}"
 ./ft_ssl des-cbc -d -q -k 6162636461626364 -v 0011223344556677 -o out1 -i test1
 echo -e "${BLUE}openssl des-cbc -d -K 6162636461626364 -iv 0011223344556677 -out out2 -in test2${NC}"
 openssl des-cbc -d -K 6162636461626364 -iv 0011223344556677 -out out2 -in test2
-diff out1 out2
+print_diff out1 out2
 echo
 echo -e "${BLUE}./ft_ssl des-cbc -a -k 6162636461626364 -v 0011223344556677 -i file -o test1${NC}"
 ./ft_ssl des-cbc -a -k 6162636461626364 -v 0011223344556677 -i file -o test1
 echo -e "${BLUE}openssl des-cbc -a -K 6162636461626364 -iv 0011223344556677 -in file -out test2${NC}"
 openssl des-cbc -a -K 6162636461626364 -iv 0011223344556677 -in file -out test2
-diff test1 test2
+print_diff test1 test2
 echo
 echo -e "${BLUE}./ft_ssl des-cbc -d -a -k 6162636461626364 -v 0011223344556677 -o out1 -i test1${NC}"
 ./ft_ssl des-cbc -d -a -k 6162636461626364 -v 0011223344556677 -o out1 -i test1
 echo -e "${BLUE}openssl des-cbc -a -d -K 6162636461626364 -iv 0011223344556677 -out out2 -in test2${NC}"
 openssl des-cbc -a -d -K 6162636461626364 -iv 0011223344556677 -out out2 -in test2
-diff out1 out2
+print_diff out1 out2
 echo
 rm file test1 test2 out1 out2

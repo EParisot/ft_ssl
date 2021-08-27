@@ -102,7 +102,6 @@ char		*des_cbc(char *str, void *data, size_t *size)
 	t_data 	*d = (t_data *)data;
 	char 	*b64_res = NULL;
 	char 	*des_res = NULL;
-	size_t 	b64_res_len = 0;
 	char 	key[56];
 	char 	*keys[16];
 	char 	*message = NULL;
@@ -116,15 +115,7 @@ char		*des_cbc(char *str, void *data, size_t *size)
 	{
 		if (d->d_opt)
 		{
-			b64_res_len = *size / 3 * 4 + 4 + 1;
-			if ((b64_res = malloc(b64_res_len)) == NULL)
-			{
-				des_clean(keys, message);
-				return NULL;
-			}
-			bzero(b64_res, b64_res_len);
-			b64_decode_str(str, &b64_res);
-			*size = ft_strlen(b64_res);
+			b64_res = base64(str, data, size);
 			if ((message = preprocess_message(b64_res, size, d->d_opt)) == NULL)
 			{
 				free(b64_res);
@@ -145,15 +136,7 @@ char		*des_cbc(char *str, void *data, size_t *size)
 				return NULL;
 			}
 			des_cbc_loop(message, *size, &des_res, keys, d);
-			b64_res_len = *size / 3 * 4 + 4 + 1;
-			if ((b64_res = malloc(b64_res_len)) == NULL)
-			{
-				des_clean(keys, message);
-				return NULL;
-			}
-			bzero(b64_res, b64_res_len);
-			b64_encode_str(des_res, &b64_res);
-			*size = b64_res_len;
+			b64_res = base64(des_res, data, size);
 			free(des_res);
 			des_clean(keys, message);
 			return b64_res;

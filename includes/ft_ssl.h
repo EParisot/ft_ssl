@@ -95,6 +95,7 @@ uint32_t			rot_l(uint32_t x, uint32_t n);
 char				*rot_str_l(char *str, int n);
 int		 			random_value(unsigned char *r, size_t size);
 void 				print_res(char *res, size_t size, FILE *fp);
+int   				char_count(char *str, char c);
 
 int 				securize(t_data* data);
 
@@ -112,8 +113,6 @@ uint32_t			sha256_ssig1(uint32_t x);
 uint32_t			sha256_k(int i);
 
 char				*base64(char *str, void *data, size_t *size);
-void 				b64_encode_str(char *str, char **converted);
-void 				b64_decode_str(char *str, char **converted);
 
 char				*des_cbc(char *str, void *data, size_t *size);
 char				*des_ecb(char *str, void *data, size_t *size);

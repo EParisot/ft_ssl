@@ -94,9 +94,10 @@ int			hash_string(t_data *data)
 				print_hex((unsigned char *)res, ft_strlen(res));
 			else
 				print_res(res, ((t_string *)(data->strings->content))->len, data->o_opt);
-			free(res);
 			suffix(data, ((t_string *)(data->strings->content))->source_type);
-			printf("\n");
+			if (res[((t_string *)(data->strings->content))->len - 1] != '\n')
+				printf("\n");
+			free(res);
 		}
 		else
 		{

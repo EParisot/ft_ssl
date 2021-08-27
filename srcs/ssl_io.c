@@ -245,8 +245,12 @@ void 			print_res(char *res, size_t size, FILE *fp)
 	for (size_t i = 0; i < size; i++)
 	{
 		if (fp == stdout)
+		{
 			write(1, &(res[i]), 1);
+		}
 		else
+		{
 			fprintf(fp, "%c", res[i]);
+		}
 	}
 }

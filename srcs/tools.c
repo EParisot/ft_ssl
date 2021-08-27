@@ -192,3 +192,15 @@ int 			random_value(unsigned char *r, size_t size)
 	close(fd);
 	return 0;
 }
+
+int					char_count(char *str, char c)
+{
+	int count = 0;
+
+	for (size_t i = 0; i < strlen(str); i++)
+	{
+		if (str[i] == c)
+			count++;
+	}
+	return count;
+}

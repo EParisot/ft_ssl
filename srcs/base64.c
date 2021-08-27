@@ -12,7 +12,7 @@
 
 #include "../includes/ft_ssl.h"
 
-int    index_of(char c, char *str)
+static int index_of(char c, char *str)
 {
 	for (size_t i = 0; i < ft_strlen(str); i++)
 	{
@@ -22,7 +22,7 @@ int    index_of(char c, char *str)
 	return -1;
 }
 
-char *remove_char(char *str, char c)
+static char *remove_char(char *str, char c)
 {
 	for (size_t i = 0; i < ft_strlen(str); i++)
 	{
@@ -41,30 +41,31 @@ char *remove_char(char *str, char c)
 }
 
 
-int 	create_res_str(char *str, char **converted, int decode)
+static int create_res_str(char *str, char **converted, int decode, size_t *size)
 {
 	int new_size = 0;
 	
 	if (decode == 0)
 	{
-		new_size = (ft_strlen(str) / 3 * 4);
-		new_size += (ft_strlen(str) % 3) ? 4 : 0;
-		new_size += new_size / 64 + 1;
+		new_size = (*size / 3) * 4;
+		new_size += (*size % 3) ? 4 : 0;
+		if (new_size >= 64)
+			new_size += new_size / 64 + 1;
 	}
 	else
 	{
-		new_size = (ft_strlen(str) / 4 * 3);
-		new_size += new_size / 64 + 1;
+		new_size = (((*size) - char_count(str, '\n')) / 4) * 3;
+		new_size -= char_count(str, '=');
 	}
 	if ((*converted = malloc(new_size + 1)) == NULL)
 	{
 		return -1;
 	}
 	ft_memset(*converted, 0, new_size + 1);
-	return 0;
+	return new_size;
 }
 
-void	encode_buffer(char *buffer, int i, char **converted)
+static void	encode_buffer(char *buffer, int i, char **converted, int size)
 {
 	uint32_t bytes_buf = (((uint8_t)buffer[0]) << 0x10) + (((uint8_t)buffer[1]) << 0x08) + (uint8_t)buffer[2];
 	int in_len = 0;
@@ -81,37 +82,37 @@ void	encode_buffer(char *buffer, int i, char **converted)
 		}
 		(*converted)[out_len] = BASE64_ALPHA[(bytes_buf >> (j * 6)) & 0x3F];
 	}
-	if (buffer[1] == 0)
+	if (i + 1 >= size)
 	{
 		(*converted)[out_len - 1] = '=';
 	}
-	if (buffer[2] == 0)
+	if (i + 2 >= size)
 	{
 		(*converted)[out_len] = '=';
 	}
 }
 
-void 	b64_encode_str(char *str, char **converted)
+static void b64_encode_str(char *str, char **converted, size_t *size)
 {
 	char buffer[4];
 
 	ft_bzero(buffer, 4);
-	for (size_t i = 0; i < ft_strlen(str); i += 3)
+	for (size_t i = 0; i < *size; i += 3)
 	{
 		buffer[0] = str[i];
-		if (i + 1 < ft_strlen(str))
+		if (i + 1 < *size)
 			buffer[1] = str[i + 1];
 		else
 			buffer[1] = '\0';
-		if (i + 2 < ft_strlen(str))
+		if (i + 2 < *size)
 			buffer[2] = str[i + 2];
 		else
 			buffer[2] = '\0';
-		encode_buffer(buffer, i, converted);
+		encode_buffer(buffer, i, converted, *size);
 	}
 }
 
-int		decode_buffer(char *buffer, int i, char **converted)
+static int decode_buffer(char *buffer, int i, char **converted)
 {
 	uint32_t bytes_buf = 0;
 
@@ -140,13 +141,13 @@ int		decode_buffer(char *buffer, int i, char **converted)
 	return 0;
 }
 
-void 	b64_decode_str(char *str, char **converted)
+static void	b64_decode_str(char *str, char **converted, size_t *size)
 {
 	char buffer[5];
 
 	ft_bzero(buffer, 5);
 	remove_char(str, '\n');
-	for (size_t i = 0; i < ft_strlen(str); i += 4)
+	for (size_t i = 0; i < *size; i += 4)
 	{
 		ft_strncpy(buffer, str + i, 4);
 		decode_buffer(buffer, i, converted);
@@ -155,22 +156,24 @@ void 	b64_decode_str(char *str, char **converted)
 
 char		*base64(char *str, void *data, size_t *size)
 {
-	(void)size;
 	t_data *d = (t_data *)data;
 	char *converted = NULL;
+	int new_size = 0;
 
-	if (create_res_str(str, &converted, d->d_opt))
+	if ((new_size = create_res_str(str, &converted, d->d_opt, size)) == -1)
 	{
 		return NULL;
 	}
 	if (d->d_opt == 0)
 	{
-		b64_encode_str(str, &converted);
+		b64_encode_str(str, &converted, size);
+		if (new_size >= 64 && converted[new_size - 1] == '\0')
+			converted[new_size - 1] = '\n';
 	}
 	else
 	{
-		b64_decode_str(str, &converted);
+		b64_decode_str(str, &converted, size);
 	}
-	*size = ft_strlen(converted);
+	*size = new_size;
 	return converted;
 }
