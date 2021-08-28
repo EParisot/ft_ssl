@@ -1,2 +1,2 @@
-# ft_ssl_md5
+# ft_ssl
 An introduction to cryptographic hashing algorithms

@@ -156,7 +156,7 @@ int		sha256_loop(unsigned char *padded_str, int padded_size, char *str_res)
 
 char				*sha256(char *str, void *data, size_t *size)
 {
-	(void)data,(void)size;
+	(void)data;
 	char			*padded_str;
 	uint64_t		str_size;
 	int				padded_size;
@@ -175,6 +175,7 @@ char				*sha256(char *str, void *data, size_t *size)
 	if (sha256_loop((unsigned char *)padded_str, padded_size, str_res))
 		return (NULL);
 	free(padded_str);
-	*size = ft_strlen(str_res);
+	if (size)
+		*size = ft_strlen(str_res);
 	return str_res;
 }

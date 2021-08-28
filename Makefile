@@ -26,7 +26,6 @@ SRCS	=	srcs/main.c \
 			srcs/des_tools.c \
 			srcs/pbkdf.c
 
-
 INC		=	includes/ft_ssl.h \
 			includes/des.h \
 
@@ -34,7 +33,7 @@ OBJS	=	$(SRCS:.c=.o)
 
 LIBS	=	libft/libft.a \
 
-CFLAGS	=	-Wall -Wextra -Werror -g3
+CFLAGS	=	-Wall -Wextra -Werror
 
 RM		=	rm -f
 

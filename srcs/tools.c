@@ -21,7 +21,7 @@ void			print_help(int usage)
 		printf("		-p		Read from STDIN and repeat input on STDOUT\n");
 		printf("		-q		Quiet mode\n");
 		printf("		-s		Read next arg as a string\n");
-		printf("		-hex	Read next arg as an hex string\n");
+		printf("		-hex		Read next arg as a hex string\n");
 		printf("		-r		Reverse output order\n");
 		printf("		-i		Read from input file (specified as next arg)\n");
 		printf("		-o		Output to file (specified as next arg)\n");

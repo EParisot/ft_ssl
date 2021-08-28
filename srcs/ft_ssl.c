@@ -16,35 +16,35 @@ static void	prefix(t_data *data, int source_type)
 {
 	if (source_type == _STDIN && data->p_opt == 1 && data->q_opt == 0)
 	{
-		printf("%s", ((t_string *)(data->strings->content))->string);
+		fprintf(stderr, "%s", ((t_string *)(data->strings->content))->string);
 		if (((t_string *)(data->strings->content))->string[ft_strlen(((t_string *)(data->strings->content))->string) - 1] != '\n')
-			printf("\n");
+			fprintf(stderr, "\n");
 	}
 	else if (data->r_opt == 0 && data->q_opt == 0)
 	{
 		if (source_type != _STDIN)
-			printf("%s ", data->hash->print_name);
+			fprintf(stderr, "%s ", data->hash->print_name);
 		if (((t_string *)(data->strings->content))->source ||
 			((t_string *)(data->strings->content))->string)
 		{
 			if (source_type == _STDIN)
 			{
-				printf("(stdin)= ");
+				fprintf(stderr, "(stdin)= ");
 			}
 			else if (source_type == _FILE)
 			{
-				printf("(%s)= ", ((t_string *)(data->strings->content))->source);
+				fprintf(stderr, "(%s)= ", ((t_string *)(data->strings->content))->source);
 			}
 			else
 			{
 				if (data->hex)
 				{
-					printf("(\"");
+					fprintf(stderr, "(\"");
 					print_hex((unsigned char *)((t_string *)(data->strings->content))->string, ft_strlen(((t_string *)(data->strings->content))->string));
-					printf("\")= ");
+					fprintf(stderr, "\")= ");
 				}
 				else
-					printf("(\"%s\")= ", ((t_string *)(data->strings->content))->string);
+					fprintf(stderr, "(\"%s\")= ", ((t_string *)(data->strings->content))->string);
 			}
 		}
 	}
@@ -55,19 +55,19 @@ static void	suffix(t_data *data, int source_type)
 	if (data->r_opt == 1 && data->q_opt == 0)
 	{
 		if (source_type == _STDIN)
-			printf(" (stdin)");
+			fprintf(stderr, " (stdin)");
 		else if (source_type == _FILE)
-			printf(" %s", ((t_string *)(data->strings->content))->source);
+			fprintf(stderr, " %s", ((t_string *)(data->strings->content))->source);
 		else
 		{
 			if (data->hex)
 				{
-					printf(" (\"");
+					fprintf(stderr, " (\"");
 					print_hex((unsigned char *)((t_string *)(data->strings->content))->string, ft_strlen(((t_string *)(data->strings->content))->string));
-					printf("\")");
+					fprintf(stderr, "\")");
 				}
 				else
-					printf(" (\"%s\")", ((t_string *)(data->strings->content))->string);
+					fprintf(stderr, " (\"%s\")", ((t_string *)(data->strings->content))->string);
 		}
 	}
 }
