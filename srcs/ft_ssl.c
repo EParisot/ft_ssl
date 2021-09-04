@@ -111,5 +111,15 @@ int			hash_string(t_data *data)
 		data->strings = data->strings->next;
 	}
 	data->strings = tmp_lst;
+	if (data->pksiv == 1)
+	{
+		printf("\nSalt : ");
+		print_hex(data->salt, 8);
+		printf("\nKey  : ");
+		print_hex(data->key, 8);
+		printf("\nIV   : ");
+		print_hex(data->iv, 8);
+		printf("\n");
+	}
 	return (0);
 }

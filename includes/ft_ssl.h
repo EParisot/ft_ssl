@@ -69,6 +69,7 @@ typedef struct		s_data
 	int 			e_opt;
 	int				d_opt;
 	int				i_opt;
+	int 			pksiv;
 	FILE			*o_opt;
 	t_fct			*hash;
 	t_list			*strings;

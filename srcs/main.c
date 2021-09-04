@@ -160,6 +160,10 @@ static int	parse_args(int ac, char **av, t_data *data, int i)
 					}
 				}
 			}
+			else if (ft_strcmp(av[i], "-P") == 0)
+			{
+				data->pksiv = 1;
+			}
 			else if (ft_strcmp(av[i], "-i") == 0)
 			{
 				if (ac > i + 1)

@@ -35,6 +35,7 @@ void			print_help(int usage)
 		printf("		-k		Key\n");
 		printf("		-s		Salt\n");
 		printf("		-v		IV\n");
+		printf("		-P		print Key Salt and IV on stdout\n");
 	}
 	printf("\nCommands:\n");
 	printf("		md5\n");

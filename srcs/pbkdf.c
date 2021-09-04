@@ -197,11 +197,5 @@ int 			securize(t_data *data)
 	{
 		random_value(data->iv, 8);
 	}
-	/*printf("Salt : ");
-	print_hex(data->salt, 8);
-	printf("\nKey  : ");
-	print_hex(data->key, 8);
-	printf("\nIV   : ");
-	print_hex(data->iv, 8);*/
 	return 0;
 }
