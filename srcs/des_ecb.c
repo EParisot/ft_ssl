@@ -92,6 +92,12 @@ char				*des_ecb(char *str, void *data, size_t *size)
 	char *keys[16];
 	char *message = NULL;
 
+
+	securize(d);
+	if (!is_empty(d->iv, 8))
+	{
+		fprintf(stderr, "ft_ssl: Warning: iv not used by this cypher\n");
+	}
 	bzero(key, 56);
 	preprocess_key(d, key);
 	if (subkeys_routine(key, keys))
@@ -122,6 +128,14 @@ char				*des_ecb(char *str, void *data, size_t *size)
 				return NULL;
 			}
 			des_ecb_loop(message, *size, &des_res, keys, d);
+			if (d->salted == 0)
+			{
+				if ((des_res = append_salt(d, des_res)) == NULL)
+				{
+					if (des_res) free(des_res);
+					return NULL;
+				}
+			}
 			b64_res = base64(des_res, data, size);
 			free(des_res);
 			des_clean(keys, message);
@@ -137,7 +151,17 @@ char				*des_ecb(char *str, void *data, size_t *size)
 		}
 		des_ecb_loop(message, *size, &des_res, keys, d);
 		if (d->d_opt)
+		{
 			postprocess_message(des_res, size);
+		}
+		else if (d->e_opt == 1 && d->salted == 0)
+		{
+			if ((des_res = append_salt(d, des_res)) == NULL)
+			{
+				if (des_res) free(des_res);
+				return NULL;
+			}
+		}
 	}
 	des_clean(keys, message);
 	return des_res;

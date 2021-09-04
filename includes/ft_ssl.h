@@ -60,6 +60,7 @@ typedef struct		s_data
 	unsigned char	key[9];
 	unsigned char 	iv[9];
 	unsigned char	salt[9];
+	int				salted;
 	int 			a_opt;
 	int				p_opt;
 	int				q_opt;
@@ -96,8 +97,11 @@ char				*rot_str_l(char *str, int n);
 int		 			random_value(unsigned char *r, size_t size);
 void 				print_res(char *res, size_t size, FILE *fp);
 int   				char_count(char *str, char c);
+int 				is_empty(unsigned char *str, int len);
 
 int 				securize(t_data* data);
+char 				*append_salt(t_data *data, char *str);
+int 				read_salt(t_data *data);
 
 char				*md5(char *str, void *data, size_t *size);
 

@@ -77,8 +77,6 @@ int			hash_string(t_data *data)
 	t_list	*tmp_lst;
 	char 	*res = NULL;
 
-	if (ft_strncmp(data->hash->name, "des", 3) == 0)
-		securize(data);
 	tmp_lst = data->strings;
 	while (data->strings)
 	{

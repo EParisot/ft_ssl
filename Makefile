@@ -33,7 +33,7 @@ OBJS	=	$(SRCS:.c=.o)
 
 LIBS	=	libft/libft.a \
 
-CFLAGS	=	-Wall -Wextra -Werror
+CFLAGS	=	-Wall -Wextra -Werror -g3
 
 RM		=	rm -f
 

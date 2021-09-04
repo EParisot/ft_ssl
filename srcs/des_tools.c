@@ -203,6 +203,12 @@ char 				*preprocess_message(char *str, size_t *str_len, int mode)
 	}
 	else
 	{
+		// remove salt
+		if (ft_strncmp(str, "Salted__", 8) == 0)
+		{
+			ft_memmove(str, str + 16, (*str_len) - 16);
+			(*str_len) -= 16;
+		}
 		// remove padding
 		if ((message = malloc(*str_len + 1)) == NULL)
 			return NULL;

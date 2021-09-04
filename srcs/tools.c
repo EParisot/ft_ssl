@@ -204,3 +204,14 @@ int					char_count(char *str, char c)
 	}
 	return count;
 }
+
+
+int 			is_empty(unsigned char *str, int len)
+{
+	for (int i = 0; i < len; ++i)
+	{
+		if (str[i] != 0)
+			return 0;
+	}
+	return 1;
+}

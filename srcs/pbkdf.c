@@ -12,7 +12,13 @@
 
 #include "../includes/ft_ssl.h"
 
-static int 	PBKDF2(char *fct(char *, void *, size_t *), t_data *data, int nIter, int dKlen)
+static char *HMAC(char *input, char *fct(char *, void *, size_t *), t_data *data, int dKlen)
+{// TODO
+	(void)dKlen;
+	return fct((char*)input, (void*)data, NULL);
+}
+
+static int 	PBKDF2(char *fct(char *, void *, size_t *), t_data *data, int32_t nIter, int dKlen)
 {//https://fr.wikipedia.org/wiki/PBKDF2
 	int hlen = 256;
 	int l = (dKlen + hlen - 1) / hlen;
@@ -20,6 +26,7 @@ static int 	PBKDF2(char *fct(char *, void *, size_t *), t_data *data, int nIter,
 	unsigned char *dk = NULL;
 	unsigned char *DK = NULL;
 	unsigned char *output = NULL;
+
 	if ((dk = malloc(hlen)) == NULL)
 		return -1;
 	if ((DK = malloc(l * hlen)) == NULL)
@@ -35,16 +42,16 @@ static int 	PBKDF2(char *fct(char *, void *, size_t *), t_data *data, int nIter,
 			if (j == 0)
 			{
 				bzero((char*)output, hlen + 1);
-				int input_len = ft_strlen((char*)data->pass) + 8 + sizeof(i) + 1;
-				if ((input = malloc(input_len)) == NULL )
+				int input_len = ft_strlen((char*)data->pass) + 8 + sizeof(nIter) + 1;
+				if ((input = malloc(input_len)) == NULL)
 					return -1;
 				bzero((char*)input, input_len);
 				ft_strcpy((char*)input, (char*)data->pass);
 				ft_memmove((char*)input + ft_strlen((char*)data->pass), (char*)data->salt, 8);
-				ft_memmove((char*)input + ft_strlen((char*)data->pass) + 8, (char*)&i, sizeof(i));
+				ft_memmove((char*)input + ft_strlen((char*)data->pass) + 8, (char*)&nIter, sizeof(nIter));
 				//printf("%s\n", (char*)input);
 				//print_hex(input, input_len);
-				char *hash = fct((char*)input, (void*)data, NULL);
+				char *hash = HMAC((char*)input, fct, data, dKlen);
 				if (read_hex(hash, output))
 					return -1;
 				//print_hex(input, input_len);
@@ -66,7 +73,7 @@ static int 	PBKDF2(char *fct(char *, void *, size_t *), t_data *data, int nIter,
 				ft_memmove((char*)input + ft_strlen((char*)data->pass), (char*)output, hlen);
 				bzero((char*)output, hlen);
 				//printf("%s\n", (char*)input);
-				char *hash = fct((char*)input, (void*)data, NULL);
+				char *hash = HMAC((char*)input, fct, data, dKlen);
 				if (read_hex(hash, output))
 					return -1;
 				//printf("%ld %s %ld %s\n", ft_strlen((char*)input), (char*)input, ft_strlen((char*)output), (char*)output);
@@ -90,14 +97,56 @@ static int 	PBKDF2(char *fct(char *, void *, size_t *), t_data *data, int nIter,
 	return 0;
 }
 
-int 			is_empty(unsigned char *str, int len)
+char 			*append_salt(t_data *data, char *str)
 {
-	for (int i = 0; i < len; ++i)
+	char *new_str = NULL;
+
+	if ((new_str = malloc(16 + ((t_string *)(data->strings->content))->len + 1)) == NULL)
 	{
-		if (str[i] != 0)
-			return 0;
+		return NULL;
 	}
-	return 1;
+	bzero(new_str, 16 + ((t_string *)(data->strings->content))->len + 1);
+	ft_memcpy(new_str, "Salted__", 8);
+	ft_memcpy(new_str + 8, (char*)data->salt, 8);
+	ft_memcpy(new_str + 16, str, ((t_string *)(data->strings->content))->len);
+	free(str);
+	((t_string *)(data->strings->content))->len += 16;
+	return new_str;
+}
+
+int  			read_salt(t_data *data)
+{
+	char *b64_res = NULL;
+	size_t len = ((t_string*)(data->strings->content))->len;
+
+	if (data->a_opt == 1)
+	{
+		char *str = ft_strdup(((t_string*)(data->strings->content))->string);
+		if ((b64_res = base64(str, data, &len)) == NULL)
+			return -1;
+		if (ft_strncmp(b64_res, "Salted__", 8) != 0)
+		{
+			printf("ft_ssl : Error : Salt not found\n");
+			free(b64_res);
+			free(str);
+			return -1;
+		}
+		ft_memcpy((char*)data->salt, b64_res + 8, 8);
+		free(b64_res);
+		free(str);
+	}
+	else if (ft_strncmp(((t_string *)(data->strings->content))->string, "Salted__", 8) == 0)
+	{
+		ft_memcpy((char*)data->salt, ((t_string *)(data->strings->content))->string + 8, 8);
+		ft_memmove(((t_string *)(data->strings->content))->string, ((t_string *)(data->strings->content))->string + 16, ((t_string *)(data->strings->content))->len - 16);
+		((t_string *)(data->strings->content))->len -= 16;
+	}
+	else
+	{
+		printf("ft_ssl : Error : No salt provided.\n");
+		return -1;
+	}
+	return 0;
 }
 
 int 			securize(t_data *data)
@@ -106,9 +155,17 @@ int 			securize(t_data *data)
 	char *tmp0 = NULL;
 	char *tmp1 = NULL;
 
-	if (is_empty(data->salt, 8))
+	if (is_empty(data->key, 8) && data->salted == 0)
 	{
-		random_value(data->salt, 8);
+		if (data->e_opt == 1 && data->salted == 0)
+		{
+			random_value(data->salt, 8);
+		}
+		else
+		{
+			if (read_salt(data))
+				return -1;
+		}
 	}
 	if (is_empty(data->key, 8))
 	{
@@ -133,22 +190,18 @@ int 			securize(t_data *data)
 			free(tmp1);
 		}
 		free(tmp);
-		if (PBKDF2(sha256, data, 256, 64))
+		if (PBKDF2(sha256, data, 10000, 64))
 			return -1;
 	}
 	if (is_empty(data->iv, 8))
 	{
 		random_value(data->iv, 8);
 	}
-	else if (ft_strcmp(data->hash->name, "des-ecb") == 0)
-	{
-		printf("ft_ssl: Warning: iv not used by this cypher\n");
-	}
-	/*printf("Key  : ");
-	print_hex(data->key, 8);
-	printf("Salt : ");
+	/*printf("Salt : ");
 	print_hex(data->salt, 8);
-	printf("IV   : ");
+	printf("\nKey  : ");
+	print_hex(data->key, 8);
+	printf("\nIV   : ");
 	print_hex(data->iv, 8);*/
 	return 0;
 }
