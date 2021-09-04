@@ -303,7 +303,6 @@ openssl des-cbc -d -a -pbkdf2 -iter 10000 -md sha256 -pass pass:password -iv 001
 print_diff out1 out2
 echo
 
-echo
 echo -e "${BLUE}./ft_ssl des-cbc -a -p password -v 0011223344556677 -i file -o test1 ${NC}"
 ./ft_ssl des-cbc -a -p password -v 0011223344556677 -i file -o test1 
 echo -e "${BLUE}openssl des-cbc -a -pbkdf2 -iter 10000 -md sha256 -pass pass:password -iv 0011223344556677 -in file -out test2${NC}"

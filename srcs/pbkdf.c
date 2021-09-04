@@ -116,12 +116,16 @@ char 			*append_salt(t_data *data, char *str)
 
 int  			read_salt(t_data *data)
 {
-	char *b64_res = NULL;
-	size_t len = ((t_string*)(data->strings->content))->len;
-
 	if (data->a_opt == 1)
 	{
+		char *b64_res = NULL;
+		size_t len = ((t_string*)(data->strings->content))->len;
 		char *str = ft_strdup(((t_string*)(data->strings->content))->string);
+		// avoid converting full data to get salt
+		/*if (len > (16 / 3) * 4)
+		{
+			len = (16 / 3) * 4;
+		}*/
 		if ((b64_res = base64(str, data, &len)) == NULL)
 			return -1;
 		if (ft_strncmp(b64_res, "Salted__", 8) != 0)
