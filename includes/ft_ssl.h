@@ -61,6 +61,7 @@ typedef struct		s_data
 	unsigned char 	iv[9];
 	unsigned char	salt[9];
 	int				salted;
+	int				key_provided;
 	int 			a_opt;
 	int				p_opt;
 	int				q_opt;

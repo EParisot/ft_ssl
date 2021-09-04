@@ -146,7 +146,7 @@ static int	parse_args(int ac, char **av, t_data *data, int i)
 					if (ac > i + 1)
 					{
 						read_hex(av[++i], data->key);
-						data->salted = 1;
+						data->key_provided = 1;
 					}
 				}
 			}

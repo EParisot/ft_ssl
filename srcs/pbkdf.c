@@ -141,9 +141,9 @@ int  			read_salt(t_data *data)
 		ft_memmove(((t_string *)(data->strings->content))->string, ((t_string *)(data->strings->content))->string + 16, ((t_string *)(data->strings->content))->len - 16);
 		((t_string *)(data->strings->content))->len -= 16;
 	}
-	else
+	else if (data->salted == 0 && data->key_provided == 0)
 	{
-		printf("ft_ssl : Error : No salt provided.\n");
+		printf("ft_ssl : Error : No Key or Salt provided.\n");
 		return -1;
 	}
 	return 0;
@@ -161,7 +161,7 @@ int 			securize(t_data *data)
 		{
 			random_value(data->salt, 8);
 		}
-		else
+		if (data->d_opt == 1)
 		{
 			if (read_salt(data))
 				return -1;

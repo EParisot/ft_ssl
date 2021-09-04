@@ -128,7 +128,7 @@ char				*des_ecb(char *str, void *data, size_t *size)
 				return NULL;
 			}
 			des_ecb_loop(message, *size, &des_res, keys, d);
-			if (d->salted == 0)
+			if (d->key_provided == 0)
 			{
 				if ((des_res = append_salt(d, des_res)) == NULL)
 				{
@@ -154,7 +154,7 @@ char				*des_ecb(char *str, void *data, size_t *size)
 		{
 			postprocess_message(des_res, size);
 		}
-		else if (d->e_opt == 1 && d->salted == 0)
+		else if (d->e_opt == 1 && d->key_provided == 0)
 		{
 			if ((des_res = append_salt(d, des_res)) == NULL)
 			{
