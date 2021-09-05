@@ -242,6 +242,15 @@ openssl des-ecb -d -a -pass pass:password -S 0011223344556677 -out out2 -in test
 print_diff out1 out2
 echo
 
+echo -e "${BLUE}openssl des-ecb -a -pass pass:password -in file -out test2${NC}"
+openssl des-ecb -a -pass pass:password -in file -out test1
+echo -e "${BLUE}./ft_ssl des-ecb -d -a -p password -o out1 -i test1${NC}"
+./ft_ssl des-ecb -d -a -p password -o out1 -i test1
+echo -e "${BLUE}openssl des-ecb -d -a -pass pass:password -out out2 -in test2${NC}"
+openssl des-ecb -d -a -pass pass:password -out out2 -in test1
+print_diff out1 out2
+echo
+
 echo -e "${YELLOW}DES-CBC${NC}:"; echo
 
 echo -e "${BLUE}echo \"foo bar\" | ./ft_ssl des-cbc -q -a -k 133457799BBCDFF1 -v 133457799BBCDFF1${NC}"
@@ -321,4 +330,14 @@ echo -e "${BLUE}openssl des-cbc -d -a -pass pass:password -S 0011223344556677 -o
 openssl des-cbc -d -a -pass pass:password -S 0011223344556677 -out out2 -in test2
 print_diff out1 out2
 echo
+
+echo -e "${BLUE}openssl des-cbc -a -pass pass:password -in file -out test2${NC}"
+openssl des-cbc -a -pass pass:password -in file -out test1
+echo -e "${BLUE}./ft_ssl des-cbc -d -a -p password -o out1 -i test1${NC}"
+./ft_ssl des-cbc -d -a -p password -o out1 -i test1
+echo -e "${BLUE}openssl des-cbc -d -a -pass pass:password -out out2 -in test2${NC}"
+openssl des-cbc -d -a -pass pass:password -out out2 -in test1
+print_diff out1 out2
+echo
+
 rm file test1 test2 out1 out2
