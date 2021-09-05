@@ -17,7 +17,7 @@ static void	prefix(t_data *data, int source_type)
 	if (source_type == _STDIN && data->p_opt == 1 && data->q_opt == 0)
 	{
 		fprintf(stderr, "%s", ((t_string *)(data->strings->content))->string);
-		if (((t_string *)(data->strings->content))->string[ft_strlen(((t_string *)(data->strings->content))->string) - 1] != '\n')
+		if (((t_string *)(data->strings->content))->string[((t_string *)(data->strings->content))->len - 1] != '\n')
 			fprintf(stderr, "\n");
 	}
 	else if (data->r_opt == 0 && data->q_opt == 0)
@@ -37,14 +37,7 @@ static void	prefix(t_data *data, int source_type)
 			}
 			else
 			{
-				if (data->hex)
-				{
-					fprintf(stderr, "(\"");
-					print_hex((unsigned char *)((t_string *)(data->strings->content))->string, ft_strlen(((t_string *)(data->strings->content))->string));
-					fprintf(stderr, "\")= ");
-				}
-				else
-					fprintf(stderr, "(\"%s\")= ", ((t_string *)(data->strings->content))->string);
+				fprintf(stderr, "(\"%s\")= ", ((t_string *)(data->strings->content))->string);
 			}
 		}
 	}
@@ -60,14 +53,7 @@ static void	suffix(t_data *data, int source_type)
 			fprintf(stderr, " %s", ((t_string *)(data->strings->content))->source);
 		else
 		{
-			if (data->hex)
-				{
-					fprintf(stderr, " (\"");
-					print_hex((unsigned char *)((t_string *)(data->strings->content))->string, ft_strlen(((t_string *)(data->strings->content))->string));
-					fprintf(stderr, "\")");
-				}
-				else
-					fprintf(stderr, " (\"%s\")", ((t_string *)(data->strings->content))->string);
+			fprintf(stderr, " (\"%s\")", ((t_string *)(data->strings->content))->string);
 		}
 	}
 }
@@ -88,10 +74,7 @@ int			hash_string(t_data *data)
 				if (res) free(res);
 				return (-1);
 			}
-			if (data->hex)
-				print_hex((unsigned char *)res, ft_strlen(res));
-			else
-				print_res(res, ((t_string *)(data->strings->content))->len, data->o_opt);
+			print_res(res, ((t_string *)(data->strings->content))->len, data->o_opt);
 			suffix(data, ((t_string *)(data->strings->content))->source_type);
 			if (res[((t_string *)(data->strings->content))->len - 1] != '\n')
 				printf("\n");

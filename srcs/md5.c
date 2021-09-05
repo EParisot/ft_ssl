@@ -165,9 +165,9 @@ char				*md5(char *str, void *data, size_t *size)
 
 	str_size = 0;
 	if (str)
-		str_size = ft_strlen(str);
+		str_size = *size;
 	padded_size = 0;
-	if ((padded_str = pad_len(str, &padded_size)) == NULL)
+	if ((padded_str = pad_len(str, str_size, &padded_size)) == NULL)
 		return (NULL);
 	if ((padded_str = add_len(padded_str, &padded_size, str_size, 0)) == NULL)
 		return (NULL);

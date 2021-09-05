@@ -101,6 +101,12 @@ for H in ${HASHES[@]}
 	done
 done
 
+echo -e "${BLUE}echo -n 'test\x0\x11\x22\x33\x44\x55\x66\x77' | ./ft_ssl md5 -q${NC}:"
+CMDA=$(echo -n 'test\x0\x11\x22\x33\x44\x55\x66\x77' | ./ft_ssl md5 -q);printf "$CMDA\n"
+echo -e "${BLUE}echo -n 'test\x0\x11\x22\x33\x44\x55\x66\x77' | openssl md5${NC}:"
+CMDB=$(echo -n 'test\x0\x11\x22\x33\x44\x55\x66\x77' | openssl md5 | sed 's/(stdin)= //');printf "$CMDB\n"
+print_res "$CMDA" "$CMDB"
+
 echo -e "${YELLOW}Reverse BASE64 Tests${NC}:"; echo
 
 BASE64_STRINGS=("" \
@@ -211,28 +217,28 @@ echo
 echo
 echo -e "${BLUE}./ft_ssl des-ecb -a -p password -v 0011223344556677 -s 0011223344556677 -i file -o test1 ${NC}"
 ./ft_ssl des-ecb -a -p password -v 0011223344556677 -s 0011223344556677 -i file -o test1 
-echo -e "${BLUE}openssl des-ecb -a -pbkdf2 -iter 10000 -md sha256 -pass pass:password -iv 0011223344556677 -S 0011223344556677 -in file -out test2${NC}"
-openssl des-ecb -a -pbkdf2 -iter 10000 -md sha256 -pass pass:password -iv 0011223344556677 -S 0011223344556677 -in file -out test2
+echo -e "${BLUE}openssl des-ecb -a -pass pass:password -iv 0011223344556677 -S 0011223344556677 -in file -out test2${NC}"
+openssl des-ecb -a -pass pass:password -iv 0011223344556677 -S 0011223344556677 -in file -out test2
 print_diff test1 test2
 echo
 echo -e "${BLUE}./ft_ssl des-ecb -d -a -p password -v 0011223344556677 -s 0011223344556677 -o out1 -i test1${NC}"
 ./ft_ssl des-ecb -d -a -p password -v 0011223344556677 -s 0011223344556677 -o out1 -i test1
-echo -e "${BLUE}openssl des-ecb -d -a -pbkdf2 -iter 10000 -md sha256 -pass pass:password -iv 0011223344556677 -S 0011223344556677 -out out2 -in test2${NC}"
-openssl des-ecb -d -a -pbkdf2 -iter 10000 -md sha256 -pass pass:password -iv 0011223344556677 -S 0011223344556677 -out out2 -in test2
+echo -e "${BLUE}openssl des-ecb -d -a -pass pass:password -iv 0011223344556677 -S 0011223344556677 -out out2 -in test2${NC}"
+openssl des-ecb -d -a -pass pass:password -iv 0011223344556677 -S 0011223344556677 -out out2 -in test2
 print_diff out1 out2
 echo
 
 echo
-echo -e "${BLUE}./ft_ssl des-ecb -a -p password -v 0011223344556677 -i file -o test1 ${NC}"
-./ft_ssl des-ecb -a -p password -v 0011223344556677 -i file -o test1 
-echo -e "${BLUE}openssl des-ecb -a -pbkdf2 -iter 10000 -md sha256 -pass pass:password -iv 0011223344556677 -in file -out test2${NC}"
-openssl des-ecb -a -pbkdf2 -iter 10000 -md sha256 -pass pass:password -iv 0011223344556677 -in file -out test2
+echo -e "${BLUE}./ft_ssl des-ecb -a -p password -s 0011223344556677 -i file -o test1 ${NC}"
+./ft_ssl des-ecb -a -p password -s 0011223344556677 -i file -o test1 
+echo -e "${BLUE}openssl des-ecb -a -pass pass:password -S 0011223344556677 -in file -out test2${NC}"
+openssl des-ecb -a -pass pass:password -S 0011223344556677 -in file -out test2
 print_diff test1 test2
 echo
-echo -e "${BLUE}./ft_ssl des-ecb -d -a -p password -v 0011223344556677 -o out1 -i test1${NC}"
-./ft_ssl des-ecb -d -a -p password -v 0011223344556677 -o out1 -i test1
-echo -e "${BLUE}openssl des-ecb -d -a -pbkdf2 -iter 10000 -md sha256 -pass pass:password -iv 0011223344556677 -out out2 -in test2${NC}"
-openssl des-ecb -d -a -pbkdf2 -iter 10000 -md sha256 -pass pass:password -iv 0011223344556677 -out out2 -in test2
+echo -e "${BLUE}./ft_ssl des-ecb -d -a -p password -s 0011223344556677 -o out1 -i test1${NC}"
+./ft_ssl des-ecb -d -a -p password -s 0011223344556677 -o out1 -i test1
+echo -e "${BLUE}openssl des-ecb -d -a -pass pass:password -S 0011223344556677 -out out2 -in test2${NC}"
+openssl des-ecb -d -a -pass pass:password -S 0011223344556677 -out out2 -in test2
 print_diff out1 out2
 echo
 
@@ -292,27 +298,27 @@ echo
 echo
 echo -e "${BLUE}./ft_ssl des-cbc -a -p password -v 0011223344556677 -s 0011223344556677 -i file -o test1 ${NC}"
 ./ft_ssl des-cbc -a -p password -v 0011223344556677 -s 0011223344556677 -i file -o test1 
-echo -e "${BLUE}openssl des-cbc -a -pbkdf2 -iter 10000 -md sha256 -pass pass:password -iv 0011223344556677 -S 0011223344556677 -in file -out test2${NC}"
-openssl des-cbc -a -pbkdf2 -iter 10000 -md sha256 -pass pass:password -iv 0011223344556677 -S 0011223344556677 -in file -out test2
+echo -e "${BLUE}openssl des-cbc -a -pass pass:password -iv 0011223344556677 -S 0011223344556677 -in file -out test2${NC}"
+openssl des-cbc -a -pass pass:password -iv 0011223344556677 -S 0011223344556677 -in file -out test2
 print_diff test1 test2
 echo
 echo -e "${BLUE}./ft_ssl des-cbc -d -a -p password -v 0011223344556677 -s 0011223344556677 -o out1 -i test1${NC}"
 ./ft_ssl des-cbc -d -a -p password -v 0011223344556677 -s 0011223344556677 -o out1 -i test1
-echo -e "${BLUE}openssl des-cbc -d -a -pbkdf2 -iter 10000 -md sha256 -pass pass:password -iv 0011223344556677 -S 0011223344556677 -out out2 -in test2${NC}"
-openssl des-cbc -d -a -pbkdf2 -iter 10000 -md sha256 -pass pass:password -iv 0011223344556677 -S 0011223344556677 -out out2 -in test2
+echo -e "${BLUE}openssl des-cbc -d -a -pass pass:password -iv 0011223344556677 -S 0011223344556677 -out out2 -in test2${NC}"
+openssl des-cbc -d -a -pass pass:password -iv 0011223344556677 -S 0011223344556677 -out out2 -in test2
 print_diff out1 out2
 echo
 
-echo -e "${BLUE}./ft_ssl des-cbc -a -p password -v 0011223344556677 -i file -o test1 ${NC}"
-./ft_ssl des-cbc -a -p password -v 0011223344556677 -i file -o test1 
-echo -e "${BLUE}openssl des-cbc -a -pbkdf2 -iter 10000 -md sha256 -pass pass:password -iv 0011223344556677 -in file -out test2${NC}"
-openssl des-cbc -a -pbkdf2 -iter 10000 -md sha256 -pass pass:password -iv 0011223344556677 -in file -out test2
+echo -e "${BLUE}./ft_ssl des-cbc -a -p password -s 0011223344556677 -i file -o test1 ${NC}"
+./ft_ssl des-cbc -a -p password -s 0011223344556677 -i file -o test1 
+echo -e "${BLUE}openssl des-cbc -a -pass pass:password -S 0011223344556677 -in file -out test2${NC}"
+openssl des-cbc -a -pass pass:password -S 0011223344556677 -in file -out test2
 print_diff test1 test2
 echo
-echo -e "${BLUE}./ft_ssl des-cbc -d -a -p password -v 0011223344556677 -o out1 -i test1${NC}"
-./ft_ssl des-cbc -d -a -p password -v 0011223344556677 -o out1 -i test1
-echo -e "${BLUE}openssl des-cbc -d -a -pbkdf2 -iter 10000 -md sha256 -pass pass:password -iv 0011223344556677 -out out2 -in test2${NC}"
-openssl des-cbc -d -a -pbkdf2 -iter 10000 -md sha256 -pass pass:password -iv 0011223344556677 -out out2 -in test2
+echo -e "${BLUE}./ft_ssl des-cbc -d -a -p password -s 0011223344556677 -o out1 -i test1${NC}"
+./ft_ssl des-cbc -d -a -p password -s 0011223344556677 -o out1 -i test1
+echo -e "${BLUE}openssl des-cbc -d -a -pass pass:password -S 0011223344556677 -out out2 -in test2${NC}"
+openssl des-cbc -d -a -pass pass:password -S 0011223344556677 -out out2 -in test2
 print_diff out1 out2
 echo
 rm file test1 test2 out1 out2

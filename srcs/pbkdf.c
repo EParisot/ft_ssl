@@ -12,88 +12,36 @@
 
 #include "../includes/ft_ssl.h"
 
-static char *HMAC(char *input, char *fct(char *, void *, size_t *), t_data *data, int dKlen)
-{// TODO
-	(void)dKlen;
-	return fct((char*)input, (void*)data, NULL);
-}
-
-static int 	PBKDF2(char *fct(char *, void *, size_t *), t_data *data, int32_t nIter, int dKlen)
-{//https://fr.wikipedia.org/wiki/PBKDF2
-	int hlen = 256;
-	int l = (dKlen + hlen - 1) / hlen;
-	unsigned char *input = NULL;
-	unsigned char *dk = NULL;
+static int 	PBKDF1(char *fct(char *, void *, size_t *), t_data *data, int32_t nIter, int dKlen, int hlen)
+{
+	int pass_len = ft_strlen((char*)data->pass);
+	int l = (pass_len + 8 > hlen) ? pass_len + 8 : hlen;
+	size_t dummy = l;
 	unsigned char *DK = NULL;
-	unsigned char *output = NULL;
-
-	if ((dk = malloc(hlen)) == NULL)
+	unsigned char *dk = NULL;
+	
+	if ((DK = malloc(l + 1)) == NULL)
 		return -1;
-	if ((DK = malloc(l * hlen)) == NULL)
-		return -1;
-	if ((output = malloc(hlen + 1)) == NULL )
-		return -1;
-	bzero(DK, l * hlen);
-	for (int i = 0; i < l; ++i)
+	bzero(DK, l + 1);
+	ft_memcpy(DK, data->pass, pass_len);
+	ft_memcpy(DK + pass_len, data->salt, 8);
+	for (int i = 0; i < nIter; ++i)
 	{
-		bzero(dk, hlen);
-		for (int j = 0; j < nIter; ++j)
+		dummy = pass_len + 8;
+		dk = (unsigned char *)fct((char*)DK, (void*)data, &dummy);
+		if (read_hex((char*)dk, DK, hlen))
 		{
-			if (j == 0)
-			{
-				bzero((char*)output, hlen + 1);
-				int input_len = ft_strlen((char*)data->pass) + 8 + sizeof(nIter) + 1;
-				if ((input = malloc(input_len)) == NULL)
-					return -1;
-				bzero((char*)input, input_len);
-				ft_strcpy((char*)input, (char*)data->pass);
-				ft_memmove((char*)input + ft_strlen((char*)data->pass), (char*)data->salt, 8);
-				ft_memmove((char*)input + ft_strlen((char*)data->pass) + 8, (char*)&nIter, sizeof(nIter));
-				//printf("%s\n", (char*)input);
-				//print_hex(input, input_len);
-				char *hash = HMAC((char*)input, fct, data, dKlen);
-				if (read_hex(hash, output))
-					return -1;
-				//print_hex(input, input_len);
-				//printf("%ld %s %ld %s\n", ft_strlen((char*)input), (char*)input, ft_strlen((char*)output), (char*)output);
-				for (int x = 0; x < hlen; ++x)
-				{
-					dk[x] ^= output[x];
-				}
-				free(input);
-				free(hash);
-			}
-			else
-			{
-				int input_len = ft_strlen((char*)data->pass) + hlen + 1;
-				if ((input = malloc(input_len)) == NULL )
-					return -1;
-				bzero((char*)input, input_len);
-				ft_strcpy((char*)input, (char*)data->pass);
-				ft_memmove((char*)input + ft_strlen((char*)data->pass), (char*)output, hlen);
-				bzero((char*)output, hlen);
-				//printf("%s\n", (char*)input);
-				char *hash = HMAC((char*)input, fct, data, dKlen);
-				if (read_hex(hash, output))
-					return -1;
-				//printf("%ld %s %ld %s\n", ft_strlen((char*)input), (char*)input, ft_strlen((char*)output), (char*)output);
-				for (int x = 0; x < hlen; ++x)
-				{
-					dk[x] ^= output[x];
-				}
-				free(input);
-				free(hash);
-			}
+			free(dk);
+			return -1;
 		}
-		ft_strcat((char*)DK, (char*)dk);
+		free(dk);
 	}
-	ft_strncpy((char *)data->key, (char *)DK, 8);
-	free(output);
-	free(dk);
+	ft_memcpy(data->key, DK, dKlen);
+	if (data->iv_provided == 0)
+	{
+		ft_memcpy(data->iv, DK + dKlen, dKlen);
+	}
 	free(DK);
-	if (data->pass)
-		free(data->pass);
-	data->pass = NULL;
 	return 0;
 }
 
@@ -121,11 +69,6 @@ int  			read_salt(t_data *data)
 		char *b64_res = NULL;
 		size_t len = ((t_string*)(data->strings->content))->len;
 		char *str = ft_strdup(((t_string*)(data->strings->content))->string);
-		// avoid converting full data to get salt
-		/*if (len > (16 / 3) * 4)
-		{
-			len = (16 / 3) * 4;
-		}*/
 		if ((b64_res = base64(str, data, &len)) == NULL)
 			return -1;
 		if (ft_strncmp(b64_res, "Salted__", 8) != 0)
@@ -194,10 +137,10 @@ int 			securize(t_data *data)
 			free(tmp1);
 		}
 		free(tmp);
-		if (PBKDF2(sha256, data, 10000, 64))
+		if (PBKDF1(sha256, data, 1, 8, 32))
 			return -1;
 	}
-	if (is_empty(data->iv, 8))
+	if (data->iv_provided == 0 && is_empty(data->iv, 8))
 	{
 		random_value(data->iv, 8);
 	}

@@ -62,11 +62,11 @@ typedef struct		s_data
 	unsigned char	salt[9];
 	int				salted;
 	int				key_provided;
+	int				iv_provided;
 	int 			a_opt;
 	int				p_opt;
 	int				q_opt;
 	int				r_opt;
-	int				hex;
 	int 			e_opt;
 	int				d_opt;
 	int				i_opt;
@@ -76,7 +76,7 @@ typedef struct		s_data
 	t_list			*strings;
 }					t_data;
 
-int 				read_hex(char *hex_str, unsigned char *out);
+int 				read_hex(char *hex_str, unsigned char *out, int len);
 void 				print_hex(unsigned char *hex, size_t size);
 int 				bitstoint(char *binstr);
 char 				*inttobits(int num, char *bits, size_t size);
@@ -85,13 +85,13 @@ char 				*bin_to_str(char *binstr, char *str);
 void				xor_bin(char *a, char *b);
 void				xor(char *a, char *b);
 int					read_string(t_data *data);
-int					get_string(t_data *data, char *str, int hex);
+int					get_string(t_data *data, char *str);
 int					handle_files(t_data *data, char *filename);
 int					hash_string(t_data *data);
 void				print_help(int usage);
 void				clean_data(t_data *data);
 void				del(void *addr, size_t size);
-char				*pad_len(char *str, int *padded_size);
+char				*pad_len(char *str, size_t str_len, int *padded_size);
 char				*add_len(char *padded_str, int *padded_size, uint64_t str_size, int swap);
 uint32_t			rot_r(uint32_t x, uint32_t n);
 uint32_t			rot_l(uint32_t x, uint32_t n);

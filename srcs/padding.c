@@ -12,24 +12,20 @@
 
 #include "../includes/ft_ssl.h"
 
-char		*pad_len(char *str, int *padded_size)
+char		*pad_len(char *str, size_t str_len, int *padded_size)
 {
-	int		str_len;
 	int		pad_len;
 	char	*new_str;
 	int		i;
 
 	i = -1;
 	pad_len = 0;
-	str_len = 0;
-	if (str)
-		str_len = ft_strlen(str);
 	while ((str_len + pad_len + 8) % 64 != 0)
 		++pad_len;
 	if ((new_str = (char *)malloc(str_len + pad_len)) == NULL)
 		return (NULL);
 	if (str)
-		memmove(new_str, str, ft_strlen(str));
+		memmove(new_str, str, str_len);
 	new_str[str_len] = 0x80;
 	i = 0;
 	while (++i < pad_len)

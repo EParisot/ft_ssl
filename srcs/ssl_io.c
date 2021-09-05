@@ -13,13 +13,13 @@
 #include "../includes/ft_ssl.h"
 
 // Read a hex string and convert it to a char array
-int 			read_hex(char *hex_str, unsigned char *out)
+int 			read_hex(char *hex_str, unsigned char *out, int len)
 {
 	int i = 0;
 	int j = 0;
 	if (hex_str[0] == '0' && (hex_str[1] == 'x' || hex_str[1] == 'X'))
 		i = 2;
-	while (hex_str[i] != '\0')
+	while (i < len * 2)
 	{
 		for (int k = 0; k < 2; k++)
 		{
@@ -51,23 +51,20 @@ int 			read_hex(char *hex_str, unsigned char *out)
 	return 0;
 }
 
-static int		read_loop(char **str, char *buf)
+static int		read_loop(char **str, char *buf, int str_len)
 {
 	char		*str_tmp;
-	int			len;
 
-	len = 0;
 	str_tmp = NULL;
 	if (*str)
 	{
-		len = ft_strlen(*str);
-		if ((str_tmp = (char *)malloc(len + 1)) == NULL)
+		if ((str_tmp = (char *)malloc(str_len + 1)) == NULL)
 			return (-1);
-		ft_memmove(str_tmp, *str, len);
-		str_tmp[len] = 0;
+		ft_memmove(str_tmp, *str, str_len);
+		str_tmp[str_len] = 0;
 		free(*str);
 	}
-	if (len)
+	if (str_len)
 	{
 		*str = ft_strjoin(str_tmp, buf);
 	}
@@ -87,6 +84,7 @@ int				read_string(t_data *data)
 	char		buf[BUF_SIZE + 1];
 	t_string	new_string;
 	t_list		*new_lst;
+	int  		readen = 0;
 
 	ft_memset(buf, 0, BUF_SIZE + 1);
 	if ((new_string.source = (char *)malloc(8)) == NULL)
@@ -94,14 +92,14 @@ int				read_string(t_data *data)
 	ft_strcpy(new_string.source, "(stdin)");
 	new_string.string = NULL;
 	new_string.source_type = _STDIN;
-	
-	while (read(STDIN_FILENO, &buf, BUF_SIZE))
+	new_string.len = 0;
+	while ((readen = read(STDIN_FILENO, &buf, BUF_SIZE)))
 	{
-		if (read_loop(&new_string.string, buf))
+		if (read_loop(&new_string.string, buf, new_string.len))
 			return (-1);
 		ft_memset(buf, 0, BUF_SIZE + 1);
+		new_string.len += readen;
 	}
-	new_string.len = ft_strlen(new_string.string);
 	if ((new_lst = ft_lstnew(&new_string, sizeof(t_string))) == NULL)
 		return (-1);
 	if (data->strings == NULL)
@@ -111,7 +109,7 @@ int				read_string(t_data *data)
 	return (0);
 }
 
-int				get_string(t_data *data, char *str, int hex)
+int				get_string(t_data *data, char *str)
 {
 	t_list		*tmp_lst;
 	t_list		*new_lst;
@@ -127,15 +125,7 @@ int				get_string(t_data *data, char *str, int hex)
 	if ((new_string.string = (char *)malloc(new_string.len + 1)) == NULL)
 		return (-1);
 	bzero(new_string.string, new_string.len + 1);
-	if (hex)
-	{
-		if (read_hex(str, (unsigned char *)new_string.string))
-			return (-1);
-	}
-	else
-	{
-		ft_strcpy(new_string.string, str);
-	}
+	ft_strcpy(new_string.string, str);
 	if ((new_lst = ft_lstnew(&new_string, sizeof(t_string))) == NULL)
 		return (-1);
 	if (data->strings)

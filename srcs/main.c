@@ -89,7 +89,7 @@ static int	parse_args(int ac, char **av, t_data *data, int i)
 					{
 						if (ac > i + 1)
 						{
-							read_hex(av[++i], data->salt);
+							read_hex(av[++i], data->salt, 8);
 							data->salted = 1;
 						}
 						else
@@ -102,7 +102,7 @@ static int	parse_args(int ac, char **av, t_data *data, int i)
 					{
 						if (ac > i + 1)
 						{
-							if (get_string(data, av[++i], 0))
+							if (get_string(data, av[++i]))
 								return (-1);
 						}
 						else
@@ -118,20 +118,6 @@ static int	parse_args(int ac, char **av, t_data *data, int i)
 						return (-1);
 				}
 			}
-			else if (ft_strcmp(av[i], "-hex") == 0 && ac > i + 1)
-			{
-				if (ac > i + 1)
-				{
-					data->hex = 1;
-					if (get_string(data, av[++i], 1))
-						return (-1);
-				}
-				else
-				{
-					print_help(1);
-					return (-1);
-				}
-			}
 			else if (ft_strcmp(av[i], "-a") == 0)
 			{
 				if (data->hash && ft_strncmp(data->hash->name, "des", 3) == 0)
@@ -145,7 +131,7 @@ static int	parse_args(int ac, char **av, t_data *data, int i)
 				{
 					if (ac > i + 1)
 					{
-						read_hex(av[++i], data->key);
+						read_hex(av[++i], data->key, 8);
 						data->key_provided = 1;
 					}
 				}
@@ -156,7 +142,8 @@ static int	parse_args(int ac, char **av, t_data *data, int i)
 				{
 					if (ac > i + 1)
 					{
-						read_hex(av[++i], data->iv);
+						read_hex(av[++i], data->iv, 8);
+						data->iv_provided = 1;
 					}
 				}
 			}
