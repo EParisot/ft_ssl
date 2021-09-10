@@ -94,7 +94,7 @@ char				*des_ecb(char *str, void *data, size_t *size)
 
 
 	securize(d);
-	if (!is_empty(d->iv, 8))
+	if (d->iv_provided == 1)
 	{
 		fprintf(stderr, "ft_ssl: Warning: iv not used by this cypher\n");
 	}

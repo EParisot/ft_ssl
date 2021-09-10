@@ -67,8 +67,14 @@ int  			read_salt(t_data *data)
 	if (data->a_opt == 1)
 	{
 		char *b64_res = NULL;
-		size_t len = ((t_string*)(data->strings->content))->len;
-		char *str = ft_strdup(((t_string*)(data->strings->content))->string);
+		// base64 on the begining of file
+		size_t len = 24;
+		if (((t_string*)(data->strings->content))->len < 24)
+		{
+			printf("ft_ssl : Error: Salt too short or absent\n");
+			return -1;
+		}
+		char *str = ft_strndup(((t_string*)(data->strings->content))->string, len);
 		if ((b64_res = base64(str, data, &len)) == NULL)
 			return -1;
 		if (ft_strncmp(b64_res, "Salted__", 8) != 0)

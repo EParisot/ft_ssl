@@ -174,43 +174,43 @@ CMDB=$(echo "mJWdy4+Oe1fBEj0N3cTox/3y4XRJKSL4" | openssl des-ecb -d -K 133457799
 print_res "$CMDA" "$CMDB";
 
 echo
-echo -e "${BLUE}./ft_ssl des-ecb -q -k 6162636461626364 -v 0011223344556677 -i file -o test1${NC}"
-./ft_ssl des-ecb -q -k 6162636461626364 -v 0011223344556677 -i file -o test1
-echo -e "${BLUE}openssl des-ecb -K 6162636461626364 -iv 0011223344556677 -in file -out test2${NC}"
-openssl des-ecb -K 6162636461626364 -iv 0011223344556677 -in file -out test2
+echo -e "${BLUE}./ft_ssl des-ecb -q -k 0011223344556677 -v 0011223344556677 -i file -o test1${NC}"
+./ft_ssl des-ecb -q -k 0011223344556677 -v 0011223344556677 -i file -o test1
+echo -e "${BLUE}openssl des-ecb -K 0011223344556677 -iv 0011223344556677 -in file -out test2${NC}"
+openssl des-ecb -K 0011223344556677 -iv 0011223344556677 -in file -out test2
 print_diff test1 test2
 echo
-echo -e "${BLUE}./ft_ssl des-ecb -d -q -k 6162636461626364 -v 0011223344556677 -o out1 -i test1${NC}"
-./ft_ssl des-ecb -d -q -k 6162636461626364 -v 0011223344556677 -o out1 -i test1
-echo -e "${BLUE}openssl des-ecb -d -K 6162636461626364 -iv 0011223344556677 -out out2 -in test2${NC}"
-openssl des-ecb -d -K 6162636461626364 -iv 0011223344556677 -out out2 -in test2
+echo -e "${BLUE}./ft_ssl des-ecb -d -q -k 0011223344556677 -v 0011223344556677 -o out1 -i test1${NC}"
+./ft_ssl des-ecb -d -q -k 0011223344556677 -v 0011223344556677 -o out1 -i test1
+echo -e "${BLUE}openssl des-ecb -d -K 0011223344556677 -iv 0011223344556677 -out out2 -in test2${NC}"
+openssl des-ecb -d -K 0011223344556677 -iv 0011223344556677 -out out2 -in test2
 print_diff out1 out2
 
 echo
-echo -e "${BLUE}./ft_ssl des-ecb -a -k 6162636461626364 -v 0011223344556677 -i file -o test1${NC}"
-./ft_ssl des-ecb -a -k 6162636461626364 -v 0011223344556677 -i file -o test1
-echo -e "${BLUE}openssl des-ecb -a -K 6162636461626364 -iv 0011223344556677 -in file -out test2${NC}"
-openssl des-ecb -a -K 6162636461626364 -iv 0011223344556677 -in file -out test2
+echo -e "${BLUE}./ft_ssl des-ecb -a -k 0011223344556677 -v 0011223344556677 -i file -o test1${NC}"
+./ft_ssl des-ecb -a -k 0011223344556677 -v 0011223344556677 -i file -o test1
+echo -e "${BLUE}openssl des-ecb -a -K 0011223344556677 -iv 0011223344556677 -in file -out test2${NC}"
+openssl des-ecb -a -K 0011223344556677 -iv 0011223344556677 -in file -out test2
 print_diff test1 test2
 echo
-echo -e "${BLUE}./ft_ssl des-ecb -d -a -k 6162636461626364 -v 0011223344556677 -o out1 -i test1${NC}"
-./ft_ssl des-ecb -d -a -k 6162636461626364 -v 0011223344556677 -o out1 -i test1
-echo -e "${BLUE}openssl des-ecb -d -a -K 6162636461626364 -iv 0011223344556677 -out out2 -in test2${NC}"
-openssl des-ecb -d -a -K 6162636461626364 -iv 0011223344556677 -out out2 -in test2
+echo -e "${BLUE}./ft_ssl des-ecb -d -a -k 0011223344556677 -v 0011223344556677 -o out1 -i test1${NC}"
+./ft_ssl des-ecb -d -a -k 0011223344556677 -v 0011223344556677 -o out1 -i test1
+echo -e "${BLUE}openssl des-ecb -d -a -K 0011223344556677 -iv 0011223344556677 -out out2 -in test2${NC}"
+openssl des-ecb -d -a -K 0011223344556677 -iv 0011223344556677 -out out2 -in test2
 print_diff out1 out2
 echo
 
 echo
-echo -e "${BLUE}./ft_ssl des-ecb -a -k 6162636461626364 -v 0011223344556677 -i file -o test1 ${NC}"
-./ft_ssl des-ecb -a -k 6162636461626364 -v 0011223344556677 -i file -o test1 
-echo -e "${BLUE}openssl des-ecb -a -K 6162636461626364 -iv 0011223344556677 -in file -out test2${NC}"
-openssl des-ecb -a -K 6162636461626364 -iv 0011223344556677 -in file -out test2
+echo -e "${BLUE}./ft_ssl des-ecb -a -k 0011223344556677 -v 0011223344556677 -i file -o test1 ${NC}"
+./ft_ssl des-ecb -a -k 0011223344556677 -v 0011223344556677 -i file -o test1 
+echo -e "${BLUE}openssl des-ecb -a -K 0011223344556677 -iv 0011223344556677 -in file -out test2${NC}"
+openssl des-ecb -a -K 0011223344556677 -iv 0011223344556677 -in file -out test2
 print_diff test1 test2
 echo
-echo -e "${BLUE}./ft_ssl des-ecb -d -a -k 6162636461626364 -v 0011223344556677 -o out1 -i test1${NC}"
-./ft_ssl des-ecb -d -a -k 6162636461626364 -v 0011223344556677 -o out1 -i test1
-echo -e "${BLUE}openssl des-ecb -d -a -K 6162636461626364 -iv 0011223344556677 -out out2 -in test2${NC}"
-openssl des-ecb -d -a -K 6162636461626364 -iv 0011223344556677 -out out2 -in test2
+echo -e "${BLUE}./ft_ssl des-ecb -d -a -k 0011223344556677 -v 0011223344556677 -o out1 -i test1${NC}"
+./ft_ssl des-ecb -d -a -k 0011223344556677 -v 0011223344556677 -o out1 -i test1
+echo -e "${BLUE}openssl des-ecb -d -a -K 0011223344556677 -iv 0011223344556677 -out out2 -in test2${NC}"
+openssl des-ecb -d -a -K 0011223344556677 -iv 0011223344556677 -out out2 -in test2
 print_diff out1 out2
 echo
 
@@ -278,29 +278,29 @@ CMDB=$(echo "zqYWONX68rWNxl7msIdGC67Uh2HfVEBo" | openssl des-cbc -d -a -K 616263
 print_res "$CMDA" "$CMDB";
 
 echo
-echo -e "${BLUE}./ft_ssl des-cbc -q -k 6162636461626364 -v 0011223344556677 -i file -o test1${NC}"
-./ft_ssl des-cbc -q -k 6162636461626364 -v 0011223344556677 -i file -o test1
-echo -e "${BLUE}openssl des-cbc -K 6162636461626364 -iv 0011223344556677 -in file -out test2${NC}"
-openssl des-cbc -K 6162636461626364 -iv 0011223344556677 -in file -out test2
+echo -e "${BLUE}./ft_ssl des-cbc -q -k 0011223344556677 -v 0011223344556677 -i file -o test1${NC}"
+./ft_ssl des-cbc -q -k 0011223344556677 -v 0011223344556677 -i file -o test1
+echo -e "${BLUE}openssl des-cbc -K 0011223344556677 -iv 0011223344556677 -in file -out test2${NC}"
+openssl des-cbc -K 0011223344556677 -iv 0011223344556677 -in file -out test2
 print_diff test1 test2
 echo
-echo -e "${BLUE}./ft_ssl des-cbc -d -q -k 6162636461626364 -v 0011223344556677 -o out1 -i test1${NC}"
-./ft_ssl des-cbc -d -q -k 6162636461626364 -v 0011223344556677 -o out1 -i test1
-echo -e "${BLUE}openssl des-cbc -d -K 6162636461626364 -iv 0011223344556677 -out out2 -in test2${NC}"
-openssl des-cbc -d -K 6162636461626364 -iv 0011223344556677 -out out2 -in test2
+echo -e "${BLUE}./ft_ssl des-cbc -d -q -k 0011223344556677 -v 0011223344556677 -o out1 -i test1${NC}"
+./ft_ssl des-cbc -d -q -k 0011223344556677 -v 0011223344556677 -o out1 -i test1
+echo -e "${BLUE}openssl des-cbc -d -K 0011223344556677 -iv 0011223344556677 -out out2 -in test2${NC}"
+openssl des-cbc -d -K 0011223344556677 -iv 0011223344556677 -out out2 -in test2
 print_diff out1 out2
 
 echo
-echo -e "${BLUE}./ft_ssl des-cbc -a -k 6162636461626364 -v 0011223344556677 -i file -o test1 ${NC}"
-./ft_ssl des-cbc -a -k 6162636461626364 -v 0011223344556677 -i file -o test1 
-echo -e "${BLUE}openssl des-cbc -a -K 6162636461626364 -iv 0011223344556677 -in file -out test2${NC}"
-openssl des-cbc -a -K 6162636461626364 -iv 0011223344556677 -in file -out test2
+echo -e "${BLUE}./ft_ssl des-cbc -a -k 0011223344556677 -v 0011223344556677 -i file -o test1 ${NC}"
+./ft_ssl des-cbc -a -k 0011223344556677 -v 0011223344556677 -i file -o test1 
+echo -e "${BLUE}openssl des-cbc -a -K 0011223344556677 -iv 0011223344556677 -in file -out test2${NC}"
+openssl des-cbc -a -K 0011223344556677 -iv 0011223344556677 -in file -out test2
 print_diff test1 test2
 echo
-echo -e "${BLUE}./ft_ssl des-cbc -d -a -k 6162636461626364 -v 0011223344556677 -o out1 -i test1${NC}"
-./ft_ssl des-cbc -d -a -k 6162636461626364 -v 0011223344556677 -o out1 -i test1
-echo -e "${BLUE}openssl des-cbc -d -a -K 6162636461626364 -iv 0011223344556677 -out out2 -in test2${NC}"
-openssl des-cbc -d -a -K 6162636461626364 -iv 0011223344556677 -out out2 -in test2
+echo -e "${BLUE}./ft_ssl des-cbc -d -a -k 0011223344556677 -v 0011223344556677 -o out1 -i test1${NC}"
+./ft_ssl des-cbc -d -a -k 0011223344556677 -v 0011223344556677 -o out1 -i test1
+echo -e "${BLUE}openssl des-cbc -d -a -K 0011223344556677 -iv 0011223344556677 -out out2 -in test2${NC}"
+openssl des-cbc -d -a -K 0011223344556677 -iv 0011223344556677 -out out2 -in test2
 print_diff out1 out2
 echo
 
